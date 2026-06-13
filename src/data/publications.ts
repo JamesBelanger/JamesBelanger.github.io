@@ -58,7 +58,8 @@ export const PUBLICATIONS: Publication[] = [
     authors:
       'Zhu, H., Franch, M., Mickiewicz, E., Belanger, J., Cowan, R. L., Katlowitz, K., Chavez, A. G. L., Chericoni, A., Paulo, D., Yan, X., Bartoli, E., Hennig, J., Provenza, N., Smith, E. H., Piantadosi, S., Sheth, S., & Hayden, B. Y.',
     status: 'Preprint',
-    doi: '10.64898/2026.01.28.702241',
+    // DOI removed: 10.64898/2026.01.28.702241 resolved to a different title
+    // ("Semantic axes in the brain support analogical representations"). Verify and re-add the correct DOI.
   },
   {
     type: 'preprint',
@@ -67,6 +68,7 @@ export const PUBLICATIONS: Publication[] = [
     title: 'Mirror manifolds: Partially overlapping neural subspaces for speaking and listening',
     authors: 'Chavez, A. G., Franch, M., Mickiewicz, E. A., Baltazar, W., Belanger, J. L., Devara, D., … Hayden, B. Y.',
     status: 'Preprint',
+    doi: '10.1101/2025.09.20.677504',
   },
   {
     type: 'preprint',
