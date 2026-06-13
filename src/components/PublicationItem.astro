@@ -1,0 +1,29 @@
+---
+import type { Publication } from '../data/publications';
+interface Props { pub: Publication }
+const { pub } = Astro.props;
+
+// Bold every occurrence of the author's surname.
+const parts = pub.authors.split(/(Belanger)/g);
+const doiUrl = pub.doi ? `https://doi.org/${pub.doi}` : undefined;
+const primaryUrl = pub.url ?? doiUrl;
+---
+<li class="border-b border-line py-5 last:border-0">
+  <p class="text-[0.95rem] leading-relaxed text-muted">
+    {parts.map((p) => (p === 'Belanger' ? <strong class="text-fg">{p}</strong> : <span>{p}</span>))}
+  </p>
+  <h3 class="mt-1 text-base font-semibold leading-snug">
+    {primaryUrl ? <a href={primaryUrl} class="no-underline hover:underline">{pub.title}</a> : pub.title}
+  </h3>
+  <p class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+    <em class="text-fg/90 not-italic font-medium">{pub.venue}</em>
+    <span class="text-muted">· {pub.year}</span>
+    <span class="rounded-full border border-line px-2 py-0.5 text-xs text-muted">{pub.status}</span>
+    {doiUrl && (
+      <a class="text-xs text-accent-strong" href={doiUrl}>DOI</a>
+    )}
+    {pub.type === 'preprint' && !doiUrl && primaryUrl && (
+      <a class="text-xs text-accent-strong" href={primaryUrl}>bioRxiv</a>
+    )}
+  </p>
+</li>

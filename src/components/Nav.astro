@@ -1,0 +1,33 @@
+---
+import { SITE, NAV } from '../data/site';
+import ThemeToggle from './ThemeToggle.astro';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+<header class="sticky top-0 z-50 border-b border-line bg-bg/85 backdrop-blur supports-[backdrop-filter]:bg-bg/70">
+  <nav aria-label="Primary" class="mx-auto flex w-full max-w-3xl flex-wrap items-center gap-x-5 gap-y-2 px-5 py-3">
+    <a href="/" class="mr-auto font-semibold tracking-tight text-fg no-underline hover:no-underline">
+      {SITE.name}
+    </a>
+    <ul class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+      {
+        NAV.filter((l) => l.href !== '/').map((l) => (
+          <li>
+            <a
+              href={l.href}
+              aria-current={isActive(l.href) ? 'page' : undefined}
+              class:list={[
+                'no-underline hover:no-underline transition-colors',
+                isActive(l.href) ? 'text-accent-strong font-medium' : 'text-muted hover:text-fg',
+              ]}
+            >
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <ThemeToggle />
+  </nav>
+</header>

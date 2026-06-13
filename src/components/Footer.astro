@@ -1,0 +1,28 @@
+---
+import { SITE } from '../data/site';
+
+const year = 2026; // static build; bump as needed
+const links = [
+  SITE.links.scholar !== '#' && { label: 'Google Scholar', href: SITE.links.scholar },
+  SITE.links.orcid !== '#' && { label: 'ORCID', href: SITE.links.orcid },
+  { label: 'GitHub', href: SITE.links.github },
+  SITE.links.linkedin && { label: 'LinkedIn', href: SITE.links.linkedin },
+  { label: 'Email', href: `mailto:${SITE.email}` },
+].filter(Boolean) as { label: string; href: string }[];
+---
+<footer class="border-t border-line">
+  <div class="mx-auto flex w-full max-w-3xl flex-col gap-3 px-5 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+    <p>© {year} {SITE.name} · {SITE.location}</p>
+    <ul class="flex flex-wrap gap-x-4 gap-y-1">
+      {
+        links.map((l) => (
+          <li>
+            <a class="text-muted hover:text-fg no-underline hover:no-underline" href={l.href}>
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</footer>

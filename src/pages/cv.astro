@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../data/site';
+
+const skills: { group: string; items: string }[] = [
+  { group: 'Programming', items: 'Python, MATLAB, R, Bash' },
+  { group: 'ML / DL', items: 'PyTorch, scikit-learn, HuggingFace transformers, sentence-transformers' },
+  {
+    group: 'Methods',
+    items:
+      'Poisson & Gaussian GLM/GAM, cross-validated ridge, RSA, Procrustes, SVM, PCA / manifold analysis, GCN, wavelets',
+  },
+  {
+    group: 'Neural data',
+    items:
+      'Single-unit spike-train analysis, LFP/iEEG preprocessing, PSTH, spike-sorting QA (UMAP), population geometry',
+  },
+  { group: 'NLP', items: 'spaCy, NLTK, pyphen, GPT-2 surprisal, SBERT' },
+  { group: 'Web / tools', items: 'React + Vite, Leaflet, Supabase, Tailwind, Git, conda, Docker, Obsidian' },
+];
+---
+<BaseLayout title="CV" description="Curriculum vitae of James Belanger.">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <h1 class="text-3xl font-bold tracking-tight">Curriculum Vitae</h1>
+    <a
+      href={SITE.links.cv}
+      class="rounded-md bg-accent px-3.5 py-1.5 text-sm font-medium text-white no-underline hover:no-underline hover:opacity-90"
+    >
+      Download PDF
+    </a>
+  </div>
+
+  <!-- Education -->
+  <section class="mt-10">
+    <h2 class="text-lg font-semibold text-muted">Education</h2>
+    <div class="mt-3">
+      <h3 class="font-semibold">Rice University</h3>
+      <p class="text-sm text-muted">
+        B.S. — triple major in Linguistics, Cognitive Sciences, and Psychology
+        <!-- TODO: graduation year, GPA, relevant coursework -->
+      </p>
+      <p class="mt-1 text-sm text-muted">Rice Undergraduate Scholars Program (RUSP) — independent research.</p>
+    </div>
+  </section>
+
+  <!-- Research experience -->
+  <section class="mt-8">
+    <h2 class="text-lg font-semibold text-muted">Research experience</h2>
+    <div class="mt-3">
+      <h3 class="font-semibold">Hayden Lab — Baylor College of Medicine</h3>
+      <p class="text-sm text-muted">{SITE.role} · present</p>
+      <ul class="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed">
+        <li>
+          Built a cross-validated ridge / Poisson encoding pipeline for hippocampal single-unit spiking
+          (435 neurons, 7,346 word-level timepoints) during naturalistic listening.
+        </li>
+        <li>
+          Engineered a 9-layer linguistic feature extractor (57 scalar features: phonology, morphology,
+          syntax, discourse) and adversarially purified GCN syntactic + SBERT semantic embeddings for clean
+          dissociation of linguistic levels.
+        </li>
+        <li>
+          Key result: an exhaustive scalar baseline predicts hippocampal firing (mean r = 0.334, 399/435
+          neurons significant); embeddings add Δr = +0.021 unique variance.
+        </li>
+        <li>Mentor three undergraduate researchers in statistical neuroscience and Python/MATLAB.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="mt-8">
+    <h2 class="text-lg font-semibold text-muted">Skills</h2>
+    <dl class="mt-3 space-y-2 text-sm">
+      {
+        skills.map((s) => (
+          <div class="sm:flex sm:gap-3">
+            <dt class="font-medium sm:w-32 sm:shrink-0">{s.group}</dt>
+            <dd class="text-muted">{s.items}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <!-- Publications -->
+  <section class="mt-8">
+    <h2 class="text-lg font-semibold text-muted">Publications</h2>
+    <p class="mt-2 text-sm text-muted">
+      4 peer-reviewed articles (Nature, Nature Neuroscience, Nature Human Behaviour, Cell) and 5 preprints.
+      <a href="/publications">See the full list →</a>
+    </p>
+  </section>
+
+  <p class="mt-10 text-sm text-muted">References available upon request.</p>
+</BaseLayout>

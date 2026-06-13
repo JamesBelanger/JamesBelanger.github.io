@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { PUBLICATIONS } from '../data/publications';
+import PublicationItem from '../components/PublicationItem.astro';
+
+const journals = PUBLICATIONS.filter((p) => p.type === 'journal').sort((a, b) => b.year - a.year);
+const preprints = PUBLICATIONS.filter((p) => p.type === 'preprint').sort((a, b) => b.year - a.year);
+---
+<BaseLayout title="Publications" description="Peer-reviewed publications and preprints by James Belanger.">
+  <h1 class="text-3xl font-bold tracking-tight">Publications</h1>
+  <p class="mt-3 text-muted">
+    {journals.length} peer-reviewed {journals.length === 1 ? 'article' : 'articles'} ·
+    {preprints.length} preprints. Author <strong class="text-fg">Belanger</strong> in bold.
+  </p>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-semibold text-muted">Peer-reviewed journal articles</h2>
+    <ul class="mt-2">
+      {journals.map((p) => <PublicationItem pub={p} />)}
+    </ul>
+  </section>
+
+  <section class="mt-10">
+    <h2 class="text-lg font-semibold text-muted">Preprints</h2>
+    <ul class="mt-2">
+      {preprints.map((p) => <PublicationItem pub={p} />)}
+    </ul>
+  </section>
+</BaseLayout>

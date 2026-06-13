@@ -1,0 +1,22 @@
+---
+// Renders a real figure if `src` is provided, otherwise an intentional placeholder
+// so the scaffold never shows a broken image. Replace by passing `src`.
+interface Props { caption: string; alt: string; src?: string }
+const { caption, alt, src } = Astro.props;
+---
+<figure class="my-5">
+  {
+    src ? (
+      <img src={src} alt={alt} loading="lazy" decoding="async" class="w-full rounded-lg border border-line" />
+    ) : (
+      <div
+        role="img"
+        aria-label={alt}
+        class="flex aspect-[16/9] w-full items-center justify-center rounded-lg border border-dashed border-line bg-card px-6 text-center"
+      >
+        <span class="font-mono text-xs text-muted">figure placeholder — add export</span>
+      </div>
+    )
+  }
+  <figcaption class="mt-2 text-sm text-muted">{caption}</figcaption>
+</figure>

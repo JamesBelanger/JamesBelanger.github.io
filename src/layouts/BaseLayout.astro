@@ -1,0 +1,45 @@
+---
+import '../styles/global.css';
+import BaseHead from '../components/BaseHead.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: string;
+  jsonld?: boolean;
+}
+const props = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Set theme before paint to avoid a flash of the wrong color scheme -->
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <BaseHead {...props} />
+  </head>
+  <body class="min-h-screen">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-card focus:px-4 focus:py-2 focus:text-fg focus:shadow"
+    >
+      Skip to content
+    </a>
+    <Nav />
+    <main id="main" class="mx-auto w-full max-w-3xl px-5 py-12 md:py-16">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

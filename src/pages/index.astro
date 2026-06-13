@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../data/site';
+import { RESEARCH } from '../data/research';
+import { PUBLICATIONS } from '../data/publications';
+
+const featured = RESEARCH.slice(0, 3);
+const recentPubs = PUBLICATIONS.filter((p) => p.type === 'journal').slice(0, 4);
+
+const linkRow = [
+  SITE.links.scholar && { label: 'Google Scholar', href: SITE.links.scholar },
+  SITE.links.orcid && { label: 'ORCID', href: SITE.links.orcid },
+  { label: 'GitHub', href: SITE.links.github },
+  { label: 'Email', href: `mailto:${SITE.email}` },
+].filter(Boolean) as { label: string; href: string }[];
+---
+<BaseLayout jsonld={true}>
+  <!-- Hero -->
+  <section class="flex flex-col-reverse gap-6 sm:flex-row sm:items-start sm:gap-8">
+    <div class="flex-1">
+      <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{SITE.name}</h1>
+      <p class="mt-1 text-base text-muted">{SITE.role} · {SITE.affiliation}</p>
+      <p class="mt-4 text-lg leading-relaxed">{SITE.tagline}</p>
+    </div>
+
+    <!-- Monogram avatar. TODO: replace with <img src="/headshot.jpg" .../> once you have a headshot. -->
+    <div
+      aria-hidden="true"
+      class="grid h-24 w-24 shrink-0 place-items-center rounded-2xl border border-line bg-gradient-to-br from-accent/20 to-accent/5 text-2xl font-semibold text-accent-strong sm:h-28 sm:w-28"
+    >
+      JB
+    </div>
+  </section>
+
+  <!-- Link row -->
+  <div class="mt-6 flex flex-wrap gap-2">
+    <a
+      href={SITE.links.cv}
+      class="rounded-md bg-accent px-3.5 py-1.5 text-sm font-medium text-white no-underline hover:no-underline hover:opacity-90"
+    >
+      Download CV
+    </a>
+    {
+      linkRow.map((l) => (
+        <a
+          href={l.href}
+          class="rounded-md border border-line px-3.5 py-1.5 text-sm text-fg no-underline hover:no-underline hover:border-accent"
+        >
+          {l.label}
+        </a>
+      ))
+    }
+  </div>
+
+  <!-- Bio -->
+  <section class="mt-10 space-y-4 leading-relaxed">
+    <p>{SITE.shortBio}</p>
+    <p class="text-muted">{SITE.arc}</p>
+  </section>
+
+  <!-- Featured research -->
+  <section class="mt-12">
+    <div class="flex items-baseline justify-between">
+      <h2 class="text-xl font-semibold">Research</h2>
+      <a href="/research" class="text-sm">All research →</a>
+    </div>
+    <div class="mt-4 grid gap-4 sm:grid-cols-3">
+      {
+        featured.map((t) => (
+          <a
+            href={`/research#${t.id}`}
+            class="group rounded-lg border border-line bg-card p-4 no-underline transition-colors hover:border-accent hover:no-underline"
+          >
+            <h3 class="text-sm font-semibold leading-snug text-fg group-hover:text-accent-strong">
+              {t.title}
+            </h3>
+            <p class="mt-2 line-clamp-4 text-sm text-muted">{t.summary}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Selected publications -->
+  <section class="mt-12">
+    <div class="flex items-baseline justify-between">
+      <h2 class="text-xl font-semibold">Selected publications</h2>
+      <a href="/publications" class="text-sm">All publications →</a>
+    </div>
+    <ul class="mt-3">
+      {
+        recentPubs.map((p) => (
+          <li class="border-b border-line py-3 last:border-0">
+            <span class="text-[0.95rem]">{p.title}</span>
+            <span class="ml-1 text-sm text-muted">— {p.venue}, {p.year}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>

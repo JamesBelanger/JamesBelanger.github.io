@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { RESEARCH } from '../data/research';
+import Tag from '../components/Tag.astro';
+import FigurePlaceholder from '../components/FigurePlaceholder.astro';
+---
+<BaseLayout title="Research" description="Research on the geometry of language in human single-neuron and population recordings.">
+  <h1 class="text-3xl font-bold tracking-tight">Research</h1>
+  <p class="mt-3 max-w-2xl text-lg leading-relaxed text-muted">
+    I measure how language is represented in human neural population codes — and ask whether the brain’s
+    compressed geometry can guide more efficient, compositional machine learning.
+  </p>
+
+  <div class="mt-10 space-y-14">
+    {
+      RESEARCH.map((t) => (
+        <article id={t.id} class="scroll-mt-24">
+          <div class="flex flex-wrap items-center gap-3">
+            <h2 class="text-xl font-semibold leading-snug">{t.title}</h2>
+            {t.flagship && (
+              <span class="rounded-full bg-accent/15 px-2 py-0.5 text-xs font-medium text-accent-strong">
+                Flagship
+              </span>
+            )}
+          </div>
+          {t.status && <p class="mt-1 text-sm text-muted">{t.status}</p>}
+          <p class="mt-3 max-w-2xl leading-relaxed">{t.summary}</p>
+          <FigurePlaceholder caption={t.figure.caption} alt={t.figure.alt} />
+          <div class="mt-3 flex flex-wrap gap-1.5">
+            {t.methods.map((m) => <Tag label={m} />)}
+          </div>
+          {t.links && (
+            <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+              {t.links.map((l) => (
+                <li>
+                  <a href={l.href}>{l.label} →</a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </article>
+      ))
+    }
+  </div>
+</BaseLayout>

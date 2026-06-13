@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../data/site';
+
+const hub = [
+  SITE.links.scholar !== '#' && { label: 'Google Scholar', href: SITE.links.scholar },
+  SITE.links.orcid !== '#' && { label: 'ORCID', href: SITE.links.orcid },
+  { label: 'GitHub', href: SITE.links.github },
+  SITE.links.linkedin && { label: 'LinkedIn', href: SITE.links.linkedin },
+].filter(Boolean) as { label: string; href: string }[];
+---
+<BaseLayout title="Contact" description="Get in touch with James Belanger.">
+  <h1 class="text-3xl font-bold tracking-tight">Contact</h1>
+
+  <p class="mt-4 leading-relaxed">
+    I’m always glad to talk about computational neuroscience, language, and neuro-inspired machine learning —
+    and I’m actively seeking PhD opportunities and research collaborations.
+  </p>
+
+  <dl class="mt-8 space-y-4">
+    <div>
+      <dt class="text-sm font-medium text-muted">Email</dt>
+      <dd class="mt-0.5">
+        <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-muted">Affiliation</dt>
+      <dd class="mt-0.5">{SITE.affiliation} · {SITE.location}</dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-muted">Elsewhere</dt>
+      <dd class="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+        {hub.map((l) => <a href={l.href}>{l.label}</a>)}
+      </dd>
+    </div>
+  </dl>
+</BaseLayout>

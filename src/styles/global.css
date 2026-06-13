@@ -1,0 +1,80 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+
+/* Dark mode is class-based (.dark on <html>) and set before paint to avoid FOUC */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Semantic design tokens — these flip under .dark at runtime */
+:root {
+  --bg: #fbfbf8;
+  --fg: #1b1c1e;
+  --muted: #5b616b;
+  --card: #ffffff;
+  --line: #e7e6e0;
+  --accent: #0d7d7d;        /* deep teal — "neural / manifold" without flash */
+  --accent-strong: #0a6363;
+}
+
+.dark {
+  --bg: #0f1116;
+  --fg: #e8e9ec;
+  --muted: #9aa1ab;
+  --card: #161a22;
+  --line: #272c36;
+  --accent: #50d1c6;
+  --accent-strong: #74ded5;
+}
+
+/* Map Tailwind color/font utilities onto the tokens (inline => responds to .dark) */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+    font-size: 17px;
+    line-height: 1.65;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 {
+    @apply font-semibold tracking-tight text-fg;
+    text-wrap: balance;
+  }
+  a {
+    @apply text-accent-strong underline-offset-2 decoration-1;
+  }
+  a:hover { @apply underline; }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--accent) 28%, transparent);
+  }
+  hr { @apply border-line; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
