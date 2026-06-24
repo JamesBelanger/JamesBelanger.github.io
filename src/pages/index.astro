@@ -9,8 +9,8 @@ const featured = RESEARCH.slice(0, 3);
 const recentPubs = PUBLICATIONS.filter((p) => p.type === 'journal').slice(0, 4);
 
 const linkRow = [
-  SITE.links.scholar && { label: 'Google Scholar', href: SITE.links.scholar },
-  SITE.links.orcid && { label: 'ORCID', href: SITE.links.orcid },
+  SITE.links.scholar !== '#' && { label: 'Google Scholar', href: SITE.links.scholar },
+  SITE.links.orcid !== '#' && { label: 'ORCID', href: SITE.links.orcid },
   { label: 'GitHub', href: SITE.links.github },
   { label: 'Email', href: `mailto:${SITE.email}` },
 ].filter(Boolean) as { label: string; href: string }[];
