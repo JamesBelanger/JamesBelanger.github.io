@@ -19,7 +19,7 @@ export const SITE = {
   // og:image used for link previews. TODO: add a headshot or clean figure at /public/og-image.png (1200x630)
   ogImage: '/og-image.png',
   links: {
-    scholar: '#', // TODO: your real Google Scholar profile URL
+    scholar: 'https://scholar.google.com/citations?user=8RCoKNUAAAAJ',
     orcid: 'https://orcid.org/0009-0003-3269-8810',
     github: 'https://github.com/JamesBelanger',
     linkedin: '', // optional — leave '' to hide
