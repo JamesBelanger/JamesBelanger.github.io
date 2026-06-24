@@ -20,7 +20,7 @@ export const SITE = {
   ogImage: '/og-image.png',
   links: {
     scholar: '#', // TODO: your real Google Scholar profile URL
-    orcid: '#', // TODO: your real ORCID iD URL (and add this site to your ORCID record)
+    orcid: 'https://orcid.org/0009-0003-3269-8810',
     github: 'https://github.com/JamesBelanger',
     linkedin: '', // optional — leave '' to hide
     cv: '/cv/Belanger_CV_2026-06.pdf', // TODO: export your CV to this path
