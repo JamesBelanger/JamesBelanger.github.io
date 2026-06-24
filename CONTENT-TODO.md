@@ -21,10 +21,10 @@ Items below are what's left. The **"Needs James"** block is the only thing block
 | ~~**Google Scholar URL**~~ | ✅ done | `user=8RCoKNUAAAAJ` wired in (commit `f3ce846`). |
 | ~~**ORCID iD URL**~~ | ✅ done | `0009-0003-3269-8810` wired in (commit `9e4ccde`). Add this site's URL to the ORCID record too. |
 | **LinkedIn URL** (optional) | `src/data/site.ts` → `links.linkedin` | leave `''` to hide |
-| **Headshot** (square, ≥400px) | `public/headshot.jpg` | I'll swap the manifold↔headshot layout on the home hero |
-| **CV PDF** | `public/cv/Belanger_CV_2026-06.pdf` | the "Download CV/PDF" buttons already point here |
-| **CV details** | `src/pages/cv.astro` | graduation year, GPA, coursework, honors (currently `<!-- TODO -->`) |
-| **4 research figures** | `public/figures/*.png` | one per theme; pass `src=` to `<FigurePlaceholder />` in `src/pages/research.astro` |
+| ~~**Headshot**~~ | ✅ done | `public/headshot.jpg` in the home hero; manifold moved to its own showcase section below the bio |
+| ~~**CV degree/year**~~ | ✅ done | B.A. · May 2025 (still optional: GPA, coursework, honors in `src/pages/cv.astro`) |
+| **CV PDF** | `public/cv/Belanger_CV_2026-06.pdf` | drop the file, then set `links.cv` back to that path in `src/data/site.ts`. **Download buttons are hidden while `links.cv` is empty** (no dead link). |
+| **4 research figures** | `public/figures/*.png` | **deferred until James publishes** — one per theme; pass `src=` to `<FigurePlaceholder />` in `src/pages/research.astro` |
 
 > Verification note (kept for the record): only the **Nature** paper is confirmed published on the open
 > web; the other 3 journal articles show as bioRxiv preprints with no public acceptance evidence. James

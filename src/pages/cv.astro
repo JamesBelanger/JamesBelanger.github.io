@@ -22,12 +22,14 @@ const skills: { group: string; items: string }[] = [
 <BaseLayout title="CV" description="Curriculum vitae of James Belanger.">
   <div class="flex flex-wrap items-center justify-between gap-3">
     <h1 class="text-3xl font-bold tracking-tight">Curriculum Vitae</h1>
-    <a
-      href={SITE.links.cv}
-      class="rounded-md bg-accent px-3.5 py-1.5 text-sm font-medium text-white no-underline hover:no-underline hover:opacity-90"
-    >
-      Download PDF
-    </a>
+    {SITE.links.cv && (
+      <a
+        href={SITE.links.cv}
+        class="rounded-md bg-accent px-3.5 py-1.5 text-sm font-medium text-white no-underline hover:no-underline hover:opacity-90"
+      >
+        Download PDF
+      </a>
+    )}
   </div>
 
   <!-- Education -->
@@ -36,8 +38,8 @@ const skills: { group: string; items: string }[] = [
     <div class="mt-3">
       <h3 class="font-semibold">Rice University</h3>
       <p class="text-sm text-muted">
-        B.S. — triple major in Linguistics, Cognitive Sciences, and Psychology
-        <!-- TODO: graduation year, GPA, relevant coursework -->
+        B.A. — triple major in Linguistics, Cognitive Sciences, and Psychology · May 2025
+        <!-- TODO (optional): GPA, relevant coursework, honors -->
       </p>
       <p class="mt-1 text-sm text-muted">Rice Undergraduate Scholars Program (RUSP) — independent research.</p>
     </div>

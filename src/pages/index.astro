@@ -24,18 +24,25 @@ const linkRow = [
       <p class="mt-4 text-lg leading-relaxed">{SITE.tagline}</p>
     </div>
 
-    <!-- Live "language manifold" motif — the geometry of the flagship result. -->
-    <ManifoldViz class="h-44 w-full shrink-0 sm:h-52 sm:w-52" />
+    <img
+      src="/headshot.jpg"
+      alt={SITE.name}
+      width="208"
+      height="208"
+      class="mx-auto h-40 w-40 shrink-0 rounded-2xl border border-line object-cover sm:mx-0 sm:h-52 sm:w-52"
+    />
   </section>
 
   <!-- Link row -->
   <div class="mt-6 flex flex-wrap gap-2">
-    <a
-      href={SITE.links.cv}
-      class="rounded-md bg-accent px-3.5 py-1.5 text-sm font-medium text-white no-underline hover:no-underline hover:opacity-90"
-    >
-      Download CV
-    </a>
+    {SITE.links.cv && (
+      <a
+        href={SITE.links.cv}
+        class="rounded-md bg-accent px-3.5 py-1.5 text-sm font-medium text-white no-underline hover:no-underline hover:opacity-90"
+      >
+        Download CV
+      </a>
+    )}
     {
       linkRow.map((l) => (
         <a
@@ -52,6 +59,15 @@ const linkRow = [
   <section class="mt-10 space-y-4 leading-relaxed">
     <p>{SITE.shortBio}</p>
     <p class="text-muted">{SITE.arc}</p>
+  </section>
+
+  <!-- Research motif: the live language manifold -->
+  <section class="mt-12 flex flex-col items-center text-center">
+    <ManifoldViz class="aspect-square w-full max-w-sm" />
+    <p class="mt-3 max-w-md text-sm text-muted">
+      Syntax and semantics occupy semi-orthogonal subspaces along a single low-dimensional hippocampal
+      population axis — the geometry at the heart of <a href="/research">my research</a>.
+    </p>
   </section>
 
   <!-- Featured research -->

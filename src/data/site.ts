@@ -23,7 +23,7 @@ export const SITE = {
     orcid: 'https://orcid.org/0009-0003-3269-8810',
     github: 'https://github.com/JamesBelanger',
     linkedin: '', // optional — leave '' to hide
-    cv: '/cv/Belanger_CV_2026-06.pdf', // TODO: export your CV to this path
+    cv: '', // TODO: set to '/cv/Belanger_CV_2026-06.pdf' after dropping the PDF in public/cv/ (download buttons stay hidden while this is empty)
   },
 };
 
