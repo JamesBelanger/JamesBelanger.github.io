@@ -1,35 +1,50 @@
-# Content TODO — fill before launch
+# Content TODO — fill before / around launch
 
-Everything below is a placeholder in the scaffold. Knock these out and the site is ready.
+The site is **live** at https://jamesbelanger.github.io/ and rebuilds on every push to `main`.
+Items below are what's left. The **"Needs James"** block is the only thing blocking a polished launch.
 
-## ⚠️ Verify first (accuracy)
-- [ ] **Publications** (`src/data/publications.ts`) — confirm every author list, venue, status, and DOI
-      against the published record. Publicly claimed Nature-tier co-authorship is a hard, checkable claim.
-      (Pulled from your vault `00_Master/Publications.md`, which had several lists truncated with "…".)
-- [x] **Current title** — confirmed: **Research Technician**, Hayden Lab (set in `src/data/site.ts`).
-      (Still confirm student-vs-graduated status / graduation year for the CV.)
+---
 
-## Identity & links (`src/data/site.ts`)
-- [ ] Real **Google Scholar** profile URL (currently `#`).
-- [ ] Real **ORCID** iD URL (currently `#`) — and add this site to your ORCID record.
-- [ ] Optional **LinkedIn** URL (leave `''` to hide).
+## ✅ Done (this scaffold)
+- [x] Interactive **language-manifold** hero viz (`src/components/ManifoldViz.astro`) — replaces the JB monogram.
+- [x] Real **OG link-preview image** at `public/og-image.png` (regenerate: `node scripts/make-og.mjs`).
+- [x] One-command **custom-domain switch** (`node scripts/use-custom-domain.mjs`).
+- [x] Publication DOIs reconciled (mismatched DOI dropped; verified DOIs kept).
+- [x] **Current title** confirmed: **Research Technician**, Hayden Lab (`src/data/site.ts`).
 
-## Assets
-- [ ] **Headshot** → swap the "JB" monogram on the home page (`src/pages/index.astro`) for
-      `<img src="/headshot.jpg" alt="James Belanger" .../>`; also use it (or a clean figure) as
-      `public/og-image.png` (1200×630) for link previews.
-- [ ] **CV PDF** → export to `public/cv/Belanger_CV_2026-06.pdf` (fill the placeholders in your vault CV first:
-      graduation year, GPA, coursework, honors).
-- [ ] **Research figures** → export 4 (one per theme) into `public/figures/` and pass `src=` to
-      `<FigurePlaceholder />` in `src/pages/research.astro`. Each needs a caption + alt text (already stubbed).
-- [ ] **Project links** → add live demo / repo links where you have them (`src/data/projects.ts`).
+---
 
-## Domain & deploy
-- [ ] Buy **jamesbelanger.io** (Cloudflare Registrar / Namecheap).
-- [ ] Push to GitHub, import to Vercel, attach the domain.
-- [ ] After deploy: submit `sitemap-index.xml` to Google Search Console; cross-link the site into
-      ORCID, Scholar, and your email signature.
+## ⚠️ Needs James (drop the file / paste the link — I'll wire each in)
 
-## Nice-to-have (post-application, "M4")
-- [ ] One interactive React island (e.g. a PSTH / subspace-geometry viz) as an engineering-signal differentiator.
-- [ ] A short technical explainer / writing section — only if you'll actually maintain it.
+| What | Where it goes | Notes |
+| --- | --- | --- |
+| **Google Scholar URL** | `src/data/site.ts` → `links.scholar` | replaces the `#`; auto-appears in nav row, footer, contact, JSON-LD |
+| **ORCID iD URL** | `src/data/site.ts` → `links.orcid` | same; also add this site to your ORCID record |
+| **LinkedIn URL** (optional) | `src/data/site.ts` → `links.linkedin` | leave `''` to hide |
+| **Headshot** (square, ≥400px) | `public/headshot.jpg` | I'll swap the manifold↔headshot layout on the home hero |
+| **CV PDF** | `public/cv/Belanger_CV_2026-06.pdf` | the "Download CV/PDF" buttons already point here |
+| **CV details** | `src/pages/cv.astro` | graduation year, GPA, coursework, honors (currently `<!-- TODO -->`) |
+| **4 research figures** | `public/figures/*.png` | one per theme; pass `src=` to `<FigurePlaceholder />` in `src/pages/research.astro` |
+
+> Verification note (kept for the record): only the **Nature** paper is confirmed published on the open
+> web; the other 3 journal articles show as bioRxiv preprints with no public acceptance evidence. James
+> affirmed they are genuinely in-press and chose to label them "In press." His call.
+
+---
+
+## Publications still to reconcile
+- [ ] **"A geometric foundation for word meaning"** — the old DOI `10.64898/2026.01.28.702241` resolved to a
+      *different* title. Find the correct bioRxiv DOI and re-add it in `src/data/publications.ts`.
+
+---
+
+## Domain & deploy (your action, then one command)
+- [ ] Buy **jamesbelanger.io** (Cloudflare Registrar / Namecheap, ~$12–15/yr).
+- [ ] Point DNS at GitHub Pages (apex A records + `www` CNAME — see DEPLOY.md).
+- [ ] Run `node scripts/use-custom-domain.mjs`, commit, push.
+- [ ] GitHub repo → Settings → Pages → Custom domain → enter domain, enable "Enforce HTTPS".
+- [ ] Google Search Console: add the property, submit `…/sitemap-index.xml`. Cross-link site into ORCID/Scholar/email signature.
+
+## Nice-to-have (post-application)
+- [ ] A short technical writing / explainer section — only if you'll maintain it.
+- [ ] Pull live demo / repo links onto more project cards (`src/data/projects.ts`).

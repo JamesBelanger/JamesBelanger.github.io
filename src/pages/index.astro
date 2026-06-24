@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ManifoldViz from '../components/ManifoldViz.astro';
 import { SITE } from '../data/site';
 import { RESEARCH } from '../data/research';
 import { PUBLICATIONS } from '../data/publications';
@@ -23,13 +24,8 @@ const linkRow = [
       <p class="mt-4 text-lg leading-relaxed">{SITE.tagline}</p>
     </div>
 
-    <!-- Monogram avatar. TODO: replace with <img src="/headshot.jpg" .../> once you have a headshot. -->
-    <div
-      aria-hidden="true"
-      class="grid h-24 w-24 shrink-0 place-items-center rounded-2xl border border-line bg-gradient-to-br from-accent/20 to-accent/5 text-2xl font-semibold text-accent-strong sm:h-28 sm:w-28"
-    >
-      JB
-    </div>
+    <!-- Live "language manifold" motif — the geometry of the flagship result. -->
+    <ManifoldViz class="h-44 w-full shrink-0 sm:h-52 sm:w-52" />
   </section>
 
   <!-- Link row -->

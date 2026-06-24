@@ -1,0 +1,202 @@
+---
+// Interactive "language manifold" mark — a rotating point cloud in which two
+// semi-orthogonal subspaces (syntax, semantics) share a single dominant,
+// low-dimensional population axis. This is the literal geometry of James's
+// flagship result, rendered as a living site motif.
+//
+// Vanilla canvas (no framework / no deps), theme-aware (reads --accent and the
+// .dark class), and fully static under prefers-reduced-motion. Pauses when the
+// tab is hidden or the element is scrolled off-screen.
+interface Props { class?: string }
+const { class: className = '' } = Astro.props;
+---
+<div class:list={['manifold relative overflow-hidden rounded-2xl border border-line bg-card', className]}>
+  <canvas data-manifold class="block h-full w-full" aria-hidden="true"></canvas>
+  <div class="pointer-events-none absolute bottom-2 left-3 flex gap-3 font-mono text-[10px] text-muted">
+    <span class="flex items-center gap-1"><span data-dot="syn" class="inline-block h-1.5 w-1.5 rounded-full"></span>syntax</span>
+    <span class="flex items-center gap-1"><span data-dot="sem" class="inline-block h-1.5 w-1.5 rounded-full"></span>semantics</span>
+  </div>
+  <span class="sr-only">
+    A rotating three-dimensional point cloud: two semi-orthogonal subspaces, one for syntax and one
+    for semantics, sharing a single dominant low-dimensional population axis.
+  </span>
+</div>
+
+<script>
+  type Vec3 = [number, number, number];
+  type Pt = { base: Vec3; syn: boolean };
+
+  // Deterministic PRNG so the cloud looks identical every load.
+  function mulberry32(a: number) {
+    return function () {
+      a |= 0;
+      a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function norm(v: Vec3): Vec3 {
+    const m = Math.hypot(v[0], v[1], v[2]) || 1;
+    return [v[0] / m, v[1] / m, v[2] / m];
+  }
+
+  function initManifold(canvas: HTMLCanvasElement) {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const wrap = canvas.parentElement as HTMLElement;
+    const prm = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const rng = mulberry32(20260624);
+    const gauss = () => {
+      // Box–Muller
+      const u = Math.max(rng(), 1e-9);
+      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rng());
+    };
+
+    // Shared dominant axis (vertical) + two secondary directions that are only
+    // *semi*-orthogonal to each other (S2 leans ~20° toward S1).
+    const U: Vec3 = [0, 1, 0];
+    const S1: Vec3 = norm([1, 0, 0.12]);
+    const S2: Vec3 = norm([0.34, 0, 1]);
+
+    const PER = 95;
+    const pts: Pt[] = [];
+    for (let g = 0; g < 2; g++) {
+      const S = g === 0 ? S1 : S2;
+      for (let i = 0; i < PER; i++) {
+        const a = gauss() * 1.0; // big variance along the shared axis -> low-D look
+        const b = gauss() * 0.42; // tight within-subspace spread
+        const nx = gauss() * 0.05;
+        const nz = gauss() * 0.05;
+        pts.push({
+          base: [a * U[0] + b * S[0] + nx, a * U[1] + b * S[1], a * U[2] + b * S[2] + nz],
+          syn: g === 0,
+        });
+      }
+    }
+
+    // Colors: syntax = brand accent (flips in dark); semantics = warm complement.
+    let cSyn = '#0d7d7d';
+    let cSem = '#e0823c';
+    const dots = wrap.querySelectorAll<HTMLElement>('[data-dot]');
+    function refreshColors() {
+      const cs = getComputedStyle(document.documentElement);
+      const dark = document.documentElement.classList.contains('dark');
+      cSyn = cs.getPropertyValue('--accent').trim() || (dark ? '#50d1c6' : '#0d7d7d');
+      cSem = dark ? '#f0a868' : '#d9772f';
+      dots.forEach((d) => {
+        d.style.backgroundColor = d.dataset.dot === 'syn' ? cSyn : cSem;
+      });
+    }
+    refreshColors();
+    new MutationObserver(refreshColors).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    let w = 0,
+      h = 0,
+      dpr = 1;
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const r = canvas.getBoundingClientRect();
+      w = r.width;
+      h = r.height;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const PHI = -0.42; // fixed camera tilt so we read depth
+    const cphi = Math.cos(PHI),
+      sphi = Math.sin(PHI);
+
+    function frame(t: number) {
+      const cx = w / 2,
+        cy = h / 2;
+      const scale = Math.min(w, h) * 0.15;
+      const cy_t = Math.cos(t),
+        sy_t = Math.sin(t);
+      ctx.clearRect(0, 0, w, h);
+
+      // project: rotate around shared (Y) axis, then tilt around X
+      const proj = (p: Vec3) => {
+        const x = p[0] * cy_t + p[2] * sy_t;
+        const z = -p[0] * sy_t + p[2] * cy_t;
+        const y = p[1] * cphi - z * sphi;
+        const depth = p[1] * sphi + z * cphi;
+        return { sx: cx + x * scale, sy: cy - y * scale, depth };
+      };
+
+      // faint shared population axis
+      const a0 = proj([0, -2.6, 0]),
+        a1 = proj([0, 2.6, 0]);
+      ctx.strokeStyle = cSyn;
+      ctx.globalAlpha = 0.16;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(a0.sx, a0.sy);
+      ctx.lineTo(a1.sx, a1.sy);
+      ctx.stroke();
+
+      // points, painter-sorted back-to-front
+      const ps = pts
+        .map((p) => ({ ...proj(p.base), syn: p.syn }))
+        .sort((p, q) => p.depth - q.depth);
+      for (const p of ps) {
+        const d = (p.depth + 3) / 6; // ~0..1
+        ctx.globalAlpha = 0.35 + 0.55 * Math.max(0, Math.min(1, d));
+        ctx.fillStyle = p.syn ? cSyn : cSem;
+        const r = 1.4 + 2.0 * Math.max(0, Math.min(1, d));
+        ctx.beginPath();
+        ctx.arc(p.sx, p.sy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    let raf = 0;
+    let t = 0.6;
+    let running = false;
+    function loop() {
+      t += 0.0032;
+      frame(t);
+      raf = requestAnimationFrame(loop);
+    }
+    function start() {
+      if (running || prm.matches) return;
+      running = true;
+      raf = requestAnimationFrame(loop);
+    }
+    function stop() {
+      running = false;
+      cancelAnimationFrame(raf);
+    }
+
+    // Only run while visible & tab is focused.
+    const io = new IntersectionObserver(
+      (es) => {
+        for (const e of es) {
+          if (e.isIntersecting && !document.hidden) start();
+          else stop();
+        }
+      },
+      { threshold: 0.05 }
+    );
+    io.observe(wrap);
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+    prm.addEventListener('change', () => {
+      stop();
+      prm.matches ? frame(t) : start();
+    });
+
+    // Always paint at least one frame (covers reduced-motion users).
+    frame(t);
+  }
+
+  document.querySelectorAll<HTMLCanvasElement>('[data-manifold]').forEach(initManifold);
+</script>
