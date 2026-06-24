@@ -18,7 +18,7 @@ Items below are what's left. The **"Needs James"** block is the only thing block
 
 | What | Where it goes | Notes |
 | --- | --- | --- |
-| **Google Scholar URL** | `src/data/site.ts` → `links.scholar` | replaces the `#`; auto-appears in nav row, footer, contact, JSON-LD. ⚠️ No profile exists yet — create one at scholar.google.com (auto-suggests your indexed papers). |
+| ~~**Google Scholar URL**~~ | ✅ done | `user=8RCoKNUAAAAJ` wired in (commit `f3ce846`). |
 | ~~**ORCID iD URL**~~ | ✅ done | `0009-0003-3269-8810` wired in (commit `9e4ccde`). Add this site's URL to the ORCID record too. |
 | **LinkedIn URL** (optional) | `src/data/site.ts` → `links.linkedin` | leave `''` to hide |
 | **Headshot** (square, ≥400px) | `public/headshot.jpg` | I'll swap the manifold↔headshot layout on the home hero |
