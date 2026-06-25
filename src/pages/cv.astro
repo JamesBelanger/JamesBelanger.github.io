@@ -38,10 +38,9 @@ const skills: { group: string; items: string }[] = [
     <div class="mt-3">
       <h3 class="font-semibold">Rice University</h3>
       <p class="text-sm text-muted">
-        B.A. — triple major in Linguistics, Cognitive Sciences, and Psychology · May 2025
-        <!-- TODO (optional): GPA, relevant coursework, honors -->
+        B.A. in Cognitive Sciences (Psychology &amp; Linguistics) · Minor in Data Science · Spanish · May 2025
       </p>
-      <p class="mt-1 text-sm text-muted">Rice Undergraduate Scholars Program (RUSP) — independent research.</p>
+      <p class="mt-1 text-sm text-muted">GPA 3.94 / 4.0 · Rice Undergraduate Scholars Program (RUSP).</p>
     </div>
   </section>
 
@@ -50,7 +49,7 @@ const skills: { group: string; items: string }[] = [
     <h2 class="text-lg font-semibold text-muted">Research experience</h2>
     <div class="mt-3">
       <h3 class="font-semibold">Hayden Lab — Baylor College of Medicine</h3>
-      <p class="text-sm text-muted">{SITE.role} · present</p>
+      <p class="text-sm text-muted">{SITE.role} · May 2024 – present</p>
       <ul class="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed">
         <li>
           Built a cross-validated ridge / Poisson encoding pipeline for hippocampal single-unit spiking
@@ -66,6 +65,27 @@ const skills: { group: string; items: string }[] = [
           neurons significant); embeddings add Δr = +0.021 unique variance.
         </li>
         <li>Mentor three undergraduate researchers in statistical neuroscience and Python/MATLAB.</li>
+      </ul>
+    </div>
+
+    <div class="mt-6">
+      <h3 class="font-semibold">Martin Lab of Language &amp; Memory — Rice University</h3>
+      <p class="text-sm text-muted">Research assistant · Sep 2022 – May 2025</p>
+      <ul class="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed">
+        <li>
+          Analyzed phonological and semantic working-memory data across 1,000+ participants with multiple
+          regression, factor analysis, and PCA.
+        </li>
+        <li>Built OpenAI Whisper pipelines to transcribe and quantify language production in aphasic patients.</li>
+      </ul>
+    </div>
+
+    <div class="mt-6">
+      <h3 class="font-semibold">Language &amp; Cognitive Development Lab — UC Berkeley</h3>
+      <p class="text-sm text-muted">Summer research assistant · Jun – Aug 2023</p>
+      <ul class="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed">
+        <li>Studied social-cue and priming effects on semantically ambiguous nouns in 50+ children (analyses in R).</li>
+        <li>Built a Vosk + Whisper pipeline producing time-stamped transcripts from 150+ hours of audio.</li>
       </ul>
     </div>
   </section>

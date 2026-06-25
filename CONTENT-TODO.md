@@ -22,10 +22,10 @@ Items below are what's left. The **"Needs James"** block is the only thing block
 | --- | --- | --- |
 | ~~**Google Scholar URL**~~ | ✅ done | `user=8RCoKNUAAAAJ` wired in (commit `f3ce846`). |
 | ~~**ORCID iD URL**~~ | ✅ done | `0009-0003-3269-8810` wired in (commit `9e4ccde`). Add this site's URL to the ORCID record too. |
-| **LinkedIn URL** (optional) | `src/data/site.ts` → `links.linkedin` | leave `''` to hide |
+| ~~**LinkedIn URL**~~ | ✅ done | `linkedin.com/in/jamesluibelanger` (from CV) |
 | ~~**Headshot**~~ | ✅ done | `public/headshot.jpg` in the home hero; manifold moved to its own showcase section below the bio |
-| ~~**CV degree/year**~~ | ✅ done | B.A. · May 2025 (still optional: GPA, coursework, honors in `src/pages/cv.astro`) |
-| **CV PDF** | `public/cv/Belanger_CV_2026-06.pdf` | drop the file, then set `links.cv` back to that path in `src/data/site.ts`. **Download buttons are hidden while `links.cv` is empty** (no dead link). |
+| ~~**CV degree/year/GPA**~~ | ✅ done | aligned to uploaded CV: B.A. Cognitive Sciences (Psych & Ling), Data Science minor, Spanish, May 2025, GPA 3.94 |
+| ~~**CV PDF**~~ | ✅ done | `public/cv/Belanger_CV_2026-06.pdf` (full 2026 CV); download buttons re-enabled. **Re-export & overwrite this file to update.** |
 | **4 research figures** | `public/figures/*.png` | **deferred until James publishes** — one per theme; pass `src=` to `<FigurePlaceholder />` in `src/pages/research.astro` |
 
 > Verification note (kept for the record): only the **Nature** paper is confirmed published on the open
