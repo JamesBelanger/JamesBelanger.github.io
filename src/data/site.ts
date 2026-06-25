@@ -10,7 +10,7 @@ export const SITE = {
   shortBio:
     'I study how the human brain represents language. My work measures the geometry of syntax and semantics in single-neuron population codes and asks a question that bridges neuroscience and AI: can the brain’s compressed, low-dimensional language code serve as a design principle for more efficient, compositional machine-learning models?',
   arc:
-    'My path was deliberate: a B.A. in Linguistics and Psychology at Rice (with minors in Data Science and Neuroscience) gave me the formal structure of language; a research position in the Hayden Lab at Baylor College of Medicine turned that into quantitative, code-driven neuroscience — building real Poisson encoding and LLM-alignment pipelines on human intracranial data.',
+    'My path was deliberate: a B.A. in Linguistics and Psychology at Rice (with minors in Spanish and Neuroscience) gave me the formal structure of language; a research position in the Hayden Lab at Baylor College of Medicine turned that into quantitative, code-driven neuroscience — building real Poisson encoding and LLM-alignment pipelines on human intracranial data.',
   url: 'https://jamesbelanger.io',
   email: 'jamesluibelanger@gmail.com',
   affiliation: 'Hayden Lab, Baylor College of Medicine',
