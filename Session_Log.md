@@ -8,6 +8,18 @@
 - Set Pages custom domain + **Enforce HTTPS** via `gh api PUT .../pages`; cert_state=approved. **https://jamesbelanger.com live & valid.**
 - Remaining: add www CNAME; Google Search Console; put the URL into ORCID/Scholar profiles.
 
+## 2026-06-25 — CV buildout (all live on jamesbelanger.com)
+- Wired in **ORCID** (0009-0003-3269-8810) + **Google Scholar** (user=8RCoKNUAAAAJ); **LinkedIn** (/in/jamesluibelanger).
+- **Uploaded CV PDF**, then rebuilt it repeatedly from the Word source via python-docx edits + Word COM `ExportAsFixedFormat`
+  (MS Word at Office16; pixel-perfect). Editable master: `Downloads\James Belanger - Resume 2026 (updated).docx` (suggest rename → CV).
+- **Degree FINAL (per James's LinkedIn):** B.A. — 3 majors (Linguistics, Cognitive Sciences, Psychology) · minors Spanish & Neuroscience
+  · May 2025 · GPA 3.94 · **Cum Laude**. (Earlier "Cognitive Sciences (Psych & Ling) + Data Science minor" wording was wrong.)
+- Added to site + CV: **honors thesis** (Kemmer), **Teaching** (TA Words in English/Kemmer), **Leadership** (Pres., Rice Linguistics
+  Student Assoc.), 4th research role (**Fette SURF** 2022), **Honors** (Psi Chi $3k + others), **Conference presentations**
+  (posters: Human Single-Neuron Mtg 2025, SNL 2025; attended SfN Nov 2024).
+- **CV-vs-résumé decision:** keep ONE comprehensive **academic CV** (CV-only on the site — correct for grad school). Now 3 pages (fine).
+- Status: James pausing; will resume later. Everything already auto-deployed/live. Optional next: Research Interests blurb / grad coursework.
+
 ## 2026-06-24 (continued — later)
 **Also shipped & deployed:**
 - ORCID `0009-0003-3269-8810` (`9e4ccde`) + Google Scholar `user=8RCoKNUAAAAJ` (`f3ce846`) wired in (verified the
