@@ -1,5 +1,19 @@
 # Session Log — jamesbelanger.io
 
+## 2026-06-24 (continued — later)
+**Also shipped & deployed:**
+- ORCID `0009-0003-3269-8810` (`9e4ccde`) + Google Scholar `user=8RCoKNUAAAAJ` (`f3ce846`) wired in (verified the
+  Scholar profile via WebFetch — it's his; agent earlier missed it only because new profiles aren't in Scholar search yet).
+- Hid placeholder `#` Scholar/ORCID links on home so no dead links went live (`a00c57b`).
+- Headshot → `public/headshot.jpg` (sharp crop) in hero; manifold moved to its own showcase section; CV fixed to
+  **B.A. · May 2025**; CV download buttons gated (`links.cv=''`) so no 404 until the PDF is added (`2a46390`).
+- **Live flagship figure** (manifold on `/research`), **citations toolkit** (`/publications.bib` + per-paper Cite/BibTeX
+  copy buttons, shared `src/lib/cite.ts`), **polish pack** (custom 404, apple-touch-icon + web manifest + theme-color
+  via `scripts/make-icons.mjs`) (`b12c714`).
+
+**Still pending James:** CV PDF (then restore `links.cv` path), research figures (deferred until he publishes),
+buy jamesbelanger.io (then `node scripts/use-custom-domain.mjs`), Search Console, add site URL into ORCID/Scholar records.
+
 ## 2026-06-24
 **Shipped (commit `0d97ce2`, pushed to main → live):**
 - **Interactive language-manifold hero** (`src/components/ManifoldViz.astro`): rotating 3D point cloud of
