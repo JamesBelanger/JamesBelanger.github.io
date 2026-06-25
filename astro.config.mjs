@@ -8,7 +8,7 @@ export default defineConfig({
   // Current deploy target = GitHub Pages user site (served at the root).
   // ⚠️ When you attach the custom domain, change this to 'https://jamesbelanger.io'
   //    (and update public/robots.txt + add public/CNAME). See DEPLOY.md.
-  site: 'https://jamesbelanger.github.io',
+  site: 'https://jamesbelanger.com',
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],
