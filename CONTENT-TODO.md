@@ -6,11 +6,13 @@ Items below are what's left. The **"Needs James"** block is the only thing block
 ---
 
 ## ✅ Done (this scaffold)
-- [x] Interactive **language-manifold** hero viz (`src/components/ManifoldViz.astro`) — replaces the JB monogram.
+- [x] Interactive **language-manifold** viz (`src/components/ManifoldViz.astro`) — home showcase + the flagship figure on `/research`.
+- [x] **Headshot** in home hero (`public/headshot.jpg`); **Google Scholar** + **ORCID** wired in.
+- [x] **Citations toolkit**: `/publications.bib` download + per-paper "Cite" / "BibTeX" copy buttons (`src/lib/cite.ts`).
+- [x] **Polish**: custom `404` page, apple-touch-icon + web manifest + theme-color (`node scripts/make-icons.mjs`).
 - [x] Real **OG link-preview image** at `public/og-image.png` (regenerate: `node scripts/make-og.mjs`).
 - [x] One-command **custom-domain switch** (`node scripts/use-custom-domain.mjs`).
-- [x] Publication DOIs reconciled (mismatched DOI dropped; verified DOIs kept).
-- [x] **Current title** confirmed: **Research Technician**, Hayden Lab (`src/data/site.ts`).
+- [x] Publication DOIs reconciled; **title** confirmed Research Technician; **degree** B.A. · May 2025.
 
 ---
 

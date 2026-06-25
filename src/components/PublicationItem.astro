@@ -1,5 +1,6 @@
 ---
 import type { Publication } from '../data/publications';
+import { toCitation, toBibtex } from '../lib/cite';
 interface Props { pub: Publication }
 const { pub } = Astro.props;
 
@@ -7,6 +8,8 @@ const { pub } = Astro.props;
 const parts = pub.authors.split(/(Belanger)/g);
 const doiUrl = pub.doi ? `https://doi.org/${pub.doi}` : undefined;
 const primaryUrl = pub.url ?? doiUrl;
+const citation = toCitation(pub);
+const bibtex = toBibtex(pub);
 ---
 <li class="border-b border-line py-5 last:border-0">
   <p class="text-[0.95rem] leading-relaxed text-muted">
@@ -25,5 +28,22 @@ const primaryUrl = pub.url ?? doiUrl;
     {pub.type === 'preprint' && !doiUrl && primaryUrl && (
       <a class="text-xs text-accent-strong" href={primaryUrl}>bioRxiv</a>
     )}
+    <button type="button" data-copy={citation} class="cursor-pointer text-xs text-accent-strong hover:underline">Cite</button>
+    <button type="button" data-copy={bibtex} class="cursor-pointer text-xs text-accent-strong hover:underline">BibTeX</button>
   </p>
 </li>
+
+<script>
+  // One delegated listener handles every Cite/BibTeX button on the page.
+  document.addEventListener('click', async (e) => {
+    const target = e.target as HTMLElement | null;
+    const btn = target?.closest?.('[data-copy]') as HTMLElement | null;
+    if (!btn) return;
+    try {
+      await navigator.clipboard.writeText(btn.getAttribute('data-copy') || '');
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      window.setTimeout(() => { btn.textContent = orig; }, 1400);
+    } catch (_) { /* clipboard unavailable */ }
+  });
+</script>

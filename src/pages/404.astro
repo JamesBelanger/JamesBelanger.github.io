@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Page not found" description="That page doesn't exist.">
+  <section class="py-16 text-center">
+    <p class="font-mono text-sm text-accent-strong">404</p>
+    <h1 class="mt-2 text-3xl font-bold tracking-tight">This page wandered off the manifold</h1>
+    <p class="mx-auto mt-3 max-w-md text-muted">
+      The page you're looking for doesn't exist or has moved.
+    </p>
+    <div class="mt-6 flex flex-wrap justify-center gap-2">
+      <a
+        href="/"
+        class="rounded-md bg-accent px-3.5 py-1.5 text-sm font-medium text-white no-underline hover:no-underline hover:opacity-90"
+      >
+        Home
+      </a>
+      <a
+        href="/research"
+        class="rounded-md border border-line px-3.5 py-1.5 text-sm text-fg no-underline hover:no-underline hover:border-accent"
+      >
+        Research
+      </a>
+      <a
+        href="/publications"
+        class="rounded-md border border-line px-3.5 py-1.5 text-sm text-fg no-underline hover:no-underline hover:border-accent"
+      >
+        Publications
+      </a>
+    </div>
+  </section>
+</BaseLayout>
