@@ -11,8 +11,13 @@
   copy buttons, shared `src/lib/cite.ts`), **polish pack** (custom 404, apple-touch-icon + web manifest + theme-color
   via `scripts/make-icons.mjs`) (`b12c714`).
 
-**Still pending James:** CV PDF (then restore `links.cv` path), research figures (deferred until he publishes),
-buy jamesbelanger.io (then `node scripts/use-custom-domain.mjs`), Search Console, add site URL into ORCID/Scholar records.
+- **CV uploaded** (`0ca96bc`): full 2026 CV → `public/cv/Belanger_CV_2026-06.pdf`, download buttons re-enabled;
+  **LinkedIn** added; degree/GPA/prior-positions aligned to the CV. Title stays **Research Technician** (CV says
+  Assistant — James's call to keep site as Technician); mentoring bullet kept.
+
+**Still pending James:** research figures (deferred until he publishes), buy jamesbelanger.io
+(then `node scripts/use-custom-domain.mjs`), Search Console, add site URL into ORCID/Scholar records.
+Optional: re-export CV PDF to say "Research Technician" + add mentoring line, to match the site.
 
 ## 2026-06-24
 **Shipped (commit `0d97ce2`, pushed to main → live):**
