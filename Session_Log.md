@@ -1,5 +1,13 @@
 # Session Log — jamesbelanger.io
 
+## 2026-06-25 — Custom domain LIVE
+- James bought **jamesbelanger.com** at Cloudflare Registrar (.com chosen over .io: available, cheaper ~$10–12, more standard).
+- Cloudflare DNS, **grey-cloud / DNS-only**: 4× `A @` → 185.199.108–111.153; `CNAME www` → jamesbelanger.github.io
+  (www CNAME repeatedly failed to save — still pending; apex fully works).
+- `node scripts/use-custom-domain.mjs jamesbelanger.com` → public/CNAME + astro.config + robots; commit `fa30838`, deployed.
+- Set Pages custom domain + **Enforce HTTPS** via `gh api PUT .../pages`; cert_state=approved. **https://jamesbelanger.com live & valid.**
+- Remaining: add www CNAME; Google Search Console; put the URL into ORCID/Scholar profiles.
+
 ## 2026-06-24 (continued — later)
 **Also shipped & deployed:**
 - ORCID `0009-0003-3269-8810` (`9e4ccde`) + Google Scholar `user=8RCoKNUAAAAJ` (`f3ce846`) wired in (verified the

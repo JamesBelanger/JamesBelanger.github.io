@@ -40,12 +40,13 @@ Items below are what's left. The **"Needs James"** block is the only thing block
 
 ---
 
-## Domain & deploy (your action, then one command)
-- [ ] Buy **jamesbelanger.io** (Cloudflare Registrar / Namecheap, ~$12–15/yr).
-- [ ] Point DNS at GitHub Pages (apex A records + `www` CNAME — see DEPLOY.md).
-- [ ] Run `node scripts/use-custom-domain.mjs`, commit, push.
-- [ ] GitHub repo → Settings → Pages → Custom domain → enter domain, enable "Enforce HTTPS".
-- [ ] Google Search Console: add the property, submit `…/sitemap-index.xml`. Cross-link site into ORCID/Scholar/email signature.
+## Domain & deploy ✅ LIVE at https://jamesbelanger.com
+- [x] Bought **jamesbelanger.com** at Cloudflare Registrar (2026-06-25; .com beat .io — cheaper + standard).
+- [x] DNS: 4× `A @` → 185.199.108–111.153 + `CNAME www` → jamesbelanger.github.io, all **grey-cloud (DNS only)**.
+- [x] `node scripts/use-custom-domain.mjs jamesbelanger.com` → committed + deployed; Pages custom domain + **Enforce HTTPS** on (cert approved).
+- [ ] ⚠️ **`www` CNAME** kept failing to save in Cloudflare — re-add it (apex works regardless).
+- [ ] Google Search Console: add property `https://jamesbelanger.com`, submit `/sitemap-index.xml`.
+- [ ] Add `https://jamesbelanger.com` into your **ORCID** + **Google Scholar** profiles + email signature.
 
 ## Nice-to-have (post-application)
 - [ ] A short technical writing / explainer section — only if you'll maintain it.
