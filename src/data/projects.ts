@@ -8,6 +8,17 @@ export interface Project {
 
 export const PROJECTS: Project[] = [
   {
+    name: 'Autonomous Research Engine',
+    category: 'Research engineering',
+    blurb:
+      'An unattended multi-agent LLM system that harvests literature claims, investigates them, and subjects every verdict to adversarial refutation — two refuter agents with different attack lenses; majority refutation kills; unfalsifiable claims are parked, not answered. Headless Claude Code + Task Scheduler + a plain-markdown ledger; no servers, no database.',
+    stack: ['Claude Code (headless)', 'Multi-agent orchestration', 'PowerShell', 'Markdown ledger'],
+    links: [
+      { label: 'Case study', href: '/projects/research-engine' },
+      { label: 'GitHub', href: 'https://github.com/JamesBelanger/research-engine' },
+    ],
+  },
+  {
     name: 'Hippocampal linguistic encoding pipeline',
     category: 'Research engineering',
     blurb:
