@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Tag from '../../components/Tag.astro';
+
+const stack = ['PostgreSQL (Supabase)', 'SQL', 'Python ETL', 'Tableau Public', 'Plotly'];
+const findings = [
+  { big: '0.4th', text: 'national percentile: Houston Methodist Hospital’s heart-failure mortality (6.0%) — the best in the Houston area.' },
+  { big: '10 of 11', text: 'key measures on which more than half of Texas hospitals beat the national average; the exception is the HCAHPS star rating (40%).' },
+  { big: '66', text: 'Texas hospitals beat the state on pneumonia readmission yet fall below it on “would recommend” — clinically strong, experientially weak.' },
+  { big: '90 / 168', text: 'measures are missing for over half of Texas hospitals; the hospital-wide readmission measure is unscored everywhere this release.' },
+];
+const sqlPercentile = `WITH latest AS (
+  SELECT DISTINCT ON (facility_id) facility_id, score
+  FROM measure_values
+  WHERE measure_id = 'MORT_30_HF' AND score IS NOT NULL
+  ORDER BY facility_id, period_end DESC),
+ranked AS (
+  SELECT facility_id, score,
+         PERCENT_RANK() OVER (ORDER BY score) AS pct_rank
+  FROM latest)
+SELECT h.facility_name, r.score, round(r.pct_rank::numeric, 3) AS national_percentile
+FROM ranked r JOIN hospitals h USING (facility_id)
+WHERE h.is_houston_area
+ORDER BY national_percentile;`;
+const sqlMismatch = `WITH r AS (SELECT facility_id, score AS readm     FROM v_tx_latest WHERE measure_id = 'READM_30_PN'),
+     p AS (SELECT facility_id, score AS recommend FROM v_tx_latest WHERE measure_id = 'H_RECMND_DY'),
+     a AS (SELECT (SELECT avg(readm) FROM r) AS avg_readm,
+                  (SELECT avg(recommend) FROM p) AS avg_recommend)
+SELECT h.facility_name, h.county, r.readm, p.recommend
+FROM hospitals h JOIN r USING (facility_id) JOIN p USING (facility_id) CROSS JOIN a
+WHERE r.readm < a.avg_readm AND p.recommend < a.avg_recommend
+ORDER BY r.readm;`;
+---
+
+<BaseLayout
+  title="Houston Hospital Quality Explorer"
+  description="Case study: CMS Care Compare data for 467 Texas hospitals, loaded into Postgres, analyzed with SQL, and published as an interactive quality dashboard."
+>
+  <div class="flex flex-wrap items-center gap-3">
+    <h1 class="text-3xl font-bold tracking-tight">Houston Hospital Quality Explorer</h1>
+    <span class="rounded-full bg-accent/15 px-2 py-0.5 text-xs font-medium text-accent-strong">Case study</span>
+  </div>
+  <p class="mt-3 max-w-2xl text-lg leading-relaxed text-muted">
+    How do Houston’s hospitals compare on the four things every quality meeting starts with —
+    readmissions, mortality, infections, and patient experience — against Texas and national
+    benchmarks? Six public CMS datasets, one tidy Postgres schema, twelve SQL analyses, and a
+    dashboard that states its own caveats.
+  </p>
+  <div class="mt-4 flex flex-wrap gap-1.5">
+    {stack.map((s) => <Tag label={s} />)}
+  </div>
+  <ul class="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+    <li><a href="/hospital-quality-dashboard.html">Open the interactive dashboard →</a></li>
+    <li><a href="https://github.com/JamesBelanger/hospital-quality-dashboard">Source on GitHub →</a></li>
+    <li><a href="/projects">All projects →</a></li>
+  </ul>
+
+  <div class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    {findings.map((f) => (
+      <div class="rounded-xl border border-muted/20 bg-muted/5 p-4">
+        <div class="text-2xl font-bold text-accent-strong">{f.big}</div>
+        <p class="mt-1 text-sm leading-snug">{f.text}</p>
+      </div>
+    ))}
+  </div>
+
+  <div class="mt-10 space-y-14">
+    <section>
+      <h2 class="text-xl font-semibold leading-snug">The problem it exists to solve</h2>
+      <p class="mt-3 max-w-2xl leading-relaxed">
+        CMS publishes hospital quality data as six differently-shaped files with hundreds of measure
+        codes, “Not Available” sprinkled through the numbers, and benchmarks in separate downloads.
+        Every hospital analytics team rebuilds the same thing from it: a scorecard, a benchmark
+        comparison, a patient-experience view, and a caveat list. I built that end to end, in the
+        open, for the 467 Texas hospitals and the 73 in the five-county Houston area.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-xl font-semibold leading-snug">Data and pipeline</h2>
+      <ol class="mt-3 max-w-2xl list-decimal space-y-2 pl-5 leading-relaxed">
+        <li><strong>Download.</strong> Six Care Compare datasets (Hospital General Information, Unplanned Hospital Visits, HCAHPS, Timely &amp; Effective Care, Complications &amp; Deaths, Healthcare-Associated Infections) resolved through the data.cms.gov metastore at run time, with a SHA-256 provenance manifest — 799,104 rows.</li>
+        <li><strong>Clean.</strong> Six column layouts collapse into one tidy fact table: <code>(facility, measure, period, value)</code>. “Not Available” becomes NULL, never zero. A documented <code>higher_is_better</code> heuristic per measure.</li>
+        <li><strong>Load.</strong> A three-table star schema in Postgres (Supabase): <code>hospitals</code>, <code>measures</code>, <code>measure_values</code>, plus a latest-period Texas view. Benchmarks are deliberately <em>not</em> loaded — state and national averages and percentiles are computed in SQL with window functions.</li>
+        <li><strong>Analyze.</strong> Twelve SQL analyses — joins, window functions, CTEs, conditional pivots — each saved with its question, approach, and result count.</li>
+        <li><strong>Publish.</strong> SQL views → CSV extracts → a Tableau Public workbook and a self-contained Plotly page (the one linked above), so the dashboard works even where embeds are blocked.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2 class="text-xl font-semibold leading-snug">Two of the analyses</h2>
+      <p class="mt-3 max-w-2xl leading-relaxed">
+        <strong>National percentile without a benchmark table.</strong> Latest value per hospital from all
+        states, then <code>PERCENT_RANK()</code> over the national distribution. Low percentile on a
+        mortality measure is good — Houston Methodist Hospital lands at 0.004.
+      </p>
+      <pre class="mt-3 overflow-x-auto rounded-lg bg-muted/10 p-4 text-xs leading-relaxed"><code>{sqlPercentile}</code></pre>
+      <p class="mt-6 max-w-2xl leading-relaxed">
+        <strong>The mismatch quadrant.</strong> Hospitals better than the Texas average on readmission but
+        worse on “would definitely recommend.” Two CTEs for the measures, one for the averages, a
+        cross join to compare. Sixty-six hospitals — the most discussable cell on the dashboard.
+      </p>
+      <pre class="mt-3 overflow-x-auto rounded-lg bg-muted/10 p-4 text-xs leading-relaxed"><code>{sqlMismatch}</code></pre>
+    </section>
+
+    <section>
+      <h2 class="text-xl font-semibold leading-snug">The dashboard</h2>
+      <p class="mt-3 max-w-2xl leading-relaxed">
+        Four panels: a Houston-area scorecard with direction-aware color, pneumonia readmission against
+        Texas and national reference lines, an HCAHPS heatmap across ten survey questions, and the
+        share of Texas hospitals beating the national average per measure.
+      </p>
+      <div class="mt-4 overflow-hidden rounded-xl border border-muted/20">
+        <iframe src="/hospital-quality-dashboard.html" title="Houston Hospital Quality Explorer — interactive dashboard" class="h-[900px] w-full" loading="lazy"></iframe>
+      </div>
+      <p class="mt-2 text-sm text-muted">
+        <a href="/hospital-quality-dashboard.html">Open full-screen →</a>
+        <!-- TABLEAU_EMBED: paste the Tableau Public embed code here once published -->
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-xl font-semibold leading-snug">Limitations and what I’d do next</h2>
+      <ul class="mt-3 max-w-2xl list-disc space-y-2 pl-5 leading-relaxed">
+        <li>This release carries one reporting period per measure, so the period-over-period analysis (<code>LAG()</code>) is a pattern waiting for the next quarterly refresh — the pipeline re-runs in one command.</li>
+        <li>CMS suppresses small-denominator scores; 90 of 168 measures are missing for more than half of Texas hospitals. Coverage is reported on the page rather than hidden.</li>
+        <li>“Higher is better” is a per-measure heuristic that needs a clinician’s review for the ambiguous HCAHPS answer rows.</li>
+        <li>Next: denominator-weighted county roll-ups on the dashboard, a materialized scorecard view, and a scheduled refresh when CMS posts the October release.</li>
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

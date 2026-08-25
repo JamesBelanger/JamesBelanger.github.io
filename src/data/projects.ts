@@ -8,6 +8,18 @@ export interface Project {
 
 export const PROJECTS: Project[] = [
   {
+    name: 'Houston Hospital Quality Explorer',
+    category: 'Product / full-stack',
+    blurb:
+      'CMS Care Compare data for 467 Texas hospitals (799k rows across six datasets) loaded into a Postgres star schema, benchmarked with SQL window functions instead of loaded benchmark tables, and published as an interactive quality dashboard — readmissions, mortality, infections, patient experience — that states its own coverage caveats.',
+    stack: ['PostgreSQL (Supabase)', 'SQL', 'Python ETL', 'Tableau Public', 'Plotly'],
+    links: [
+      { label: 'Case study', href: '/projects/hospital-quality' },
+      { label: 'Live dashboard', href: '/hospital-quality-dashboard.html' },
+      { label: 'GitHub', href: 'https://github.com/JamesBelanger/hospital-quality-dashboard' },
+    ],
+  },
+  {
     name: 'Autonomous Research Engine',
     category: 'Research engineering',
     blurb:
