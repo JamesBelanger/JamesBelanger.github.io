@@ -50,7 +50,8 @@ ORDER BY r.readm;`;
     {stack.map((s) => <Tag label={s} />)}
   </div>
   <ul class="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm">
-    <li><a href="/hospital-quality-dashboard.html">Open the interactive dashboard →</a></li>
+    <li><a href="/projects/hospital-quality/explore/" class="font-semibold">Open the explorer — look up any U.S. hospital →</a></li>
+    <li><a href="/hospital-quality-dashboard.html">Houston dashboard (static) →</a></li>
     <li><a href="https://github.com/JamesBelanger/hospital-quality-dashboard">Source on GitHub →</a></li>
     <li><a href="/projects">All projects →</a></li>
   </ul>
@@ -83,8 +84,31 @@ ORDER BY r.readm;`;
         <li><strong>Clean.</strong> Six column layouts collapse into one tidy fact table: <code>(facility, measure, period, value)</code>. “Not Available” becomes NULL, never zero. A documented <code>higher_is_better</code> heuristic per measure.</li>
         <li><strong>Load.</strong> A three-table star schema in Postgres (Supabase): <code>hospitals</code>, <code>measures</code>, <code>measure_values</code>, plus a latest-period Texas view. Benchmarks are deliberately <em>not</em> loaded — state and national averages and percentiles are computed in SQL with window functions.</li>
         <li><strong>Analyze.</strong> Twelve SQL analyses — joins, window functions, CTEs, conditional pivots — each saved with its question, approach, and result count.</li>
-        <li><strong>Publish.</strong> SQL views → CSV extracts → a Tableau Public workbook and a self-contained Plotly page (the one linked above), so the dashboard works even where embeds are blocked.</li>
+        <li><strong>Publish.</strong> SQL views → CSV extracts → a Tableau Public workbook and a self-contained Plotly page; and a static JSON + Parquet export that drives the interactive explorer below, with no server behind it.</li>
       </ol>
+    </section>
+
+    <section>
+      <h2 class="text-xl font-semibold leading-snug">The explorer</h2>
+      <p class="mt-3 max-w-2xl leading-relaxed">
+        The dashboard answers the Houston question. The explorer answers <em>yours</em>: search any of the
+        5,419 hospitals in the country and get a report card that places every one of 33 key measures on
+        the distribution of a peer group you define — the whole country, one state, the Houston area, or
+        only hospitals with the same ownership or type. Every benchmark is recomputed in the browser from
+        hospital-level rows, the same way the SQL does it in the warehouse.
+      </p>
+      <ul class="mt-3 max-w-2xl list-disc space-y-1.5 pl-5 leading-relaxed">
+        <li><strong>Report card</strong> — peer-group strips, “beats X% of peers” badges, shareable URL, CSV export.</li>
+        <li><strong>Compare</strong> — brush a distribution and the scorecard and HCAHPS heatmap follow; hover a row to find its dot.</li>
+        <li><strong>Measures</strong> — all 161 measures with national vs peer distributions, best and worst ten, and missingness stated up front.</li>
+        <li><strong>Map</strong> — state choropleth of medians; zoom into a state for hospital dots colored by peer percentile.</li>
+        <li><strong>Rankings</strong> — a weighted composite with five sliders that re-rank the list live (labeled as illustrative, not the CMS star method), plus the outcomes-versus-experience mismatch quadrant with a brush.</li>
+        <li><strong>SQL</strong> — the twelve analyses run in the browser on DuckDB-WASM over the project’s Parquet tables; edit and re-run anything. Every chart also has a “Show the SQL” drawer.</li>
+      </ul>
+      <p class="mt-3 text-sm">
+        <a href="/projects/hospital-quality/explore/" class="font-semibold">Open the explorer →</a>
+        <span class="text-muted"> Vanilla JavaScript and D3; ~3 MB of static data; no backend.</span>
+      </p>
     </section>
 
     <section>
