@@ -1,0 +1,661 @@
+{
+ "examples": [
+  {
+   "name": "fox_correct",
+   "text": "The quick brown fox jumps over the lazy dog.",
+   "caption": "A text-to-speech voice reading the sentence correctly",
+   "audio": "samples/fox_correct.wav",
+   "overall": 100.0,
+   "phones": [
+    {
+     "word": "The",
+     "phone": "DH",
+     "score": 100,
+     "t0": 0.17,
+     "t1": 0.22
+    },
+    {
+     "word": "The",
+     "phone": "AH",
+     "score": 100,
+     "t0": 0.22,
+     "t1": 0.3
+    },
+    {
+     "word": "quick",
+     "phone": "K",
+     "score": 100,
+     "t0": 0.3,
+     "t1": 0.38
+    },
+    {
+     "word": "quick",
+     "phone": "W",
+     "score": 100,
+     "t0": 0.38,
+     "t1": 0.43
+    },
+    {
+     "word": "quick",
+     "phone": "IH",
+     "score": 100,
+     "t0": 0.43,
+     "t1": 0.5
+    },
+    {
+     "word": "quick",
+     "phone": "K",
+     "score": 100,
+     "t0": 0.5,
+     "t1": 0.55
+    },
+    {
+     "word": "brown",
+     "phone": "B",
+     "score": 100,
+     "t0": 0.55,
+     "t1": 0.59
+    },
+    {
+     "word": "brown",
+     "phone": "R",
+     "score": 100,
+     "t0": 0.59,
+     "t1": 0.66
+    },
+    {
+     "word": "brown",
+     "phone": "AW",
+     "score": 100,
+     "t0": 0.66,
+     "t1": 0.77
+    },
+    {
+     "word": "brown",
+     "phone": "N",
+     "score": 100,
+     "t0": 0.77,
+     "t1": 0.82
+    },
+    {
+     "word": "fox",
+     "phone": "F",
+     "score": 100,
+     "t0": 0.82,
+     "t1": 0.94
+    },
+    {
+     "word": "fox",
+     "phone": "AA",
+     "score": 100,
+     "t0": 0.94,
+     "t1": 1.09
+    },
+    {
+     "word": "fox",
+     "phone": "K",
+     "score": 100,
+     "t0": 1.09,
+     "t1": 1.16
+    },
+    {
+     "word": "fox",
+     "phone": "S",
+     "score": 100,
+     "t0": 1.16,
+     "t1": 1.25
+    },
+    {
+     "word": "jumps",
+     "phone": "JH",
+     "score": 100,
+     "t0": 1.25,
+     "t1": 1.36
+    },
+    {
+     "word": "jumps",
+     "phone": "AH",
+     "score": 100,
+     "t0": 1.36,
+     "t1": 1.44
+    },
+    {
+     "word": "jumps",
+     "phone": "M",
+     "score": 100,
+     "t0": 1.44,
+     "t1": 1.48
+    },
+    {
+     "word": "jumps",
+     "phone": "P",
+     "score": 100,
+     "t0": 1.48,
+     "t1": 1.53
+    },
+    {
+     "word": "jumps",
+     "phone": "S",
+     "score": 100,
+     "t0": 1.53,
+     "t1": 1.61
+    },
+    {
+     "word": "over",
+     "phone": "OW",
+     "score": 100,
+     "t0": 1.61,
+     "t1": 1.69
+    },
+    {
+     "word": "over",
+     "phone": "V",
+     "score": 100,
+     "t0": 1.69,
+     "t1": 1.74
+    },
+    {
+     "word": "over",
+     "phone": "ER",
+     "score": 100,
+     "t0": 1.74,
+     "t1": 1.79
+    },
+    {
+     "word": "the",
+     "phone": "DH",
+     "score": 100,
+     "t0": 1.79,
+     "t1": 1.83
+    },
+    {
+     "word": "the",
+     "phone": "AH",
+     "score": 100,
+     "t0": 1.83,
+     "t1": 1.88
+    },
+    {
+     "word": "lazy",
+     "phone": "L",
+     "score": 100,
+     "t0": 1.88,
+     "t1": 1.99
+    },
+    {
+     "word": "lazy",
+     "phone": "EY",
+     "score": 100,
+     "t0": 1.99,
+     "t1": 2.07
+    },
+    {
+     "word": "lazy",
+     "phone": "Z",
+     "score": 100,
+     "t0": 2.07,
+     "t1": 2.15
+    },
+    {
+     "word": "lazy",
+     "phone": "IY",
+     "score": 100,
+     "t0": 2.15,
+     "t1": 2.21
+    },
+    {
+     "word": "dog",
+     "phone": "D",
+     "score": 100,
+     "t0": 2.21,
+     "t1": 2.29
+    },
+    {
+     "word": "dog",
+     "phone": "AO",
+     "score": 100,
+     "t0": 2.29,
+     "t1": 2.49
+    },
+    {
+     "word": "dog",
+     "phone": "G",
+     "score": 100,
+     "t0": 2.49,
+     "t1": 2.64
+    }
+   ]
+  },
+  {
+   "name": "fox_wrong",
+   "text": "The quick brown fox jumps over the lazy dog.",
+   "caption": "The same voice reading a completely different sentence",
+   "audio": "samples/fox_wrong.wav",
+   "overall": 12.7,
+   "phones": [
+    {
+     "word": "The",
+     "phone": "DH",
+     "score": 0,
+     "t0": 0.29,
+     "t1": 0.3
+    },
+    {
+     "word": "The",
+     "phone": "AH",
+     "score": 0,
+     "t0": 0.3,
+     "t1": 1.54
+    },
+    {
+     "word": "quick",
+     "phone": "K",
+     "score": 0,
+     "t0": 1.59,
+     "t1": 1.6
+    },
+    {
+     "word": "quick",
+     "phone": "W",
+     "score": 0,
+     "t0": 1.6,
+     "t1": 1.61
+    },
+    {
+     "word": "quick",
+     "phone": "IH",
+     "score": 0,
+     "t0": 1.61,
+     "t1": 1.73
+    },
+    {
+     "word": "quick",
+     "phone": "K",
+     "score": 0,
+     "t0": 1.73,
+     "t1": 1.74
+    },
+    {
+     "word": "brown",
+     "phone": "B",
+     "score": 0,
+     "t0": 1.85,
+     "t1": 1.86
+    },
+    {
+     "word": "brown",
+     "phone": "R",
+     "score": 1,
+     "t0": 1.86,
+     "t1": 2.23
+    },
+    {
+     "word": "brown",
+     "phone": "AW",
+     "score": 0,
+     "t0": 2.23,
+     "t1": 2.24
+    },
+    {
+     "word": "brown",
+     "phone": "N",
+     "score": 0,
+     "t0": 2.24,
+     "t1": 2.25
+    },
+    {
+     "word": "fox",
+     "phone": "F",
+     "score": 0,
+     "t0": 2.25,
+     "t1": 2.26
+    },
+    {
+     "word": "fox",
+     "phone": "AA",
+     "score": 0,
+     "t0": 2.26,
+     "t1": 2.27
+    },
+    {
+     "word": "fox",
+     "phone": "K",
+     "score": 0,
+     "t0": 2.27,
+     "t1": 2.28
+    },
+    {
+     "word": "fox",
+     "phone": "S",
+     "score": 93,
+     "t0": 2.28,
+     "t1": 2.41
+    },
+    {
+     "word": "jumps",
+     "phone": "JH",
+     "score": 0,
+     "t0": 2.41,
+     "t1": 2.42
+    },
+    {
+     "word": "jumps",
+     "phone": "AH",
+     "score": 100,
+     "t0": 2.42,
+     "t1": 2.5
+    },
+    {
+     "word": "jumps",
+     "phone": "M",
+     "score": 100,
+     "t0": 2.5,
+     "t1": 2.56
+    },
+    {
+     "word": "jumps",
+     "phone": "P",
+     "score": 0,
+     "t0": 2.56,
+     "t1": 2.57
+    },
+    {
+     "word": "jumps",
+     "phone": "S",
+     "score": 0,
+     "t0": 2.57,
+     "t1": 2.58
+    },
+    {
+     "word": "over",
+     "phone": "OW",
+     "score": 0,
+     "t0": 2.58,
+     "t1": 2.59
+    },
+    {
+     "word": "over",
+     "phone": "V",
+     "score": 0,
+     "t0": 2.59,
+     "t1": 2.6
+    },
+    {
+     "word": "over",
+     "phone": "ER",
+     "score": 100,
+     "t0": 2.6,
+     "t1": 2.68
+    },
+    {
+     "word": "the",
+     "phone": "DH",
+     "score": 0,
+     "t0": 2.68,
+     "t1": 2.69
+    },
+    {
+     "word": "the",
+     "phone": "AH",
+     "score": 0,
+     "t0": 2.69,
+     "t1": 2.7
+    },
+    {
+     "word": "lazy",
+     "phone": "L",
+     "score": 0,
+     "t0": 2.7,
+     "t1": 2.71
+    },
+    {
+     "word": "lazy",
+     "phone": "EY",
+     "score": 0,
+     "t0": 2.71,
+     "t1": 2.72
+    },
+    {
+     "word": "lazy",
+     "phone": "Z",
+     "score": 0,
+     "t0": 2.72,
+     "t1": 2.73
+    },
+    {
+     "word": "lazy",
+     "phone": "IY",
+     "score": 0,
+     "t0": 2.73,
+     "t1": 2.74
+    },
+    {
+     "word": "dog",
+     "phone": "D",
+     "score": 0,
+     "t0": 2.74,
+     "t1": 2.75
+    },
+    {
+     "word": "dog",
+     "phone": "AO",
+     "score": 0,
+     "t0": 2.75,
+     "t1": 2.76
+    },
+    {
+     "word": "dog",
+     "phone": "G",
+     "score": 0,
+     "t0": 2.76,
+     "t1": 2.77
+    }
+   ]
+  },
+  {
+   "name": "rain_correct",
+   "text": "The rain in Spain stays mainly on the plain.",
+   "caption": "A second voice reading its sentence correctly",
+   "audio": "samples/rain_correct.wav",
+   "overall": 94.1,
+   "phones": [
+    {
+     "word": "The",
+     "phone": "DH",
+     "score": 100,
+     "t0": 0.17,
+     "t1": 0.23
+    },
+    {
+     "word": "The",
+     "phone": "AH",
+     "score": 100,
+     "t0": 0.23,
+     "t1": 0.3
+    },
+    {
+     "word": "rain",
+     "phone": "R",
+     "score": 100,
+     "t0": 0.3,
+     "t1": 0.38
+    },
+    {
+     "word": "rain",
+     "phone": "EY",
+     "score": 100,
+     "t0": 0.38,
+     "t1": 0.49
+    },
+    {
+     "word": "rain",
+     "phone": "N",
+     "score": 86,
+     "t0": 0.49,
+     "t1": 0.55
+    },
+    {
+     "word": "in",
+     "phone": "IH",
+     "score": 7,
+     "t0": 0.55,
+     "t1": 0.59
+    },
+    {
+     "word": "in",
+     "phone": "N",
+     "score": 41,
+     "t0": 0.59,
+     "t1": 0.68
+    },
+    {
+     "word": "Spain",
+     "phone": "S",
+     "score": 100,
+     "t0": 0.68,
+     "t1": 0.75
+    },
+    {
+     "word": "Spain",
+     "phone": "P",
+     "score": 100,
+     "t0": 0.75,
+     "t1": 0.82
+    },
+    {
+     "word": "Spain",
+     "phone": "EY",
+     "score": 100,
+     "t0": 0.82,
+     "t1": 0.96
+    },
+    {
+     "word": "Spain",
+     "phone": "N",
+     "score": 100,
+     "t0": 0.96,
+     "t1": 1.04
+    },
+    {
+     "word": "stays",
+     "phone": "S",
+     "score": 100,
+     "t0": 1.04,
+     "t1": 1.12
+    },
+    {
+     "word": "stays",
+     "phone": "T",
+     "score": 100,
+     "t0": 1.12,
+     "t1": 1.19
+    },
+    {
+     "word": "stays",
+     "phone": "EY",
+     "score": 100,
+     "t0": 1.19,
+     "t1": 1.32
+    },
+    {
+     "word": "stays",
+     "phone": "Z",
+     "score": 100,
+     "t0": 1.32,
+     "t1": 1.41
+    },
+    {
+     "word": "mainly",
+     "phone": "M",
+     "score": 100,
+     "t0": 1.41,
+     "t1": 1.48
+    },
+    {
+     "word": "mainly",
+     "phone": "EY",
+     "score": 100,
+     "t0": 1.48,
+     "t1": 1.58
+    },
+    {
+     "word": "mainly",
+     "phone": "N",
+     "score": 100,
+     "t0": 1.58,
+     "t1": 1.61
+    },
+    {
+     "word": "mainly",
+     "phone": "L",
+     "score": 100,
+     "t0": 1.61,
+     "t1": 1.67
+    },
+    {
+     "word": "mainly",
+     "phone": "IY",
+     "score": 100,
+     "t0": 1.67,
+     "t1": 1.76
+    },
+    {
+     "word": "on",
+     "phone": "AA",
+     "score": 100,
+     "t0": 1.76,
+     "t1": 1.83
+    },
+    {
+     "word": "on",
+     "phone": "N",
+     "score": 100,
+     "t0": 1.83,
+     "t1": 1.88
+    },
+    {
+     "word": "the",
+     "phone": "DH",
+     "score": 100,
+     "t0": 1.88,
+     "t1": 1.92
+    },
+    {
+     "word": "the",
+     "phone": "AH",
+     "score": 100,
+     "t0": 1.92,
+     "t1": 1.96
+    },
+    {
+     "word": "plain",
+     "phone": "P",
+     "score": 100,
+     "t0": 1.96,
+     "t1": 2.09
+    },
+    {
+     "word": "plain",
+     "phone": "L",
+     "score": 100,
+     "t0": 2.09,
+     "t1": 2.14
+    },
+    {
+     "word": "plain",
+     "phone": "EY",
+     "score": 100,
+     "t0": 2.14,
+     "t1": 2.32
+    },
+    {
+     "word": "plain",
+     "phone": "N",
+     "score": 100,
+     "t0": 2.32,
+     "t1": 2.48
+    }
+   ]
+  }
+ ]
+}

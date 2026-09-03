@@ -21,6 +21,18 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
+    name: 'Pronunciation Coach (in-browser)',
+    category: 'Product / full-stack',
+    blurb:
+      'The core feedback loop of a pronunciation-learning app, running entirely in the browser: a wav2vec2 phoneme model (ONNX/WebAssembly), Viterbi forced alignment, and per-phoneme goodness-of-pronunciation scoring — no server, audio never leaves the device. Python reference implementation and ONNX export in the open repo; companion write-up benchmarks Whisper vs Qwen3-ASR on faint conversational speech.',
+    stack: ['wav2vec2', 'ONNX Runtime Web', 'Forced alignment (Viterbi)', 'GOP scoring', 'Vanilla JS'],
+    links: [
+      { label: 'Live demo', href: '/projects/pronunciation/' },
+      { label: 'ASR benchmark note', href: '/notes/whisper-vs-qwen3-asr/' },
+      { label: 'GitHub', href: 'https://github.com/JamesBelanger/pronunciation-scoring' },
+    ],
+  },
+  {
     name: 'Autonomous Research Engine',
     category: 'Research engineering',
     blurb:

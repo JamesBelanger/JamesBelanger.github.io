@@ -1,0 +1,1006 @@
+{
+ "sentences": [
+  {
+   "text": "The quick brown fox jumps over the lazy dog.",
+   "plan": [
+    {
+     "word": "The",
+     "phones": [
+      "DH",
+      "AH"
+     ],
+     "ids": [
+      29,
+      25
+     ]
+    },
+    {
+     "word": "quick",
+     "phones": [
+      "K",
+      "W",
+      "IH",
+      "K"
+     ],
+     "ids": [
+      17,
+      19,
+      39,
+      17
+     ]
+    },
+    {
+     "word": "brown",
+     "phones": [
+      "B",
+      "R",
+      "AW",
+      "N"
+     ],
+     "ids": [
+      26,
+      5,
+      9,
+      7
+     ]
+    },
+    {
+     "word": "fox",
+     "phones": [
+      "F",
+      "AA",
+      "K",
+      "S"
+     ],
+     "ids": [
+      2,
+      13,
+      17,
+      38
+     ]
+    },
+    {
+     "word": "jumps",
+     "phones": [
+      "JH",
+      "AH",
+      "M",
+      "P",
+      "S"
+     ],
+     "ids": [
+      33,
+      25,
+      3,
+      27,
+      38
+     ]
+    },
+    {
+     "word": "over",
+     "phones": [
+      "OW",
+      "V",
+      "ER"
+     ],
+     "ids": [
+      12,
+      10,
+      14
+     ]
+    },
+    {
+     "word": "the",
+     "phones": [
+      "DH",
+      "AH"
+     ],
+     "ids": [
+      29,
+      25
+     ]
+    },
+    {
+     "word": "lazy",
+     "phones": [
+      "L",
+      "EY",
+      "Z",
+      "IY"
+     ],
+     "ids": [
+      32,
+      20,
+      16,
+      8
+     ]
+    },
+    {
+     "word": "dog",
+     "phones": [
+      "D",
+      "AO",
+      "G"
+     ],
+     "ids": [
+      36,
+      30,
+      31
+     ]
+    }
+   ]
+  },
+  {
+   "text": "The rain in Spain stays mainly on the plain.",
+   "plan": [
+    {
+     "word": "The",
+     "phones": [
+      "DH",
+      "AH"
+     ],
+     "ids": [
+      29,
+      25
+     ]
+    },
+    {
+     "word": "rain",
+     "phones": [
+      "R",
+      "EY",
+      "N"
+     ],
+     "ids": [
+      5,
+      20,
+      7
+     ]
+    },
+    {
+     "word": "in",
+     "phones": [
+      "IH",
+      "N"
+     ],
+     "ids": [
+      39,
+      7
+     ]
+    },
+    {
+     "word": "Spain",
+     "phones": [
+      "S",
+      "P",
+      "EY",
+      "N"
+     ],
+     "ids": [
+      38,
+      27,
+      20,
+      7
+     ]
+    },
+    {
+     "word": "stays",
+     "phones": [
+      "S",
+      "T",
+      "EY",
+      "Z"
+     ],
+     "ids": [
+      38,
+      22,
+      20,
+      16
+     ]
+    },
+    {
+     "word": "mainly",
+     "phones": [
+      "M",
+      "EY",
+      "N",
+      "L",
+      "IY"
+     ],
+     "ids": [
+      3,
+      20,
+      7,
+      32,
+      8
+     ]
+    },
+    {
+     "word": "on",
+     "phones": [
+      "AA",
+      "N"
+     ],
+     "ids": [
+      13,
+      7
+     ]
+    },
+    {
+     "word": "the",
+     "phones": [
+      "DH",
+      "AH"
+     ],
+     "ids": [
+      29,
+      25
+     ]
+    },
+    {
+     "word": "plain",
+     "phones": [
+      "P",
+      "L",
+      "EY",
+      "N"
+     ],
+     "ids": [
+      27,
+      32,
+      20,
+      7
+     ]
+    }
+   ]
+  },
+  {
+   "text": "She sells seashells by the seashore.",
+   "plan": [
+    {
+     "word": "She",
+     "phones": [
+      "SH",
+      "IY"
+     ],
+     "ids": [
+      35,
+      8
+     ]
+    },
+    {
+     "word": "sells",
+     "phones": [
+      "S",
+      "EH",
+      "L",
+      "Z"
+     ],
+     "ids": [
+      38,
+      23,
+      32,
+      16
+     ]
+    },
+    {
+     "word": "seashells",
+     "phones": [
+      "S",
+      "IY",
+      "SH",
+      "EH",
+      "L",
+      "Z"
+     ],
+     "ids": [
+      38,
+      8,
+      35,
+      23,
+      32,
+      16
+     ]
+    },
+    {
+     "word": "by",
+     "phones": [
+      "B",
+      "AY"
+     ],
+     "ids": [
+      26,
+      37
+     ]
+    },
+    {
+     "word": "the",
+     "phones": [
+      "DH",
+      "AH"
+     ],
+     "ids": [
+      29,
+      25
+     ]
+    },
+    {
+     "word": "seashore",
+     "phones": [
+      "S",
+      "IY",
+      "SH",
+      "AO",
+      "R"
+     ],
+     "ids": [
+      38,
+      8,
+      35,
+      30,
+      5
+     ]
+    }
+   ]
+  },
+  {
+   "text": "I think Thursday is the third day of the month.",
+   "plan": [
+    {
+     "word": "I",
+     "phones": [
+      "AY"
+     ],
+     "ids": [
+      37
+     ]
+    },
+    {
+     "word": "think",
+     "phones": [
+      "TH",
+      "IH",
+      "NG",
+      "K"
+     ],
+     "ids": [
+      28,
+      39,
+      1,
+      17
+     ]
+    },
+    {
+     "word": "Thursday",
+     "phones": [
+      "TH",
+      "ER",
+      "Z",
+      "D",
+      "EY"
+     ],
+     "ids": [
+      28,
+      14,
+      16,
+      36,
+      20
+     ]
+    },
+    {
+     "word": "is",
+     "phones": [
+      "IH",
+      "Z"
+     ],
+     "ids": [
+      39,
+      16
+     ]
+    },
+    {
+     "word": "the",
+     "phones": [
+      "DH",
+      "AH"
+     ],
+     "ids": [
+      29,
+      25
+     ]
+    },
+    {
+     "word": "third",
+     "phones": [
+      "TH",
+      "ER",
+      "D"
+     ],
+     "ids": [
+      28,
+      14,
+      36
+     ]
+    },
+    {
+     "word": "day",
+     "phones": [
+      "D",
+      "EY"
+     ],
+     "ids": [
+      36,
+      20
+     ]
+    },
+    {
+     "word": "of",
+     "phones": [
+      "AH",
+      "V"
+     ],
+     "ids": [
+      25,
+      10
+     ]
+    },
+    {
+     "word": "the",
+     "phones": [
+      "DH",
+      "AH"
+     ],
+     "ids": [
+      29,
+      25
+     ]
+    },
+    {
+     "word": "month",
+     "phones": [
+      "M",
+      "AH",
+      "N",
+      "TH"
+     ],
+     "ids": [
+      3,
+      25,
+      7,
+      28
+     ]
+    }
+   ]
+  },
+  {
+   "text": "The little red lorry rolled down the long road.",
+   "plan": [
+    {
+     "word": "The",
+     "phones": [
+      "DH",
+      "AH"
+     ],
+     "ids": [
+      29,
+      25
+     ]
+    },
+    {
+     "word": "little",
+     "phones": [
+      "L",
+      "IH",
+      "T",
+      "AH",
+      "L"
+     ],
+     "ids": [
+      32,
+      39,
+      22,
+      25,
+      32
+     ]
+    },
+    {
+     "word": "red",
+     "phones": [
+      "R",
+      "EH",
+      "D"
+     ],
+     "ids": [
+      5,
+      23,
+      36
+     ]
+    },
+    {
+     "word": "lorry",
+     "phones": [
+      "L",
+      "AO",
+      "R",
+      "IY"
+     ],
+     "ids": [
+      32,
+      30,
+      5,
+      8
+     ]
+    },
+    {
+     "word": "rolled",
+     "phones": [
+      "R",
+      "OW",
+      "L",
+      "D"
+     ],
+     "ids": [
+      5,
+      12,
+      32,
+      36
+     ]
+    },
+    {
+     "word": "down",
+     "phones": [
+      "D",
+      "AW",
+      "N"
+     ],
+     "ids": [
+      36,
+      9,
+      7
+     ]
+    },
+    {
+     "word": "the",
+     "phones": [
+      "DH",
+      "AH"
+     ],
+     "ids": [
+      29,
+      25
+     ]
+    },
+    {
+     "word": "long",
+     "phones": [
+      "L",
+      "AO",
+      "NG"
+     ],
+     "ids": [
+      32,
+      30,
+      1
+     ]
+    },
+    {
+     "word": "road",
+     "phones": [
+      "R",
+      "OW",
+      "D"
+     ],
+     "ids": [
+      5,
+      12,
+      36
+     ]
+    }
+   ]
+  },
+  {
+   "text": "Very well, we will wait for the van in the valley.",
+   "plan": [
+    {
+     "word": "Very",
+     "phones": [
+      "V",
+      "EH",
+      "R",
+      "IY"
+     ],
+     "ids": [
+      10,
+      23,
+      5,
+      8
+     ]
+    },
+    {
+     "word": "well",
+     "phones": [
+      "W",
+      "EH",
+      "L"
+     ],
+     "ids": [
+      19,
+      23,
+      32
+     ]
+    },
+    {
+     "word": "we",
+     "phones": [
+      "W",
+      "IY"
+     ],
+     "ids": [
+      19,
+      8
+     ]
+    },
+    {
+     "word": "will",
+     "phones": [
+      "W",
+      "IH",
+      "L"
+     ],
+     "ids": [
+      19,
+      39,
+      32
+     ]
+    },
+    {
+     "word": "wait",
+     "phones": [
+      "W",
+      "EY",
+      "T"
+     ],
+     "ids": [
+      19,
+      20,
+      22
+     ]
+    },
+    {
+     "word": "for",
+     "phones": [
+      "F",
+      "AO",
+      "R"
+     ],
+     "ids": [
+      2,
+      30,
+      5
+     ]
+    },
+    {
+     "word": "the",
+     "phones": [
+      "DH",
+      "AH"
+     ],
+     "ids": [
+      29,
+      25
+     ]
+    },
+    {
+     "word": "van",
+     "phones": [
+      "V",
+      "AE",
+      "N"
+     ],
+     "ids": [
+      10,
+      4,
+      7
+     ]
+    },
+    {
+     "word": "in",
+     "phones": [
+      "IH",
+      "N"
+     ],
+     "ids": [
+      39,
+      7
+     ]
+    },
+    {
+     "word": "the",
+     "phones": [
+      "DH",
+      "AH"
+     ],
+     "ids": [
+      29,
+      25
+     ]
+    },
+    {
+     "word": "valley",
+     "phones": [
+      "V",
+      "AE",
+      "L",
+      "IY"
+     ],
+     "ids": [
+      10,
+      4,
+      32,
+      8
+     ]
+    }
+   ]
+  },
+  {
+   "text": "Please put the book on the wooden table.",
+   "plan": [
+    {
+     "word": "Please",
+     "phones": [
+      "P",
+      "L",
+      "IY",
+      "Z"
+     ],
+     "ids": [
+      27,
+      32,
+      8,
+      16
+     ]
+    },
+    {
+     "word": "put",
+     "phones": [
+      "P",
+      "UH",
+      "T"
+     ],
+     "ids": [
+      27,
+      11,
+      22
+     ]
+    },
+    {
+     "word": "the",
+     "phones": [
+      "DH",
+      "AH"
+     ],
+     "ids": [
+      29,
+      25
+     ]
+    },
+    {
+     "word": "book",
+     "phones": [
+      "B",
+      "UH",
+      "K"
+     ],
+     "ids": [
+      26,
+      11,
+      17
+     ]
+    },
+    {
+     "word": "on",
+     "phones": [
+      "AA",
+      "N"
+     ],
+     "ids": [
+      13,
+      7
+     ]
+    },
+    {
+     "word": "the",
+     "phones": [
+      "DH",
+      "AH"
+     ],
+     "ids": [
+      29,
+      25
+     ]
+    },
+    {
+     "word": "wooden",
+     "phones": [
+      "W",
+      "UH",
+      "D",
+      "AH",
+      "N"
+     ],
+     "ids": [
+      19,
+      11,
+      36,
+      25,
+      7
+     ]
+    },
+    {
+     "word": "table",
+     "phones": [
+      "T",
+      "EY",
+      "B",
+      "AH",
+      "L"
+     ],
+     "ids": [
+      22,
+      20,
+      26,
+      25,
+      32
+     ]
+    }
+   ]
+  },
+  {
+   "text": "The brown cow wandered around the mountain.",
+   "plan": [
+    {
+     "word": "The",
+     "phones": [
+      "DH",
+      "AH"
+     ],
+     "ids": [
+      29,
+      25
+     ]
+    },
+    {
+     "word": "brown",
+     "phones": [
+      "B",
+      "R",
+      "AW",
+      "N"
+     ],
+     "ids": [
+      26,
+      5,
+      9,
+      7
+     ]
+    },
+    {
+     "word": "cow",
+     "phones": [
+      "K",
+      "AW"
+     ],
+     "ids": [
+      17,
+      9
+     ]
+    },
+    {
+     "word": "wandered",
+     "phones": [
+      "W",
+      "AA",
+      "N",
+      "D",
+      "ER",
+      "D"
+     ],
+     "ids": [
+      19,
+      13,
+      7,
+      36,
+      14,
+      36
+     ]
+    },
+    {
+     "word": "around",
+     "phones": [
+      "ER",
+      "AW",
+      "N",
+      "D"
+     ],
+     "ids": [
+      14,
+      9,
+      7,
+      36
+     ]
+    },
+    {
+     "word": "the",
+     "phones": [
+      "DH",
+      "AH"
+     ],
+     "ids": [
+      29,
+      25
+     ]
+    },
+    {
+     "word": "mountain",
+     "phones": [
+      "M",
+      "AW",
+      "N",
+      "T",
+      "AH",
+      "N"
+     ],
+     "ids": [
+      3,
+      9,
+      7,
+      22,
+      25,
+      7
+     ]
+    }
+   ]
+  }
+ ],
+ "examples_hint": {
+  "AA": "father",
+  "AE": "cat",
+  "AH": "cup",
+  "AO": "law",
+  "AW": "how",
+  "AY": "my",
+  "EH": "bed",
+  "ER": "bird",
+  "EY": "say",
+  "IH": "sit",
+  "IY": "see",
+  "OW": "go",
+  "OY": "boy",
+  "UH": "book",
+  "UW": "food",
+  "B": "bat",
+  "CH": "chin",
+  "D": "dog",
+  "DH": "this",
+  "F": "fan",
+  "G": "go",
+  "HH": "hat",
+  "JH": "jam",
+  "K": "cat",
+  "L": "lip",
+  "M": "map",
+  "N": "net",
+  "NG": "sing",
+  "P": "pen",
+  "R": "red",
+  "S": "sun",
+  "SH": "she",
+  "T": "top",
+  "TH": "think",
+  "V": "van",
+  "W": "wet",
+  "Y": "yes",
+  "Z": "zoo",
+  "ZH": "vision"
+ }
+}

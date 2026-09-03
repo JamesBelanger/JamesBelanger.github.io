@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pronunciation Coach — per-phoneme feedback in your browser</title>
+<meta name="description" content="Read a sentence, get per-phoneme pronunciation scores. Forced alignment + goodness-of-pronunciation scoring running entirely in your browser — no server, no audio upload.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+:root{--surface:#fcfcfb;--page:#f9f9f7;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--axis:#c3c2b7;--blue:#2a78d6;--blue-soft:#cde2fb;--border:rgba(11,11,11,.10);--good:#1f7a4d;--ok:#a05a00;--bad:#b3261e;--goodbg:#e7f2ec;--okbg:#f7ede0;--badbg:#f9e7e6}
+*{box-sizing:border-box}
+html{background:var(--page)}
+body{margin:0;font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--page)}
+.wrap{max-width:880px;margin:0 auto;padding:36px 20px 64px}
+.kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+h1{font-size:32px;line-height:1.15;letter-spacing:-.01em;margin:0 0 10px;font-weight:650}
+h2{font-size:19px;margin:0 0 6px;font-weight:650}
+.dek{font-size:16.5px;color:var(--ink2);max-width:60ch;margin:0 0 6px}
+.meta{font-size:13px;color:var(--muted);margin:0 0 24px}
+.meta a{color:var(--ink2)}
+.card{background:var(--surface);border:1px solid var(--border);padding:20px 22px;margin:0 0 20px}
+select{font:inherit;font-size:15px;padding:9px 10px;border:1px solid var(--axis);border-radius:4px;background:#fff;color:var(--ink);width:100%;margin:6px 0 14px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+button{font:inherit;cursor:pointer}
+.btn{border:1px solid var(--ink);background:var(--ink);color:#fff;padding:10px 18px;border-radius:4px;font-size:15px}
+.btn.rec{background:var(--bad);border-color:var(--bad)}
+.btn-ghost{border:1px solid var(--axis);background:#fff;color:var(--ink);padding:9px 14px;border-radius:4px;font-size:14px}
+.filelab{font-size:13.5px;color:var(--ink2)}
+#status{font-size:13.5px;color:var(--ink2);min-height:20px;margin-top:10px}
+.reshead{display:flex;align-items:baseline;gap:8px;margin:16px 0 6px}
+.reshead .big{font-size:46px;font-weight:650;letter-spacing:-.02em;line-height:1}
+.reshead .of{color:var(--muted)}
+.play{border:1px solid var(--axis);background:#fff;border-radius:999px;padding:4px 12px;font-size:13px;color:var(--ink2);margin-left:8px}
+.words{font-size:24px;line-height:1.7;margin:6px 0 8px}
+.w{cursor:pointer;border-bottom:3px solid transparent;padding:0 1px}
+.w.good{border-color:var(--good)}
+.w.ok{border-color:var(--ok);background:var(--okbg)}
+.w.bad{border-color:var(--bad);background:var(--badbg)}
+.phones{font-size:13.5px;color:var(--ink2);min-height:26px}
+.plab{color:var(--muted)}
+.ph{display:inline-block;border:1px solid var(--axis);border-radius:4px;padding:1px 7px;margin:2px 0;font-variant-numeric:tabular-nums}
+.ph.good{color:var(--good);border-color:var(--good);background:var(--goodbg)}
+.ph.ok{color:var(--ok);border-color:var(--ok);background:var(--okbg)}
+.ph.bad{color:var(--bad);border-color:var(--bad);background:var(--badbg)}
+.hint{margin-top:10px;font-size:14px;color:var(--ink);border-left:2px solid var(--axis);padding:4px 10px}
+.big.good{color:var(--good)}.big.ok{color:var(--ok)}.big.bad{color:var(--bad)}
+.excard{border-top:1px solid var(--border);padding:14px 0 6px;margin-top:10px}
+.excap{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.extext{font-size:15px;color:var(--ink2);margin:2px 0 0}
+.excard .words{font-size:19px}
+.excard .reshead .big{font-size:32px}
+.how p{max-width:70ch;color:var(--ink2);margin:8px 0}
+.how b{color:var(--ink)}
+footer{margin-top:32px;padding-top:14px;border-top:1px solid var(--border);font-size:13px;color:var(--ink2);max-width:76ch}
+@media (max-width:640px){h1{font-size:26px}.words{font-size:20px}}
+</style>
+</head>
+<body><div class="wrap">
+<p class="kicker">Demo · runs entirely in your browser</p>
+<h1>How well did you say that?</h1>
+<p class="dek">Pick a sentence, read it aloud, and get a score for every phoneme — the core feedback loop of a pronunciation coach, built from forced alignment and goodness-of-pronunciation scoring.</p>
+<p class="meta">No server and no audio upload: a 123&nbsp;MB speech model runs in your browser via WebAssembly. By <a href="https://jamesbelanger.com">James Belanger</a> · <a href="https://github.com/JamesBelanger/pronunciation-scoring">code on GitHub</a></p>
+
+<div class="card">
+  <h2>Score your voice</h2>
+  <label for="sentence" style="font-size:13.5px;color:var(--ink2)">Sentence to read</label>
+  <select id="sentence"></select>
+  <div class="row">
+    <button class="btn" id="record">Record yourself</button>
+    <label class="filelab">or upload audio: <input type="file" id="upload" accept="audio/*"></label>
+    <button class="btn-ghost" id="rescore" hidden>Re-score</button>
+  </div>
+  <div id="status"></div>
+  <div id="result"></div>
+</div>
+
+<div class="card">
+  <h2>Or see it on synthetic voices first</h2>
+  <p style="font-size:14px;color:var(--ink2);margin:4px 0 0">Three text-to-speech recordings, scored by the exact same pipeline (no download needed). The second one reads the wrong sentence on purpose — the score collapses, which is the point: the system measures what you said, not whether you said something.</p>
+  <div id="examples"></div>
+</div>
+
+<div class="card how">
+  <h2>How it works</h2>
+  <p><b>1. Listen.</b> A wav2vec2 acoustic model (<a href="https://huggingface.co/charsiu/en_w2v2_fc_10ms">charsiu/en_w2v2_fc_10ms</a>) turns your audio into a probability over 40 English phonemes every 10 milliseconds.</p>
+  <p><b>2. Align.</b> A Viterbi forced alignment matches those frames against the sentence's canonical phoneme sequence (with optional silences between words), so every phoneme owns a time span — the same idea behind the Montreal Forced Aligner.</p>
+  <p><b>3. Score.</b> Each phoneme gets a goodness-of-pronunciation (GOP) score: how strongly the model believes you produced the expected sound, versus the best competing sound, averaged over its frames.</p>
+  <p><b>Honestly:</b> this is a demo, not a product. Scores are model posteriors, not a validated assessment; the model is English-only and fairest to North American accents; very noisy rooms and cut-off recordings will score poorly for the wrong reasons. The Python reference implementation, the ONNX export, and this page's source are all in <a href="https://github.com/JamesBelanger/pronunciation-scoring">the repository</a>.</p>
+</div>
+
+<footer>Built by James Belanger — computational linguistics researcher (Baylor College of Medicine; 9 papers, 4 in press at Nature-family journals). Related: <a href="https://jamesbelanger.com/notes/whisper-vs-qwen3-asr/">Whisper vs Qwen3-ASR on faint speech</a> · <a href="https://jamesbelanger.com/projects/hospital-quality/">Hospital Quality Explorer</a> · <a href="https://jamesbelanger.com">jamesbelanger.com</a>. Audio is processed on your device and never leaves your browser.</footer>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

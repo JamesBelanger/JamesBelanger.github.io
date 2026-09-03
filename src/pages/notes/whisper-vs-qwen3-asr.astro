@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Whisper vs Qwen3-ASR on faint conversational speech"
+  description="A benchmark on 74 minutes of faint, far-field, multi-speaker audio: Whisper large-v3 at 13.1% WER vs Qwen3-ASR-1.7B at 44.1% out of the box and 25.2% after tuning — and why you should tune both sides before declaring a winner."
+>
+  <p class="text-xs uppercase tracking-wider text-muted">Note · July 2026</p>
+  <h1 class="mt-1 text-3xl font-bold tracking-tight">Whisper vs Qwen3-ASR on faint conversational speech</h1>
+  <p class="mt-3 max-w-2xl text-lg leading-relaxed text-muted">
+    13.1% vs 44.1% word error rate out of the box — but a third of that gap was my own under-tuned
+    configuration, not the model. Both numbers matter.
+  </p>
+
+  <div class="mt-8 max-w-2xl space-y-5 leading-relaxed">
+    <h2 class="text-xl font-semibold">The setup</h2>
+    <p>
+      I needed to know which open ASR model to trust for hard real-world audio: 74 minutes of faint,
+      far-field, five-speaker conversational speech recorded by a room microphone under an IRB-approved
+      research protocol (no audio or transcript content is shared here). The reference transcript was
+      hand-corrected — 15,061 words after normalization. Scoring used Whisper's own
+      <code>EnglishTextNormalizer</code> and <code>jiwer</code>, and both models received the identical
+      16&nbsp;kHz mono file. Contenders: OpenAI's <strong>Whisper large-v3</strong> and Alibaba's
+      <strong>Qwen3-ASR-1.7B</strong>, the largest open Qwen3 ASR checkpoint.
+    </p>
+
+    <h2 class="text-xl font-semibold">Round one: out of the box</h2>
+    <p>
+      Whisper large-v3, with robust long-form settings (<code>condition_on_previous_text=False</code>,
+      <code>no_speech_threshold=0.9</code>, temperature fallback): <strong>13.1% WER</strong> (10.6% CER),
+      transcribing 94% of the reference words. Qwen3-ASR-1.7B with defaults: <strong>44.1% WER</strong> —
+      and the failure mode was specific. Of the errors, 5,408 were <em>deletions</em>: it produced words
+      for only 64% of the reference. On faint multi-speaker audio it doesn't hallucinate; it goes quiet.
+    </p>
+
+    <h2 class="text-xl font-semibold">Round two: tune both sides</h2>
+    <p>
+      A 3× gap between two modern models usually means someone's configuration is unfair, so I rematched
+      after fixing mine. Three changes recovered most of Qwen's deficit: windowed automatic gain control
+      to lift the faint segments; forcing <code>language="English"</code> (the full name — the ISO code
+      raises an error), which stops quiet chunks from being dropped on failed language detection; and
+      requesting timestamps with Qwen's forced-aligner companion model, which switches processing to
+      180-second chunks and removes a token cap that silently truncates long files.
+    </p>
+    <p>
+      Tuned Qwen: <strong>25.2% WER</strong>, coverage up from 64% to 85%, deletions cut from 5,408 to
+      2,240. About 60% of what looked like model failure was recoverable configuration. Whisper still
+      wins — by roughly 12 points instead of 31 — and it got there with no babysitting.
+    </p>
+
+    <h2 class="text-xl font-semibold">What I take from it</h2>
+    <ul class="list-disc space-y-2 pl-5">
+      <li><strong>Test on your own audio.</strong> Leaderboard WER on clean benchmarks predicted none of this; the failure mode (systematic deletion of faint speech) only shows up on audio like yours.</li>
+      <li><strong>Tune both sides before declaring a winner.</strong> My first result overstated the gap by ~19 points. A benchmark you haven't tried to break is marketing, not measurement.</li>
+      <li><strong>Turnkey robustness is a real feature.</strong> Whisper's margin isn't just accuracy; it's that the accuracy arrived without the failure-mode archaeology Qwen needed.</li>
+      <li>The closed <code>Qwen3-ASR-Flash</code> API reportedly beats the open weights, but API-only is a non-starter for protected audio — a constraint that quietly decides many real deployments.</li>
+    </ul>
+
+    <p class="text-sm text-muted">
+      Pipeline details: both models ran on one NVIDIA L40 via SLURM; the harness feeds one shared
+      16&nbsp;kHz mono conversion, scores with normalized WER/CER, and diffs error types
+      (substitutions/insertions/deletions) per model. Related: this pipeline's alignment and
+      pronunciation-scoring layer is public at
+      <a href="https://github.com/JamesBelanger/pronunciation-scoring">pronunciation-scoring</a>, with a
+      <a href="/projects/pronunciation/">live in-browser demo</a>.
+    </p>
+  </div>
+</BaseLayout>
