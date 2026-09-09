@@ -21,6 +21,17 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
+    name: 'Identity Resolution Lab',
+    category: 'Product / full-stack',
+    blurb:
+      '769 synthetic messy customer records from four source systems, resolved into unified golden records live in the browser: normalization, blocking, explainable fuzzy matching (nickname-aware Jaro-Winkler, weighted field scores), union-find clustering, and survivorship — with real precision/recall measured against known ground truth, updating as you drag the match threshold. At the default threshold it finds 451 customers against a ground truth of 450.',
+    stack: ['Entity resolution', 'Data quality', 'Vanilla JS', 'Python data generator'],
+    links: [
+      { label: 'Live demo', href: '/projects/identity-resolution/' },
+      { label: 'GitHub', href: 'https://github.com/JamesBelanger/identity-resolution' },
+    ],
+  },
+  {
     name: 'Pronunciation Coach (in-browser)',
     category: 'Product / full-stack',
     blurb:

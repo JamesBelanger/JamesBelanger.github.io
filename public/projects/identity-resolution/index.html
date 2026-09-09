@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Identity Resolution Lab — messy records to golden customers, in your browser</title>
+<meta name="description" content="769 messy customer records from four systems, resolved into unified golden records live in your browser: normalization, blocking, explainable fuzzy matching, survivorship, and honest precision/recall against known ground truth.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+:root{--surface:#fcfcfb;--page:#f9f9f7;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--grid:#e1e0d9;--axis:#c3c2b7;--blue:#2a78d6;--blue-soft:#cde2fb;--border:rgba(11,11,11,.10);--good:#1f7a4d}
+*{box-sizing:border-box}
+html{background:var(--page)}
+body{margin:0;font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--page)}
+.wrap{max-width:1080px;margin:0 auto;padding:36px 20px 64px}
+.kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+h1{font-size:31px;line-height:1.15;letter-spacing:-.01em;margin:0 0 10px;font-weight:650}
+h2{font-size:19px;margin:0 0 6px;font-weight:650}
+h3{font-size:16px;margin:0 0 8px;font-weight:650}
+h4{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:16px 0 6px;font-weight:600}
+.dek{font-size:16.5px;color:var(--ink2);max-width:66ch;margin:0 0 6px}
+.meta{font-size:13px;color:var(--muted);margin:0 0 24px}
+.meta a{color:var(--ink2)}
+.card{background:var(--surface);border:1px solid var(--border);padding:18px 20px;margin:0 0 20px}
+.hero{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px}
+.hero div{border-right:1px solid var(--border);padding:0 16px}
+.hero div:first-child{padding-left:0}
+.hero div:last-child{border-right:0}
+.hero .v{font-size:34px;font-weight:650;letter-spacing:-.01em;line-height:1.1}
+.hero .l{font-size:12.5px;color:var(--ink2);margin-top:2px}
+.acc{display:flex;gap:26px;align-items:baseline;flex-wrap:wrap}
+.acc .v{font-size:22px;font-weight:650}
+.acc .v.good{color:var(--good)}
+.acc .l{font-size:12.5px;color:var(--ink2)}
+.caption{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+.slider{display:flex;align-items:center;gap:12px;margin-top:12px;font-size:13.5px;color:var(--ink2)}
+.slider input{flex:1;max-width:340px;accent-color:var(--ink)}
+.slider b{font-variant-numeric:tabular-nums}
+.cols{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+.qrow{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:13px}
+.ql{width:84px;color:var(--ink2)}
+.qbar{flex:1;height:9px;background:var(--grid)}
+.qbar span{display:block;height:9px;background:var(--blue)}
+.qv{width:40px;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
+.search{width:100%;font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--axis);border-radius:4px;margin-bottom:8px;background:#fff}
+table.main{width:100%;border-collapse:collapse;font-size:13.5px}
+table.main th{text-align:left;font-weight:600;padding:6px 10px 6px 0;border-bottom:1px solid var(--axis)}
+table.main td{padding:6px 10px 6px 0;border-bottom:1px solid var(--grid);color:var(--ink2)}
+table.main td.name{color:var(--ink);font-weight:500}
+table.main tr{cursor:pointer}
+table.main tr:hover td{background:var(--page)}
+table.main tr.sel td{background:var(--blue-soft)}
+.badge{display:inline-block;border:1px solid var(--blue);color:var(--blue);border-radius:999px;padding:0 8px;font-size:11.5px;font-weight:600}
+.mut{color:var(--muted)}
+.tblwrap{overflow-x:auto}
+table.srcs{border-collapse:collapse;font-size:12.5px;min-width:100%}
+table.srcs th{text-align:left;font-weight:600;padding:5px 12px 5px 0;border-bottom:1px solid var(--axis);white-space:nowrap;vertical-align:bottom}
+table.srcs th .rid{display:block;font-weight:400;color:var(--muted);font-size:10.5px}
+table.srcs td{padding:5px 12px 5px 0;border-bottom:1px solid var(--grid);color:var(--ink2);white-space:nowrap}
+table.srcs td.differs{background:#f7ede0}
+table.srcs .gold{background:var(--blue-soft);color:var(--ink);font-weight:500;padding-left:10px}
+.edge{font-size:12.5px;padding:4px 0;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums}
+.epair{color:var(--muted)}
+.escore{font-weight:650;color:var(--blue);margin:0 6px}
+.eparts{color:var(--ink2)}
+.how p{max-width:74ch;color:var(--ink2);margin:8px 0}
+.how b{color:var(--ink)}
+footer{margin-top:32px;padding-top:14px;border-top:1px solid var(--border);font-size:13px;color:var(--ink2);max-width:80ch}
+@media (max-width:820px){.cols{grid-template-columns:1fr}.hero{grid-template-columns:1fr}.hero div{border-right:0;border-bottom:1px solid var(--border);padding:8px 0}}
+</style>
+</head>
+<body><div class="wrap">
+<p class="kicker">Demo · runs entirely in your browser</p>
+<h1>769 messy records. How many real customers?</h1>
+<p class="dek">Four fake systems (CRM, e-commerce, support desk, in-store) full of nicknames, typos, format drift, and missing fields — resolved into unified golden records right here in your browser, with every merge explained and the accuracy measured against known ground truth.</p>
+<p class="meta">All data is synthetic (no real people). By <a href="https://jamesbelanger.com">James Belanger</a> · <a href="https://github.com/JamesBelanger/identity-resolution">code on GitHub</a></p>
+
+<div class="card">
+  <div class="hero">
+    <div><div class="v" id="n-in">–</div><div class="l">raw records in, across four source systems</div></div>
+    <div><div class="v" id="n-out" style="color:var(--blue)">–</div><div class="l">unified customers out · <span id="n-merged">–</span> duplicates absorbed · <span id="truth-note"></span></div></div>
+    <div><div class="acc"><span><span class="v good" id="m-prec">–</span> <span class="l">precision</span></span><span><span class="v good" id="m-rec">–</span> <span class="l">recall</span></span></div><div class="l" id="m-note"></div></div>
+  </div>
+  <div class="slider">
+    <span>Match threshold</span>
+    <input type="range" id="threshold" min="0.55" max="0.95" step="0.01" value="0.75">
+    <b id="thval">0.75</b>
+    <span class="mut">— drag it: lower merges more aggressively (recall ↑, precision ↓), higher is stricter. Watch the numbers respond.</span>
+  </div>
+</div>
+
+<div class="cols">
+  <div class="card">
+    <h2>The mess, measured</h2>
+    <p class="caption" style="margin:0 0 10px">Field completeness across the 769 raw records:</p>
+    <div id="quality"></div>
+    <p class="caption" id="q-invalid"></p>
+  </div>
+  <div class="card">
+    <h2>Unified customers</h2>
+    <input class="search" id="search" placeholder="Search a name, email, or city…">
+    <div style="max-height:420px;overflow:auto">
+      <table class="main"><thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th>City</th><th></th></tr></thead><tbody id="rows"></tbody></table>
+    </div>
+    <p class="caption" id="tbl-note"></p>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Inside one customer</h2>
+  <div id="detail"></div>
+</div>
+
+<div class="card how">
+  <h2>How it works</h2>
+  <p><b>1. Normalize.</b> Phones collapse to ten digits, emails validate, nicknames map to canonical names (Bob → Robert), street abbreviations standardize (Boulevard → Blvd), and malformed values are quarantined rather than silently matched.</p>
+  <p><b>2. Block.</b> Comparing every record with every other would be ~295,000 pairs; cheap blocking keys (same phone, same email, ZIP + name prefix, a typo-tolerant name key) cut that to a few thousand candidate pairs without losing the true matches.</p>
+  <p><b>3. Score and explain.</b> Each candidate pair gets a weighted similarity — exact email and phone matches, Jaro-Winkler on names (nickname-aware), token overlap on addresses — with weights renormalized over the fields both records actually have. Every merge above shows its per-field reasoning.</p>
+  <p><b>4. Cluster and survive.</b> Pairs above the threshold link into clusters; each cluster becomes one golden record, with survivorship picking the most-attested, best-formed value for every field.</p>
+  <p><b>5. Measure honestly.</b> Because the data is generated, the true customer identities are known — so precision and recall up top are real numbers, not vibes, and they move when you move the threshold. That tradeoff is the whole game in identity resolution.</p>
+  <p><b>Honestly:</b> this is a teaching demo, not a product — classic deterministic + probabilistic matching on a small synthetic dataset, built to show the concepts (and my code) end to end. Production identity resolution handles orders of magnitude more scale, streaming updates, and far messier reality.</p>
+</div>
+
+<footer>Built by James Belanger — four years turning messy multi-source research data into validated, analysis-ready datasets. Related: <a href="https://jamesbelanger.com/projects/hospital-quality/">Hospital Quality Explorer</a> · <a href="https://jamesbelanger.com/projects/pronunciation/">Pronunciation Coach</a> · <a href="https://jamesbelanger.com">jamesbelanger.com</a></footer>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
