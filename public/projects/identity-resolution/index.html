@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Identity Resolution Lab — messy records to golden customers, in your browser</title>
-<meta name="description" content="769 messy customer records from four systems, resolved into unified golden records live in your browser: normalization, blocking, explainable fuzzy matching, survivorship, and honest precision/recall against known ground truth.">
+<title>Identity Resolution Lab — identity resolution and householding, in your browser</title>
+<meta name="description" content="858 messy customer records from four systems, resolved into unified customers and mailable households live in your browser: data hygiene, match/merge, survivorship, householding, and a 3rd-party demographics append — with honest precision/recall against known ground truth.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>
 :root{--surface:#fcfcfb;--page:#f9f9f7;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--grid:#e1e0d9;--axis:#c3c2b7;--blue:#2a78d6;--blue-soft:#cde2fb;--border:rgba(11,11,11,.10);--good:#1f7a4d}
@@ -21,7 +21,7 @@ h4{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--mute
 .meta{font-size:13px;color:var(--muted);margin:0 0 24px}
 .meta a{color:var(--ink2)}
 .card{background:var(--surface);border:1px solid var(--border);padding:18px 20px;margin:0 0 20px}
-.hero{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px}
+.hero{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px}
 .hero div{border-right:1px solid var(--border);padding:0 16px}
 .hero div:first-child{padding-left:0}
 .hero div:last-child{border-right:0}
@@ -64,20 +64,29 @@ table.srcs .gold{background:var(--blue-soft);color:var(--ink);font-weight:500;pa
 .eparts{color:var(--ink2)}
 .how p{max-width:74ch;color:var(--ink2);margin:8px 0}
 .how b{color:var(--ink)}
+.chip{display:inline-block;padding:2px 10px;border:1px solid var(--axis);border-radius:999px;font-size:12px;color:var(--ink2);background:#fff;cursor:pointer}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.mailrow{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:baseline;font-size:15px;color:var(--ink2)}
+.mailrow b{font-size:26px;font-weight:650;letter-spacing:-.01em;color:var(--ink)}
+.mailrow .arrow{color:var(--muted)}
+.hhline{font-size:13px;color:var(--ink2);border-left:2px solid var(--blue);padding:2px 10px;margin:6px 0}
+.enrline{font-size:12.5px;color:var(--ink2);margin:4px 0 10px}
+.enr{display:inline-block;border:1px solid var(--good);color:var(--good);border-radius:999px;font-size:10px;font-weight:700;padding:0 5px;margin-left:4px}
 footer{margin-top:32px;padding-top:14px;border-top:1px solid var(--border);font-size:13px;color:var(--ink2);max-width:80ch}
 @media (max-width:820px){.cols{grid-template-columns:1fr}.hero{grid-template-columns:1fr}.hero div{border-right:0;border-bottom:1px solid var(--border);padding:8px 0}}
 </style>
 </head>
 <body><div class="wrap">
 <p class="kicker">Demo · runs entirely in your browser</p>
-<h1>769 messy records. How many real customers?</h1>
-<p class="dek">Four fake systems (CRM, e-commerce, support desk, in-store) full of nicknames, typos, format drift, and missing fields — resolved into unified golden records right here in your browser, with every merge explained and the accuracy measured against known ground truth.</p>
+<h1>858 messy records. How many customers — and how many households?</h1>
+<p class="dek">Four fake systems (CRM, e-commerce, support desk, in-store) full of nicknames, typos, format drift, and missing fields — resolved into unified customers, grouped into mailable households, and enriched with a 3rd-party demographics file — right here in your browser, every merge explained, accuracy measured against known ground truth.</p>
 <p class="meta">All data is synthetic (no real people). By <a href="https://jamesbelanger.com">James Belanger</a> · <a href="https://github.com/JamesBelanger/identity-resolution">code on GitHub</a></p>
 
 <div class="card">
   <div class="hero">
     <div><div class="v" id="n-in">–</div><div class="l">raw records in, across four source systems</div></div>
-    <div><div class="v" id="n-out" style="color:var(--blue)">–</div><div class="l">unified customers out · <span id="n-merged">–</span> duplicates absorbed · <span id="truth-note"></span></div></div>
+    <div><div class="v" id="n-out" style="color:var(--blue)">–</div><div class="l">unified customers · <span id="n-merged">–</span> duplicates absorbed · <span id="truth-note"></span></div></div>
+    <div><div class="v" id="n-hh" style="color:var(--blue)">–</div><div class="l" id="hh-sub">mailable households</div></div>
     <div><div class="acc"><span><span class="v good" id="m-prec">–</span> <span class="l">precision</span></span><span><span class="v good" id="m-rec">–</span> <span class="l">recall</span></span></div><div class="l" id="m-note"></div></div>
   </div>
   <div class="slider">
@@ -88,6 +97,17 @@ footer{margin-top:32px;padding-top:14px;border-top:1px solid var(--border);font-
   </div>
 </div>
 
+<div class="card">
+  <h2>One mailer per household</h2>
+  <div class="mailrow">
+    <span><b id="mail-raw">–</b> raw records</span><span class="arrow">→</span>
+    <span><b id="mail-cust">–</b> unified customers</span><span class="arrow">→</span>
+    <span><b id="mail-hh" style="color:var(--blue)">–</b> households, one mailer each</span>
+  </div>
+  <p class="caption" id="mail-saved"></p>
+  <p class="caption" id="enrich-note"></p>
+</div>
+
 <div class="cols">
   <div class="card">
     <h2>The mess, measured</h2>
@@ -96,10 +116,10 @@ footer{margin-top:32px;padding-top:14px;border-top:1px solid var(--border);font-
     <p class="caption" id="q-invalid"></p>
   </div>
   <div class="card">
-    <h2>Unified customers</h2>
+    <div class="row" style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><h2 style="margin:0">Unified</h2><span class="chip on" id="view-customers">Customers</span><span class="chip" id="view-households">Households</span></div>
     <input class="search" id="search" placeholder="Search a name, email, or city…">
     <div style="max-height:420px;overflow:auto">
-      <table class="main"><thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th>City</th><th></th></tr></thead><tbody id="rows"></tbody></table>
+      <table class="main"><thead><tr id="thead-row"><th>Customer</th><th>Email</th><th>Phone</th><th>City</th><th></th></tr></thead><tbody id="rows"></tbody></table>
     </div>
     <p class="caption" id="tbl-note"></p>
   </div>
@@ -115,8 +135,11 @@ footer{margin-top:32px;padding-top:14px;border-top:1px solid var(--border);font-
   <p><b>1. Normalize.</b> Phones collapse to ten digits, emails validate, nicknames map to canonical names (Bob → Robert), street abbreviations standardize (Boulevard → Blvd), and malformed values are quarantined rather than silently matched.</p>
   <p><b>2. Block.</b> Comparing every record with every other would be ~295,000 pairs; cheap blocking keys (same phone, same email, ZIP + name prefix, a typo-tolerant name key) cut that to a few thousand candidate pairs without losing the true matches.</p>
   <p><b>3. Score and explain.</b> Each candidate pair gets a weighted similarity — exact email and phone matches, Jaro-Winkler on names (nickname-aware), token overlap on addresses — with weights renormalized over the fields both records actually have. Every merge above shows its per-field reasoning.</p>
+  <p><b>3b. Guard against families.</b> Households are the classic trap: two siblings share a surname, an address, even the home phone. Two rules keep them apart — clearly different full first names cap a pair's score, and a bare initial cannot force a merge without email evidence. Genuinely ambiguous records stay unmerged on purpose; in production those route to a data-steward queue instead of a guess.</p>
   <p><b>4. Cluster and survive.</b> Pairs above the threshold link into clusters; each cluster becomes one golden record, with survivorship picking the most-attested, best-formed value for every field.</p>
-  <p><b>5. Measure honestly.</b> Because the data is generated, the true customer identities are known — so precision and recall up top are real numbers, not vibes, and they move when you move the threshold. That tradeoff is the whole game in identity resolution.</p>
+  <p><b>5. Household.</b> Resolved customers at the same normalized address join a household when they share a surname or a phone — so the Smiths get one catalog, while unrelated roommates stay separate. Household grouping is scored against ground truth too.</p>
+  <p><b>6. Enrich.</b> A synthetic 3rd-party demographics file appends onto golden records by normalized email or phone; corrupted vendor keys fail to match and are quarantined, not force-joined — consuming 1st- and 3rd-party data into one repository.</p>
+  <p><b>7. Measure honestly.</b> Because the data is generated, the true customer identities are known — so precision and recall up top are real numbers, not vibes, and they move when you move the threshold. That tradeoff is the whole game in identity resolution and householding.</p>
   <p><b>Honestly:</b> this is a teaching demo, not a product — classic deterministic + probabilistic matching on a small synthetic dataset, built to show the concepts (and my code) end to end. Production identity resolution handles orders of magnitude more scale, streaming updates, and far messier reality.</p>
 </div>
 

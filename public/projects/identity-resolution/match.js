@@ -92,8 +92,23 @@ export function scorePair(x, y) {
     parts.push({ field: "address", w: 0.08, s: x.n_zip === y.n_zip ? 1 : 0 });
   }
   const wsum = parts.reduce((a, p) => a + p.w, 0);
-  const score = parts.reduce((a, p) => a + p.w * p.s, 0) / (wsum || 1);
-  return { score, parts, wsum };
+  let score = parts.reduce((a, p) => a + p.w * p.s, 0) / (wsum || 1);
+  // Different-person guard: family members share surname, address, even a home phone — but two
+  // clearly different full first names is strong evidence of two people. Cap such pairs below the
+  // default threshold so households don't collapse into one "customer".
+  let guard = false;
+  {
+    const init = x.n_first.length <= 1 || y.n_first.length <= 1 || x.first.includes(".") || y.first.includes(".");
+    const emailProof = parts.some(p => p.field === "email" && p.s >= 0.99);
+    if (!init && x.n_first && y.n_first && jaroWinkler(x.n_first, y.n_first) < 0.72) {
+      if (score > 0.70) { score = 0.70; guard = true; }
+    } else if (init && !emailProof && score > 0.74) {
+      // An initial plus family-shared surname/address/phone could be either sibling — ambiguity
+      // must not force a merge. A matching email is the tie-breaker that lifts the cap.
+      score = 0.74; guard = true;
+    }
+  }
+  return { score, parts, wsum, guard };
 }
 
 // ---------------- blocking: only compare records that share a cheap key ----------------
@@ -233,4 +248,122 @@ export function profile(records, meta) {
   }
   for (const f of FIELDS) out.completeness[f] = out.completeness[f] / records.length;
   return out;
+}
+
+// ---------------- v2: householding ----------------
+// Marketing-style householding on top of resolved customers: same normalized address is the
+// candidate household; within an address, customers join a household when they share a surname
+// or a phone number (so roommates with different names and phones stay separate).
+export function householdize(golden, rs) {
+  const byAddr = new Map();
+  golden.forEach((g, gi) => {
+    g.hid = null;
+    const street = mode(g.members.map(i => rs[i].n_street).filter(Boolean));
+    const zip = mode(g.members.map(i => rs[i].n_zip).filter(Boolean));
+    g._addrKey = street ? street + "|" + zip : null;
+    g._last = mode(g.members.map(i => rs[i].n_last).filter(Boolean)) || "";
+    g._phones = new Set(g.members.map(i => rs[i].n_phone).filter(Boolean));
+    if (!g._addrKey) return;
+    if (!byAddr.has(g._addrKey)) byAddr.set(g._addrKey, []);
+    byAddr.get(g._addrKey).push(gi);
+  });
+  const households = [];
+  for (const [addrKey, gis] of byAddr.entries()) {
+    // union goldens at this address that share surname or a phone
+    const parent = new Map(gis.map(x => [x, x]));
+    const find = (x) => { while (parent.get(x) !== x) { parent.set(x, parent.get(parent.get(x))); x = parent.get(x); } return x; };
+    for (let a = 0; a < gis.length; a++) {
+      for (let b = a + 1; b < gis.length; b++) {
+        const A = golden[gis[a]], B = golden[gis[b]];
+        const shareName = A._last && A._last === B._last;
+        const sharePhone = [...A._phones].some(p => B._phones.has(p));
+        if (shareName || sharePhone) parent.set(find(gis[a]), find(gis[b]));
+      }
+    }
+    const groups = new Map();
+    for (const gi of gis) {
+      const r = find(gi);
+      if (!groups.has(r)) groups.set(r, []);
+      groups.get(r).push(gi);
+    }
+    for (const members of groups.values()) households.push({ addrKey, customers: members });
+  }
+  // customers with no usable address become single-customer households (not mailable)
+  golden.forEach((g, gi) => {
+    if (!g._addrKey) households.push({ addrKey: null, customers: [gi], noAddress: true });
+  });
+  households.forEach((h, k) => {
+    h.id = k;
+    h.customers.forEach(gi => { golden[gi].hid = k; });
+    const first = golden[h.customers[0]];
+    h.address = first.fields.street ? `${first.fields.street}, ${first.fields.city} ${first.fields.zip}` : "(no deliverable address)";
+    h.surname = first._last;
+    h.size = h.customers.length;
+  });
+  return households.sort((a, b) => b.size - a.size);
+}
+const mode = (arr) => {
+  if (!arr.length) return null;
+  const c = new Map();
+  let best = arr[0], bn = 0;
+  for (const v of arr) { const n = (c.get(v) || 0) + 1; c.set(v, n); if (n > bn) { bn = n; best = v; } }
+  return best;
+};
+
+/** Pairwise household precision/recall at the record level, against ground-truth household ids. */
+export function evaluateHouseholds(records, golden, households, truthH) {
+  const recHH = new Map();       // record id -> predicted household id
+  for (const g of golden) {
+    for (const i of g.members) recHH.set(records[i].id, g.hid);
+  }
+  const trueGroups = new Map();
+  records.forEach(r => {
+    const h = truthH[r.id];
+    if (!trueGroups.has(h)) trueGroups.set(h, []);
+    trueGroups.get(h).push(r.id);
+  });
+  const pairKey = (a, b) => (a < b ? a + "|" + b : b + "|" + a);
+  const truePairs = new Set();
+  for (const ids of trueGroups.values()) {
+    for (let i = 0; i < ids.length; i++) for (let j = i + 1; j < ids.length; j++) truePairs.add(pairKey(ids[i], ids[j]));
+  }
+  const predGroups = new Map();
+  for (const [rid, hh] of recHH.entries()) {
+    if (!predGroups.has(hh)) predGroups.set(hh, []);
+    predGroups.get(hh).push(rid);
+  }
+  let predicted = 0, correct = 0;
+  for (const ids of predGroups.values()) {
+    for (let i = 0; i < ids.length; i++) {
+      for (let j = i + 1; j < ids.length; j++) {
+        predicted++;
+        if (truePairs.has(pairKey(ids[i], ids[j]))) correct++;
+      }
+    }
+  }
+  return { precision: predicted ? correct / predicted : 1, recall: truePairs.size ? correct / truePairs.size : 1 };
+}
+
+// ---------------- v2: third-party enrichment append ----------------
+/** Match a 3rd-party demographics file onto golden records by normalized email, then phone. */
+export function matchEnrichment(golden, rs, thirdParty, meta) {
+  const N = normalizers(meta);
+  const byEmail = new Map(), byPhone = new Map();
+  golden.forEach((g, gi) => {
+    for (const i of g.members) {
+      if (rs[i].n_email) byEmail.set(rs[i].n_email, gi);
+      if (rs[i].n_phone) byPhone.set(rs[i].n_phone, gi);
+    }
+    g.enrich = null;
+  });
+  let matched = 0, unmatched = 0;
+  for (const row of thirdParty) {
+    const e = N.email(row.email), p = N.phone(row.phone);
+    const gi = (e && byEmail.has(e)) ? byEmail.get(e) : (p && byPhone.has(p)) ? byPhone.get(p) : null;
+    if (gi === null) { unmatched++; continue; }
+    matched++;
+    if (!golden[gi].enrich) golden[gi].enrich = { ...row, via: (e && byEmail.has(e)) ? "email" : "phone" };
+  }
+  const coverage = golden.filter(g => g.enrich).length;
+  return { matched, unmatched, coverage };
 }
