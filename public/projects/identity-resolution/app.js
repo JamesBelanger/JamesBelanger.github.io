@@ -1,5 +1,6 @@
 // app.js — UI for the identity-resolution + householding demo. All computation happens in match.js, in your browser.
 import { resolve, evaluate, profile, householdize, evaluateHouseholds, matchEnrichment } from './match.js';
+import { initWorkbench, renderWorkbench } from './workbench.js';
 
 const $ = (id) => document.getElementById(id);
 const pct = (x, d = 1) => (100 * x).toFixed(d) + '%';
@@ -19,6 +20,7 @@ async function boot() {
   $('search').addEventListener('input', () => { state.query = $('search').value.toLowerCase(); renderTable(); });
   $('view-customers').addEventListener('click', () => setView('customers'));
   $('view-households').addEventListener('click', () => setView('households'));
+  initWorkbench(() => state);
   run();
 }
 
@@ -40,6 +42,7 @@ function run() {
   const ms = performance.now() - t0;
   renderHero(ms);
   renderMailer();
+  renderWorkbench();
   state.selected = 0;
   renderTable();
   // showcase a clean multi-record cluster by default (all raw first names agree after normalization)
