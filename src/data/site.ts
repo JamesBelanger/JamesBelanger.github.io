@@ -23,7 +23,6 @@ export const SITE = {
     orcid: 'https://orcid.org/0009-0003-3269-8810',
     github: 'https://github.com/JamesBelanger',
     linkedin: 'https://www.linkedin.com/in/jamesluibelanger',
-    cv: '/cv/Belanger_CV_2026-06.pdf',
   },
 };
 
@@ -32,7 +31,6 @@ export const NAV = [
   { href: '/research', label: 'Research' },
   { href: '/publications', label: 'Publications' },
   { href: '/projects', label: 'Projects' },
-  { href: '/cv', label: 'CV' },
   { href: '/news', label: 'News' },
   { href: '/contact', label: 'Contact' },
 ];
