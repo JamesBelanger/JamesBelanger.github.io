@@ -173,7 +173,8 @@ const v2Stack = ['FastAPI', 'Python', 'Azure Container Apps', 'GitHub Container 
       <p class="mt-2 max-w-2xl leading-relaxed">
         Version 2 puts a question box on top of the same data. You type a question in plain English; a
         language model then either writes SQL against the hospital tables, finds the relevant passage in
-        496 chunks of CMS documentation, or declines. Every answer comes with its evidence: the SQL and the
+        CMS documents (496 passages of measure documentation, and 833 passages from Medicare National
+        Coverage Determinations added after launch), or declines. Every answer comes with its evidence: the SQL and the
         rows it returned, or quoted passages with the document, page and a link to the source.
         It is a public demo built as a portfolio project, not a product with users. I built it with AI coding
         agents under my direction: I chose what to build, what counted as a correct answer, and the calls
@@ -186,8 +187,8 @@ const v2Stack = ['FastAPI', 'Python', 'Azure Container Apps', 'GitHub Container 
 
       <h3 class="mt-8 text-base font-semibold">How it works</h3>
       <ol class="mt-2 max-w-2xl list-decimal space-y-2 pl-5 leading-relaxed">
-        <li><strong>Plan.</strong> One model call reads the question and picks a route: data, documentation, both, or refuse. For data it writes the SQL; for documentation it rewrites the question into a search query.</li>
-        <li><strong>Evidence.</strong> SQL passes two safeguards before it touches anything. A validator checks that it is a single SELECT. Then it runs under a database login that can only read the hospital schema, in read-only transactions with a 5-second timeout; that login cannot read the documentation index, the request log or any other schema. Documentation questions use vector search over the 496 chunks and keep the top 8.</li>
+        <li><strong>Plan.</strong> One model call reads the question and picks a route: data, documentation, both, or refuse. For data it writes the SQL; for documentation it rewrites the question into a search query and picks which of the two document sets to search.</li>
+        <li><strong>Evidence.</strong> SQL passes two safeguards before it touches anything. A validator checks that it is a single SELECT. Then it runs under a database login that can only read the hospital schema, in read-only transactions with a 5-second timeout; that login cannot read the documentation index, the request log or any other schema. Documentation questions use vector search over the chosen document set and keep the top 8; a search never mixes the two sets.</li>
         <li><strong>Answer.</strong> A second call writes a short answer from only the rows and passages it was handed. Citations are checked: one with an unknown chunk id, or a quote that is not in that chunk, is dropped, and a documentation answer left with no valid citation becomes a refusal. If there is no evidence on any path, it declines without writing an answer.</li>
       </ol>
       <p class="mt-3 max-w-2xl leading-relaxed">
@@ -241,6 +242,27 @@ const v2Stack = ['FastAPI', 'Python', 'Azure Container Apps', 'GitHub Container 
         Every score is a single run, or the pair or triple shown, and repeat runs of one configuration differed by 1 to
         3 questions (final definition scores: 13, 11, 14). Read the changes in numbers accordingly: the 23 to 26 move on
         number questions held in every later run; the definition scores did not move beyond that noise.
+      </p>
+
+      <h3 class="mt-8 text-base font-semibold">Added after launch: Medicare coverage documents</h3>
+      <p class="mt-2 max-w-2xl leading-relaxed">
+        The second document set is the 345 current Medicare National Coverage Determinations, fetched from the CMS
+        Coverage API. The service can now answer &ldquo;is this covered, and under what conditions&rdquo; from the text of a
+        determination. A coverage answer names the determination, quotes it, and ends by saying it is national policy
+        and not a decision about any person. Questions about one person&rsquo;s claim, prices, other insurers or local
+        coverage rules are declined.
+      </p>
+      <p class="mt-3 max-w-2xl leading-relaxed">
+        It has its own set of 30 questions, written by an AI agent from the determinations and frozen before the
+        service saw any of them. Eight were used to adjust the prompts (8 of 8). On the other 22 the service scored
+        21 of 22 in each of two runs: 16 of 16 on what a determination covers, 2 of 3 on questions no determination
+        answers, and 3 of 3 on questions it should decline. Read that with care. The agent that wrote the questions
+        also built the feature, and each question names its item or service, so finding the right document is easy;
+        the score shows the path works, not that coverage answers are always right. The second run exists because
+        review found the answer prompt used one determination as a formatting example and a test question was about
+        that same determination; the example was replaced and the set was run again. On the original hospital-quality
+        test split the changed prompts scored 56 of 63 in one run (26 of 26 number, 15 of 22 definition, 4 of 4 and
+        11 of 11 declined) and passed the release gate.
       </p>
 
       <h3 class="mt-8 text-base font-semibold">What broke</h3>
@@ -302,6 +324,14 @@ const v2Stack = ['FastAPI', 'Python', 'Azure Container Apps', 'GitHub Container 
           later, then switched back. That rollback path skips the gate on purpose, which is why the prompt versions in use are shown on
           the health endpoint and recorded with every request.
         </li>
+        <li>
+          <strong>New documents reached the live table before the code that separates them.</strong> The coverage passages
+          were loaded into the same table the running service searches, while the running code still searched every row.
+          Until the new release shipped, a live question could have pulled a coverage passage and been answered without the
+          coverage wording rules. Review of the load step caught it, not a test. A check showed no coverage passage reached
+          the top 8 for any of the 22 definition test questions, and the release that filters by document set closed the
+          window. Loading into a separate table first would have avoided it.
+        </li>
       </ul>
 
       <h3 class="mt-8 text-base font-semibold">Cost and speed</h3>
@@ -314,10 +344,11 @@ const v2Stack = ['FastAPI', 'Python', 'Azure Container Apps', 'GitHub Container 
 
       <h3 class="mt-8 text-base font-semibold">Limits</h3>
       <ul class="mt-2 max-w-2xl list-disc space-y-1.5 pl-5 leading-relaxed">
-        <li><strong>Scope.</strong> It answers from the hospital-level quality tables and the 496 documentation chunks, nothing else. It will not rank individual doctors, quote prices, discuss patients or give medical advice. This release has one reporting period per measure, so questions about change over time cannot be answered.</li>
+        <li><strong>Scope.</strong> It answers from the hospital-level quality tables, the 496 measure-documentation passages and the 833 coverage passages, nothing else. It will not rank individual doctors, quote prices, discuss patients or give medical advice. This release has one reporting period per measure, so questions about change over time cannot be answered.</li>
         <li><strong>Definition answers are the weak spot.</strong> 11 to 14 of 22 on the test split and 11 of 15 on the holdout. For some questions the right passage is never retrieved (6 or 7 of 22 test questions in the final runs), because the documentation is thin or phrased differently for those measures. Part of the gap is the answer-key problem above.</li>
         <li><strong>Declining is graded by a blunt rule.</strong> A judge that checks whether an answer asserts anything the documents lack is planned and not built.</li>
-        <li><strong>No alerting.</strong> Nothing notifies anyone when the daily budget runs out or the error rate rises; the status page has to be looked at.</li>
+        <li><strong>Coverage is national policy text only.</strong> National Coverage Determinations as fetched on October 6, 2026, not refreshed automatically. No local coverage determinations, no billing articles, no Medicare Advantage, Medicaid or commercial plans. Twenty-nine of the 345 determinations are marked retired in their titles and can still be cited. An answer summarizes a document; it is not a coverage decision.</li>
+        <li><strong>Alerting is coarse.</strong> A scheduled check outside the service reads the request log every 30 minutes and raises an alert at 80% and 100% of the daily budget, or when at least 3 requests and a quarter of requests failed in the last hour. Each alert fires once per period. It cannot see requests turned away by a rate limit, and the schedule can run late, so an alert can arrive well after the event.</li>
         <li><strong>It is a demo.</strong> Public data, a small daily budget, questions logged without IP addresses, and no promise it will be answering at any given moment. Answers can be wrong; check the SQL or the cited source.</li>
       </ul>
 
