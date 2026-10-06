@@ -1,45 +1,94 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ManifoldViz from '../components/ManifoldViz.astro';
+import CollageHero from '../components/CollageHero.astro';
+import NeuronWall from '../components/NeuronWall.astro';
+import NameScripts from '../components/NameScripts.astro';
+import Gloss from '../components/Gloss.astro';
 import { SITE } from '../data/site';
-import { RESEARCH } from '../data/research';
+import { PROJECTS } from '../data/projects';
 import { PUBLICATIONS } from '../data/publications';
 
-const featured = RESEARCH.slice(0, 3);
+// The three lanes on the hero's label strip, each with the evidence for it.
+const lanes = [
+  {
+    name: 'Data',
+    line: 'Pipelines that clean, match and check messy records.',
+    proof: [
+      'Spike-sorting and quality-control pipeline: 98% agreement with expert curation, manual review cut from 28% of the data to 5%, adopted lab-wide.',
+      'Record matching at 98.9% precision and 90.2% recall against known ground truth, with the rule that fired shown for every match.',
+      '799K rows of federal hospital data behind an explorer with an in-browser SQL console.',
+    ],
+  },
+  {
+    name: 'Language',
+    line: 'Speech and language models, measured on real audio.',
+    proof: [
+      'A pronunciation coach whose speech model, cut from 380 MB to 123 MB, runs entirely in the browser.',
+      'A speech-recognition benchmark on faint conversational audio: 13.1% word error rate for Whisper against 44.1% for Qwen3-ASR (25.2% after tuning).',
+      '26 language models compared on a GPU cluster, in a job that finishes in about two minutes.',
+    ],
+  },
+  {
+    name: 'AI automation',
+    line: 'Agent workflows with checks built in and a person at the gate.',
+    proof: [
+      'An agent workflow that runs a ten-step brain-imaging procedure end to end: 203 electrode contacts on 19 leads localized within 0.16 mm of the hand-checked result.',
+      'A research engine where every verdict has to survive two agents trying to refute it.',
+      'Planner, worker and reviewer agents with caps, deny lists and an escalation path, used daily.',
+    ],
+  },
+];
+
+// Headline results from the language work. Numbers are from the project notes; only results that
+// survived the stricter controls are listed. `count` = the figure to count up to when it scrolls in.
+const findings = [
+  { big: '1,008', count: 1008, text: 'single neurons, recorded one at a time, in 14 patients.' },
+  { big: '81,370', count: 81370, text: 'words of live conversation, plus a 7,346-word podcast, each word timed against the spikes.' },
+  { big: '2 of 3', text: 'brain regions tracked grammar more strongly than meaning: the hippocampus and anterior cingulate, but not orbitofrontal cortex. The same answer held for a podcast and for live conversation.' },
+  { big: '26', count: 26, text: 'language models compared with the brain, from 0.1 to 32.6 billion parameters. Bigger models matched the hippocampus no better; the best match was GPT-2 medium, one of the smallest.' },
+];
+
+// Lead with what a visitor can try.
+const order = ['Pronunciation Coach (in-browser)', 'Hospital Quality Explorer', 'Identity Resolution Lab', 'Autonomous Research Engine'];
+const featured = order.map((n) => PROJECTS.find((p) => p.name === n)!).filter(Boolean);
 const recentPubs = PUBLICATIONS.filter((p) => p.type === 'journal').slice(0, 4);
 
 const linkRow = [
-  SITE.links.scholar !== '#' && { label: 'Google Scholar', href: SITE.links.scholar },
-  SITE.links.orcid !== '#' && { label: 'ORCID', href: SITE.links.orcid },
-  { label: 'GitHub', href: SITE.links.github },
   { label: 'Email', href: `mailto:${SITE.email}` },
-].filter(Boolean) as { label: string; href: string }[];
+  { label: 'GitHub', href: SITE.links.github },
+  { label: 'LinkedIn', href: SITE.links.linkedin },
+  { label: 'Google Scholar', href: SITE.links.scholar },
+];
 ---
 <BaseLayout jsonld={true}>
-  <!-- Hero -->
-  <section class="flex flex-col-reverse gap-6 sm:flex-row sm:items-start sm:gap-8">
+  <CollageHero slot="hero" />
+
+  <!-- Intro -->
+  <section class="flex flex-col gap-8 sm:flex-row sm:items-start">
     <div class="flex-1">
-      <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{SITE.name}</h1>
-      <p class="mt-1 text-base text-muted">{SITE.role} · {SITE.affiliation}</p>
-      <p class="mt-4 text-lg leading-relaxed">{SITE.tagline}</p>
+      <Gloss parts={SITE.taglineGloss} class="font-display text-3xl font-bold leading-tight sm:text-[2.6rem]" />
+      <NameScripts />
+      <div class="mt-6 space-y-4 leading-relaxed">
+        {SITE.bio.map((p) => <p>{p}</p>)}
+        <p class="font-mono text-sm text-muted">{SITE.education}</p>
+      </div>
     </div>
 
-    <img
-      src="/headshot.jpg"
-      alt={SITE.name}
-      width="208"
-      height="208"
-      class="mx-auto h-40 w-40 shrink-0 rounded-2xl border border-line object-cover sm:mx-0 sm:h-52 sm:w-52"
-    />
+    <figure class="photo mx-auto shrink-0 sm:mx-0 sm:mt-2">
+      <img src="/headshot.jpg" alt={SITE.name} width="208" height="208" class="block h-44 w-44 object-cover sm:h-52 sm:w-52" />
+      <figcaption class="mt-2 text-center font-mono text-xs text-muted">{SITE.location}</figcaption>
+    </figure>
   </section>
 
-  <!-- Link row -->
-  <div class="mt-6 flex flex-wrap gap-2">
+  <div class="mt-7 flex flex-wrap gap-2.5">
     {
-      linkRow.map((l) => (
+      linkRow.map((l, i) => (
         <a
           href={l.href}
-          class="rounded-md border border-line px-3.5 py-1.5 text-sm text-fg no-underline hover:no-underline hover:border-accent"
+          class:list={[
+            'border-2 border-fg px-3.5 pb-1 pt-1.5 font-mono text-sm font-bold text-fg no-underline transition-colors hover:bg-pop hover:text-[#141418] hover:no-underline',
+            i === 0 && 'bg-fg !text-bg hover:!text-[#141418]',
+          ]}
         >
           {l.label}
         </a>
@@ -47,59 +96,148 @@ const linkRow = [
     }
   </div>
 
-  <!-- Bio -->
-  <section class="mt-10 space-y-4 leading-relaxed">
-    <p>{SITE.shortBio}</p>
-    <p class="text-muted">{SITE.arc}</p>
-  </section>
-
-  <!-- Research motif: the live language manifold -->
-  <section class="mt-12 flex flex-col items-center text-center">
-    <ManifoldViz class="aspect-square w-full max-w-sm" />
-    <p class="mt-3 max-w-md text-sm text-muted">
-      Syntax and semantics occupy semi-orthogonal subspaces along a single low-dimensional hippocampal
-      population axis — the geometry at the heart of <a href="/research">my research</a>.
-    </p>
-  </section>
-
-  <!-- Featured research -->
-  <section class="mt-12">
-    <div class="flex items-baseline justify-between">
-      <h2 class="text-xl font-semibold">Research</h2>
-      <a href="/research" class="text-sm">All research →</a>
-    </div>
-    <div class="mt-4 grid gap-4 sm:grid-cols-3">
+  <!-- What I do -->
+  <section class="mt-16">
+    <h2 class="label">What I do</h2>
+    <div class="mt-6 grid gap-5 md:grid-cols-3">
       {
-        featured.map((t) => (
-          <a
-            href={`/research#${t.id}`}
-            class="group rounded-lg border border-line bg-card p-4 no-underline transition-colors hover:border-accent hover:no-underline"
-          >
-            <h3 class="text-sm font-semibold leading-snug text-fg group-hover:text-accent-strong">
-              {t.title}
-            </h3>
-            <p class="mt-2 line-clamp-4 text-sm text-muted">{t.summary}</p>
+        lanes.map((lane) => (
+          <div class="clip p-5">
+            <h3 class="text-xl"><span class="hl">{lane.name}</span></h3>
+            <p class="mt-2 text-[0.95rem] font-medium leading-snug">{lane.line}</p>
+            <ul class="mt-3 space-y-2.5 text-sm leading-snug text-muted">
+              {lane.proof.map((p) => <li class="border-t border-line pt-2.5">{p}</li>)}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="mt-16">
+    <div class="flex items-end justify-between gap-4">
+      <h2 class="label">Try the work</h2>
+      <a href="/projects" class="font-mono text-sm font-bold">All projects →</a>
+    </div>
+    <div class="mt-6 grid gap-5 sm:grid-cols-2">
+      {
+        featured.map((p) => (
+          <a href={p.links![0].href} class="clip group block p-5 no-underline hover:no-underline">
+            <h3 class="text-lg leading-snug text-fg">{p.name}</h3>
+            <p class="mt-2 line-clamp-4 text-sm leading-relaxed text-muted">{p.blurb}</p>
+            <p class="mt-3 font-mono text-sm font-bold text-accent-strong">{p.links![0].label} →</p>
           </a>
         ))
       }
     </div>
   </section>
 
-  <!-- Selected publications -->
-  <section class="mt-12">
-    <div class="flex items-baseline justify-between">
-      <h2 class="text-xl font-semibold">Selected publications</h2>
-      <a href="/publications" class="text-sm">All publications →</a>
+  <!-- Where it comes from -->
+  <section class="mt-16">
+    <h2 class="label">Where it comes from</h2>
+    <p class="mt-6 leading-relaxed">
+      The lab work was research on how the human brain represents language: we recorded single neurons while
+      people listened and talked, then asked what each one was tracking. It produced nine co-authored papers,
+      four of them in press at Nature, Nature Human Behaviour, Nature Neuroscience and Cell.
+    </p>
+
+    <NeuronWall class="mt-6" />
+
+    <div class="mt-6 grid gap-5 sm:grid-cols-2" data-findings>
+      {
+        findings.map((f) => (
+          <div class="clip p-5">
+            <p class="font-display text-4xl font-bold leading-none">
+              <span class="hl" data-count={f.count}>{f.big}</span>
+            </p>
+            <p class="mt-3 text-[0.95rem] leading-snug">{f.text}</p>
+          </div>
+        ))
+      }
     </div>
-    <ul class="mt-3">
+    <p class="mt-5 text-sm text-muted">
+      From analyses for a manuscript that is still in preparation. Several earlier results did not survive
+      stricter controls and were dropped; these are the ones that did.
+    </p>
+    <p class="mt-4 font-mono text-sm font-bold">
+      <a href="/research">Research →</a>
+      <a href="/publications" class="ml-5">Publications →</a>
+    </p>
+    <ul class="mt-6">
       {
         recentPubs.map((p) => (
-          <li class="border-b border-line py-3 last:border-0">
+          <li class="border-t border-line py-3">
             <span class="text-[0.95rem]">{p.title}</span>
-            <span class="ml-1 text-sm text-muted">— {p.venue}, {p.year}</span>
+            <span class="ml-1 text-sm text-muted">{p.venue}, {p.year}</span>
           </li>
         ))
       }
     </ul>
   </section>
+
+  <!-- Languages + contact -->
+  <section class="mt-16 grid gap-5 sm:grid-cols-2">
+    <div class="clip p-5">
+      <h2 class="font-mono text-xs font-bold uppercase tracking-widest text-muted">Languages I speak</h2>
+      <p class="mt-2 leading-snug">{SITE.languages}</p>
+      <p class="mt-2 text-sm text-muted">Plus a habit of learning writing systems, which is why my name keeps changing script up top. Press play on any of them.</p>
+    </div>
+    <a href={`mailto:${SITE.email}`} class="clip halftone block p-5 text-[#141418] no-underline hover:no-underline">
+      <span class="font-mono text-xs font-bold uppercase tracking-widest">Get in touch</span>
+      <span class="mt-2 block font-display text-2xl font-bold leading-tight">{SITE.email}</span>
+      <span class="mt-2 block text-sm font-medium">Houston, open to remote or relocating.</span>
+    </a>
+  </section>
 </BaseLayout>
+
+<style>
+  /* The headshot as a photo taped to the page. */
+  .photo {
+    position: relative;
+    padding: 8px 8px 6px;
+    background: var(--card);
+    box-shadow: 0 0 0 1px var(--line), 4px 6px 0 var(--shadow);
+    transform: rotate(2.2deg);
+  }
+  .photo::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -11px;
+    width: 5.5rem;
+    height: 1.4rem;
+    translate: -50% 0;
+    rotate: -3deg;
+    background: rgb(255 200 46 / 0.78);
+    box-shadow: 0 1px 1px rgb(0 0 0 / 0.12);
+  }
+</style>
+
+<script>
+  // Count the headline numbers up once, when they scroll into view.
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const els = document.querySelectorAll<HTMLElement>('[data-findings] [data-count]');
+  if (!RM && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          io.unobserve(e.target);
+          const el = e.target as HTMLElement;
+          const to = Number(el.dataset.count);
+          if (!to) continue;
+          const t0 = performance.now();
+          const tick = (now: number) => {
+            const p = Math.min(1, (now - t0) / 1100);
+            el.textContent = Math.round(to * (1 - (1 - p) ** 3)).toLocaleString('en-US');
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }
+      },
+      { threshold: 0.6 },
+    );
+    els.forEach((el) => io.observe(el));
+  }
+</script>

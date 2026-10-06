@@ -1,0 +1,539 @@
+{
+ "width": 1584,
+ "height": 396,
+ "variant": "industry",
+ "palette": "teal_marigold",
+ "seed": 7,
+ "layers": [
+  {
+   "file": "00-bg.webp",
+   "tag": "bg",
+   "cx": 792.0,
+   "cy": 198.0,
+   "w": 1584.0,
+   "h": 396.0,
+   "rot": 0,
+   "shadow": 0
+  },
+  {
+   "file": "01-field.webp",
+   "tag": "field",
+   "cx": 150,
+   "cy": 105,
+   "w": 400.0,
+   "h": 280.0,
+   "rot": -7,
+   "shadow": 0.28
+  },
+  {
+   "file": "02-field.webp",
+   "tag": "field",
+   "cx": 760,
+   "cy": 372,
+   "w": 560.0,
+   "h": 150.0,
+   "rot": 3,
+   "shadow": 0.28
+  },
+  {
+   "file": "03-field.webp",
+   "tag": "field",
+   "cx": 1425,
+   "cy": 190,
+   "w": 400.0,
+   "h": 430.0,
+   "rot": 9,
+   "shadow": 0.28
+  },
+  {
+   "file": "04-field.webp",
+   "tag": "field",
+   "cx": 705,
+   "cy": 22,
+   "w": 400.0,
+   "h": 130.0,
+   "rot": -4,
+   "shadow": 0.28
+  },
+  {
+   "file": "05-field.webp",
+   "tag": "field",
+   "cx": 1035,
+   "cy": 28,
+   "w": 190.0,
+   "h": 80.0,
+   "rot": 6,
+   "shadow": 0.28
+  },
+  {
+   "file": "06-field.webp",
+   "tag": "field",
+   "cx": 470,
+   "cy": 372,
+   "w": 170.0,
+   "h": 90.0,
+   "rot": -10,
+   "shadow": 0.28
+  },
+  {
+   "file": "07-field.webp",
+   "tag": "field",
+   "cx": 1190,
+   "cy": 352,
+   "w": 230.0,
+   "h": 120.0,
+   "rot": -5,
+   "shadow": 0.28
+  },
+  {
+   "file": "08-field.webp",
+   "tag": "field",
+   "cx": 372,
+   "cy": 48,
+   "w": 130.0,
+   "h": 100.0,
+   "rot": 12,
+   "shadow": 0.28
+  },
+  {
+   "file": "09-field.webp",
+   "tag": "field",
+   "cx": 60,
+   "cy": 340,
+   "w": 200.0,
+   "h": 160.0,
+   "rot": 8,
+   "shadow": 0.28
+  },
+  {
+   "file": "10-ipa.webp",
+   "tag": "ipa",
+   "cx": 468,
+   "cy": 62,
+   "w": 260.0,
+   "h": 111.0,
+   "rot": -3,
+   "shadow": 0
+  },
+  {
+   "file": "11-ipa.webp",
+   "tag": "ipa",
+   "cx": 1235,
+   "cy": 262,
+   "w": 260.0,
+   "h": 111.0,
+   "rot": 4,
+   "shadow": 0
+  },
+  {
+   "file": "12-clip-psth.webp",
+   "tag": "clip-psth",
+   "cx": 262,
+   "cy": 322,
+   "w": 162.0,
+   "h": 120.0,
+   "rot": 6,
+   "shadow": 0.4
+  },
+  {
+   "file": "13-clip-grid.webp",
+   "tag": "clip-grid",
+   "cx": 142,
+   "cy": 78,
+   "w": 262.0,
+   "h": 144.0,
+   "rot": -5,
+   "shadow": 0.4
+  },
+  {
+   "file": "14-sticker-brain.webp",
+   "tag": "sticker-brain",
+   "cx": 322,
+   "cy": 96,
+   "w": 169.0,
+   "h": 160.0,
+   "rot": 9,
+   "shadow": 0.4
+  },
+  {
+   "file": "15-clip-arcs.webp",
+   "tag": "clip-arcs",
+   "cx": 680,
+   "cy": 58,
+   "w": 348.0,
+   "h": 108.0,
+   "rot": -2,
+   "shadow": 0.4
+  },
+  {
+   "file": "16-clip-words.webp",
+   "tag": "clip-words",
+   "cx": 955,
+   "cy": 56,
+   "w": 218.0,
+   "h": 112.0,
+   "rot": 5,
+   "shadow": 0.4
+  },
+  {
+   "file": "17-clip-agents.webp",
+   "tag": "clip-agents",
+   "cx": 1178,
+   "cy": 76,
+   "w": 177.0,
+   "h": 132.0,
+   "rot": -6,
+   "shadow": 0.4
+  },
+  {
+   "file": "18-clip-manifold.webp",
+   "tag": "clip-manifold",
+   "cx": 1432,
+   "cy": 98,
+   "w": 257.0,
+   "h": 172.0,
+   "rot": 4,
+   "shadow": 0.4
+  },
+  {
+   "file": "19-clip-browser.webp",
+   "tag": "clip-browser",
+   "cx": 532,
+   "cy": 318,
+   "w": 244.0,
+   "h": 154.0,
+   "rot": -4,
+   "shadow": 0.4
+  },
+  {
+   "file": "20-clip-speech.webp",
+   "tag": "clip-speech",
+   "cx": 1112,
+   "cy": 343,
+   "w": 332.0,
+   "h": 92.0,
+   "rot": 2,
+   "shadow": 0.4
+  },
+  {
+   "file": "21-clip-code.webp",
+   "tag": "clip-code",
+   "cx": 1418,
+   "cy": 305,
+   "w": 262.0,
+   "h": 116.0,
+   "rot": -3,
+   "shadow": 0.4
+  },
+  {
+   "file": "22-staff.webp",
+   "tag": "staff",
+   "cx": 752,
+   "cy": 360,
+   "w": 215.0,
+   "h": 42.0,
+   "rot": -3,
+   "shadow": 0.4
+  },
+  {
+   "file": "23-stamp-paper.webp",
+   "tag": "stamp-paper",
+   "cx": 1452,
+   "cy": 224,
+   "w": 205.0,
+   "h": 84.0,
+   "rot": -8,
+   "shadow": 0.4
+  },
+  {
+   "file": "24-stamp.webp",
+   "tag": "stamp",
+   "cx": 1452,
+   "cy": 224,
+   "w": 162.5,
+   "h": 58.0,
+   "rot": -8,
+   "shadow": 0
+  },
+  {
+   "file": "25-sticker-mic.webp",
+   "tag": "sticker-mic",
+   "cx": 912,
+   "cy": 350,
+   "w": 93.5,
+   "h": 90.5,
+   "rot": -14,
+   "shadow": 0.4
+  },
+  {
+   "file": "26-sticker-noodle.webp",
+   "tag": "sticker-noodle",
+   "cx": 1078,
+   "cy": 70,
+   "w": 62.0,
+   "h": 65.5,
+   "rot": 8,
+   "shadow": 0.4
+  },
+  {
+   "file": "27-chip-ru.webp",
+   "tag": "chip-ru",
+   "cx": 985,
+   "cy": 121,
+   "w": 109.0,
+   "h": 37.0,
+   "rot": 3,
+   "shadow": 0.4
+  },
+  {
+   "file": "28-chip-ko.webp",
+   "tag": "chip-ko",
+   "cx": 464,
+   "cy": 59,
+   "w": 86.0,
+   "h": 34.5,
+   "rot": 4,
+   "shadow": 0.4
+  },
+  {
+   "file": "29-chip-zh.webp",
+   "tag": "chip-zh",
+   "cx": 452,
+   "cy": 99,
+   "w": 86.0,
+   "h": 34.0,
+   "rot": -4,
+   "shadow": 0.4
+  },
+  {
+   "file": "30-chip-brl.webp",
+   "tag": "chip-brl",
+   "cx": 852,
+   "cy": 116,
+   "w": 127.0,
+   "h": 34.5,
+   "rot": -3,
+   "shadow": 0.4
+  },
+  {
+   "file": "31-chip-am.webp",
+   "tag": "chip-am",
+   "cx": 1286,
+   "cy": 26,
+   "w": 79.5,
+   "h": 35.5,
+   "rot": -7,
+   "shadow": 0.4
+  },
+  {
+   "file": "32-chip-ar.webp",
+   "tag": "chip-ar",
+   "cx": 1158,
+   "cy": 270,
+   "w": 102.0,
+   "h": 30.5,
+   "rot": 3,
+   "shadow": 0.4
+  },
+  {
+   "file": "33-chip-hi.webp",
+   "tag": "chip-hi",
+   "cx": 1252,
+   "cy": 264,
+   "w": 63.5,
+   "h": 39.5,
+   "rot": -5,
+   "shadow": 0.4
+  },
+  {
+   "file": "34-chip-el.webp",
+   "tag": "chip-el",
+   "cx": 392,
+   "cy": 268,
+   "w": 91.0,
+   "h": 35.0,
+   "rot": -8,
+   "shadow": 0.4
+  },
+  {
+   "file": "35-chip-ja.webp",
+   "tag": "chip-ja",
+   "cx": 1372,
+   "cy": 369,
+   "w": 123.0,
+   "h": 31.5,
+   "rot": -3,
+   "shadow": 0.4
+  },
+  {
+   "file": "36-chip-he.webp",
+   "tag": "chip-he",
+   "cx": 1508,
+   "cy": 368,
+   "w": 77.0,
+   "h": 26.0,
+   "rot": 4,
+   "shadow": 0.4
+  },
+  {
+   "file": "37-chip-th.webp",
+   "tag": "chip-th",
+   "cx": 105,
+   "cy": 172,
+   "w": 77.5,
+   "h": 35.0,
+   "rot": -5,
+   "shadow": 0.4
+  },
+  {
+   "file": "38-chip-hy.webp",
+   "tag": "chip-hy",
+   "cx": 224,
+   "cy": 177,
+   "w": 84.5,
+   "h": 37.0,
+   "rot": 5,
+   "shadow": 0.4
+  },
+  {
+   "file": "39-letter.webp",
+   "tag": "letter",
+   "cx": 392.25,
+   "cy": 188.54,
+   "w": 48.5,
+   "h": 106.0,
+   "rot": -3.8983991194334067,
+   "shadow": 0.45
+  },
+  {
+   "file": "40-letter.webp",
+   "tag": "letter",
+   "cx": 458.96,
+   "cy": 194.8,
+   "w": 92.0,
+   "h": 86.0,
+   "rot": -4.1734128671701285,
+   "shadow": 0.45
+  },
+  {
+   "file": "41-letter.webp",
+   "tag": "letter",
+   "cx": 540.18,
+   "cy": 193.5,
+   "w": 78.5,
+   "h": 87.5,
+   "rot": 1.0519788330617228,
+   "shadow": 0.45
+  },
+  {
+   "file": "42-letter.webp",
+   "tag": "letter",
+   "cx": 617.33,
+   "cy": 187.8,
+   "w": 81.0,
+   "h": 86.5,
+   "rot": 1.8625941035759075,
+   "shadow": 0.45
+  },
+  {
+   "file": "43-letter.webp",
+   "tag": "letter",
+   "cx": 691.83,
+   "cy": 196.37,
+   "w": 75.0,
+   "h": 88.5,
+   "rot": -5.090363173045911,
+   "shadow": 0.45
+  },
+  {
+   "file": "44-letter.webp",
+   "tag": "letter",
+   "cx": 815.69,
+   "cy": 196.6,
+   "w": 126.5,
+   "h": 104.0,
+   "rot": 3.1957582745677993,
+   "shadow": 0.45
+  },
+  {
+   "file": "45-letter.webp",
+   "tag": "letter",
+   "cx": 905.46,
+   "cy": 195.73,
+   "w": 59.0,
+   "h": 84.5,
+   "rot": -2.949871174667087,
+   "shadow": 0.45
+  },
+  {
+   "file": "46-letter.webp",
+   "tag": "letter",
+   "cx": 957.06,
+   "cy": 187.3,
+   "w": 54.5,
+   "h": 101.0,
+   "rot": 1.1247719552387085,
+   "shadow": 0.45
+  },
+  {
+   "file": "47-letter.webp",
+   "tag": "letter",
+   "cx": 1002.55,
+   "cy": 194.32,
+   "w": 48.5,
+   "h": 82.5,
+   "rot": -3.351520291902415,
+   "shadow": 0.45
+  },
+  {
+   "file": "48-letter.webp",
+   "tag": "letter",
+   "cx": 1073.46,
+   "cy": 188.06,
+   "w": 103.5,
+   "h": 84.0,
+   "rot": -4.35751357450995,
+   "shadow": 0.45
+  },
+  {
+   "file": "49-letter.webp",
+   "tag": "letter",
+   "cx": 1175.47,
+   "cy": 199.15,
+   "w": 105.5,
+   "h": 106.5,
+   "rot": 3.1932073641449,
+   "shadow": 0.45
+  },
+  {
+   "file": "50-letter.webp",
+   "tag": "letter",
+   "cx": 1248.11,
+   "cy": 189.8,
+   "w": 44.5,
+   "h": 85.0,
+   "rot": 5.212990118466671,
+   "shadow": 0.45
+  },
+  {
+   "file": "51-letter.webp",
+   "tag": "letter",
+   "cx": 1288.44,
+   "cy": 189.16,
+   "w": 48.5,
+   "h": 82.5,
+   "rot": -4.484013097383569,
+   "shadow": 0.45
+  },
+  {
+   "file": "52-label.webp",
+   "tag": "label",
+   "cx": 862,
+   "cy": 300,
+   "w": 376.0,
+   "h": 32.0,
+   "rot": -1.5,
+   "shadow": 0.45
+  }
+ ]
+}

@@ -1,0 +1,97 @@
+---
+// A sentence that parses itself on hover: each constituent gets a bracket
+// underline, and the one under the pointer (or keyboard focus / tap) shows its
+// phrase category and Spanish gloss. Reads as a plain sentence otherwise.
+// Pure CSS — no script.
+interface Props {
+  parts: { text: string; cat: string; es: string }[];
+  class?: string;
+}
+const { parts, class: className = '' } = Astro.props;
+---
+<p class:list={['gloss', className]}>
+  {
+    parts.map((p, i) => (
+      <>
+        <span class="chunk" tabindex="0">
+          {p.text}
+          <span class="tip" role="note">
+            <span class="cat">{p.cat}</span>
+            <span lang="es">{p.es}</span>
+          </span>
+        </span>
+        {i < parts.length - 1 ? ' ' : ''}
+      </>
+    ))
+  }
+</p>
+
+<style>
+  .chunk {
+    position: relative;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease, color 0.2s ease;
+    outline: none;
+  }
+  /* Hovering the sentence reveals the segmentation… */
+  .gloss:hover .chunk,
+  .gloss:focus-within .chunk {
+    border-bottom-color: var(--line);
+  }
+  /* …and the active constituent lights up. */
+  .chunk:hover,
+  .chunk:focus {
+    border-bottom-color: var(--accent);
+    color: var(--accent-strong);
+  }
+  .tip {
+    position: absolute;
+    left: 0;
+    top: calc(100% + 6px);
+    z-index: 20;
+    display: none; /* not just transparent: a hidden box would still widen the page on phones */
+    align-items: baseline;
+    gap: 0.5rem;
+    width: max-content;
+    max-width: min(22rem, 80vw);
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--card);
+    color: var(--fg);
+    font-size: 0.875rem;
+    line-height: 1.4;
+    pointer-events: none;
+  }
+  .chunk:hover .tip,
+  .chunk:focus .tip {
+    display: flex;
+    animation: tip-in 0.15s ease;
+  }
+  @keyframes tip-in {
+    from {
+      opacity: 0;
+      transform: translateY(-3px);
+    }
+  }
+  /* Narrow screens: anchor the gloss under the whole sentence so it can't run off the edge. */
+  @media (max-width: 640px) {
+    .gloss {
+      position: relative;
+    }
+    .chunk {
+      position: static;
+    }
+    .tip {
+      right: 0;
+      width: auto;
+      max-width: none;
+    }
+  }
+  .cat {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    color: var(--accent-strong);
+  }
+</style>

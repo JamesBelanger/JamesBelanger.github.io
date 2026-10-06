@@ -18,7 +18,7 @@ export const RESEARCH: ResearchTheme[] = [
     flagship: true,
     status: 'Manuscript in preparation',
     summary:
-      'In recordings from human hippocampus, syntactic and semantic information are not spread across separate, distributed populations — they are written into semi-orthogonal subspaces along a single, strikingly low-dimensional population axis. The brain’s solution is more compressed than the internal geometry of any state-of-the-art language model I compared it against. This is the core of my research: characterizing that geometry and asking what it teaches us about efficient computation.',
+      'In recordings from human hippocampus, syntactic and semantic information are not spread across separate, distributed populations — they are written into semi-orthogonal subspaces along a single, strikingly low-dimensional population axis. Grammar is the stronger signal: in the hippocampus and anterior cingulate, syntactic features predict firing better than semantic ones, in both podcast listening and live conversation. This is the core of my research: characterizing that geometry and asking what it teaches us about efficient computation.',
     methods: [
       'Poisson GLM (spike counts)',
       'Cross-validated GPU ridge (PyTorch)',
@@ -28,11 +28,11 @@ export const RESEARCH: ResearchTheme[] = [
       'Representational Similarity Analysis',
       'Principal-angle / semi-orthogonality',
       'Participation ratio & manifold capacity',
-      'Benchmark vs. 10 open-weight LLMs',
+      'Benchmark vs. 26 open-weight LLMs',
     ],
     figure: {
       caption:
-        'Figure: semi-orthogonal syntactic and semantic subspaces along a shared low-dimensional hippocampal population axis.',
+        'Illustration, not data: semi-orthogonal syntactic and semantic subspaces along a shared low-dimensional hippocampal population axis.',
       alt: 'Schematic of two semi-orthogonal subspaces embedded along a shared low-dimensional neural population axis.',
     },
     links: [{ label: 'Related preprint: A geometric foundation for word meaning', href: '/publications' }],
@@ -42,7 +42,7 @@ export const RESEARCH: ResearchTheme[] = [
     title: 'Aligning language models to the brain (QA-Emb)',
     status: 'Multiple analyses complete; LLM-vs-brain figure validated',
     summary:
-      'I built a question-answer embedding framework (QA-Emb) that interrogates the hidden states of large language models and aligns them against hippocampal population geometry. Across ten models, syntax is read out from shallower layers than semantics — a depth gap that survives length-controlled, grain-matched comparison in 9 of 10 models.',
+      'I built a question-answer embedding framework (QA-Emb) that interrogates the hidden states of large language models and aligns them against hippocampal population geometry. Across 26 models, from 0.1 to 32.6 billion parameters, both the syntactic and the semantic components of every model predict hippocampal activity above chance, and the syntactic component predicts it better in 23 of the 26. Bigger models are not more brain-like: alignment does not grow with parameter count.',
     methods: [
       'QA-Emb (text & video)',
       'Layer-wise transformer extraction',
@@ -52,8 +52,8 @@ export const RESEARCH: ResearchTheme[] = [
       'Wavelet null models',
     ],
     figure: {
-      caption: 'Figure: layer-wise LLM-to-brain alignment — the syntax-before-semantics depth gap.',
-      alt: 'Layer-wise alignment curves showing syntactic information peaking at shallower layers than semantic information.',
+      caption: 'Figure: layer-wise LLM-to-brain alignment across 26 models.',
+      alt: 'Layer-wise alignment curves for syntactic and semantic components across 26 language models.',
     },
   },
   {

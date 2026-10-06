@@ -1,8 +1,8 @@
 {
   "name": "James Belanger",
   "short_name": "J. Belanger",
-  "theme_color": "#0d7d7d",
-  "background_color": "#0f1116",
+  "theme_color": "#0d948e",
+  "background_color": "#faf7ee",
   "display": "browser",
   "icons": [
     {

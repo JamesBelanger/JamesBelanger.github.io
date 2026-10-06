@@ -9,7 +9,7 @@ interface Props {
   jsonld?: boolean;
 }
 
-const { title, description = SITE.tagline, image = SITE.ogImage, type = 'website', jsonld = false } =
+const { title, description = SITE.description, image = SITE.ogImage, type = 'website', jsonld = false } =
   Astro.props;
 
 const pageTitle = title ? `${title} — ${SITE.name}` : SITE.title;
@@ -23,15 +23,15 @@ const person = {
   name: SITE.name,
   url: SITE.url,
   email: `mailto:${SITE.email}`,
-  jobTitle: SITE.role,
-  affiliation: { '@type': 'Organization', name: 'Baylor College of Medicine' },
+  description: SITE.description,
   alumniOf: { '@type': 'CollegeOrUniversity', name: 'Rice University' },
   knowsAbout: [
-    'Computational neuroscience',
-    'Natural language processing',
-    'Single-neuron electrophysiology',
+    'Data pipelines and data quality',
+    'Speech and language technology',
     'Machine learning',
-    'Computational linguistics',
+    'AI agent workflows',
+    'Natural language processing',
+    'Computational neuroscience',
   ],
   sameAs: [SITE.links.scholar, SITE.links.orcid, SITE.links.github, SITE.links.linkedin].filter(
     (u) => u && u !== '#'
@@ -45,11 +45,12 @@ const person = {
 <meta name="description" content={description} />
 <meta name="author" content={SITE.name} />
 <link rel="canonical" href={canonical} />
-<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+<link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
-<meta name="theme-color" content="#0d7d7d" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#0f1116" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#0d948e" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#141418" media="(prefers-color-scheme: dark)" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <meta name="generator" content={Astro.generator} />
 

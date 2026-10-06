@@ -5,12 +5,10 @@ import ThemeToggle from './ThemeToggle.astro';
 const path = Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
-<header class="sticky top-0 z-50 border-b border-line bg-bg/85 backdrop-blur supports-[backdrop-filter]:bg-bg/70">
+<header class="sticky top-0 z-50 border-b-2 border-fg bg-bg/90 backdrop-blur supports-[backdrop-filter]:bg-bg/80">
   <nav aria-label="Primary" class="mx-auto flex w-full max-w-3xl flex-wrap items-center gap-x-5 gap-y-2 px-5 py-3">
-    <a href="/" class="mr-auto font-semibold tracking-tight text-fg no-underline hover:no-underline">
-      {SITE.name}
-    </a>
-    <ul class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+    <a href="/" class="label mr-auto no-underline hover:no-underline">{SITE.name}</a>
+    <ul class="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[0.8125rem] font-bold uppercase tracking-wider">
       {
         NAV.filter((l) => l.href !== '/').map((l) => (
           <li>
@@ -19,7 +17,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
               aria-current={isActive(l.href) ? 'page' : undefined}
               class:list={[
                 'no-underline hover:no-underline transition-colors',
-                isActive(l.href) ? 'text-accent-strong font-medium' : 'text-muted hover:text-fg',
+                isActive(l.href) ? 'hl text-fg' : 'text-muted hover:text-fg',
               ]}
             >
               {l.label}

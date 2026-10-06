@@ -1,0 +1,109 @@
+---
+// Scroll-driven spike raster in the right gutter. Each column is a "neuron"
+// with a place field somewhere along the page: scrolling past its preferred
+// position makes it fire, so reading the page sweeps a sequence across the
+// columns. Time runs upward; spikes rise and fade like fireflies, and the
+// gutter is empty when the page is still.
+//
+// Decorative only: aria-hidden, no pointer events, wide screens only, and not
+// started at all under prefers-reduced-motion. Vanilla canvas, theme-aware.
+---
+<canvas
+  data-raster
+  aria-hidden="true"
+  class="pointer-events-none fixed right-8 top-1/2 hidden h-[60vh] w-20 -translate-y-1/2 xl:block"
+></canvas>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-raster]');
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (canvas && !RM) {
+    const ctx = canvas.getContext('2d')!;
+    const N = 12; // neurons (columns)
+    const LIFE = 2600; // ms a spike stays visible
+    const RISE = 0.07; // px per ms
+    const PX_PER_SPIKE = 26; // scroll distance per expected spike at a field's peak
+    const SIGMA = 0.16; // place-field width, in page-progress units
+
+    type Spike = { col: number; born: number };
+    let spikes: Spike[] = [];
+    let w = 0;
+    let h = 0;
+    let lastY = window.scrollY;
+    let pending = 0; // scroll distance not yet converted into spikes
+    let running = false;
+    let color = '';
+
+    const resize = () => {
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      w = canvas.clientWidth;
+      h = canvas.clientHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const readColor = () => {
+      color = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+    };
+
+    const progress = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      return max > 0 ? window.scrollY / max : 0;
+    };
+
+    const fire = (now: number) => {
+      const p = progress();
+      for (let c = 0; c < N; c++) {
+        const d = p - c / (N - 1);
+        const tuning = 0.06 + Math.exp(-(d * d) / (2 * SIGMA * SIGMA));
+        let expected = (pending / PX_PER_SPIKE) * tuning;
+        // Poisson-ish: whole spikes, plus a Bernoulli draw on the remainder.
+        while (expected > 0) {
+          if (Math.random() < expected) spikes.push({ col: c, born: now - Math.random() * 16 });
+          expected -= 1;
+        }
+      }
+      pending = 0;
+    };
+
+    const frame = (now: number) => {
+      if (pending > 0) fire(now);
+      spikes = spikes.filter((s) => now - s.born < LIFE);
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = color;
+      const colW = w / N;
+      for (const s of spikes) {
+        const age = now - s.born;
+        ctx.globalAlpha = 0.85 * (1 - age / LIFE) ** 1.5;
+        ctx.fillRect(s.col * colW + 1, h - 2 - age * RISE, colW - 2, 1.5);
+      }
+      ctx.globalAlpha = 1;
+      if (spikes.length) requestAnimationFrame(frame);
+      else running = false;
+    };
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (canvas.clientWidth === 0) return; // hidden below the xl breakpoint
+        if (canvas.clientWidth !== w) resize();
+        pending += Math.abs(window.scrollY - lastY);
+        lastY = window.scrollY;
+        if (!running) {
+          running = true;
+          requestAnimationFrame(frame);
+        }
+      },
+      { passive: true },
+    );
+    window.addEventListener('resize', resize);
+    new MutationObserver(readColor).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+    resize();
+    readColor();
+  }
+</script>

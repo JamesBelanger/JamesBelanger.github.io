@@ -3,21 +3,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { PROJECTS } from '../data/projects';
 import Tag from '../components/Tag.astro';
 
-const categories = ['Research engineering', 'Product / full-stack'] as const;
+const categories = ['Product / full-stack', 'Research engineering'] as const;
+const heading = { 'Product / full-stack': 'Shipped tools', 'Research engineering': 'Research engineering' } as const;
 ---
-<BaseLayout title="Projects" description="Research software and full-stack projects by James Belanger.">
+<BaseLayout title="Projects" description="Tools James Belanger has built and shipped: data, speech and language, and AI agent workflows.">
   <h1 class="text-3xl font-bold tracking-tight">Projects</h1>
   <p class="mt-3 max-w-2xl text-lg leading-relaxed text-muted">
-    Reproducible scientific software, and a couple of shipped full-stack apps — the engineering behind the research.
+    Things I built and put in front of people, most with a live demo you can try, followed by the research software behind the papers.
   </p>
 
   {
     categories.map((cat) => (
       <section class="mt-10">
-        <h2 class="text-lg font-semibold text-muted">{cat}</h2>
-        <div class="mt-3 grid gap-4 sm:grid-cols-2">
+        <h2 class="label">{heading[cat]}</h2>
+        <div class="mt-5 grid gap-5 sm:grid-cols-2">
           {PROJECTS.filter((p) => p.category === cat).map((p) => (
-            <article class="flex flex-col rounded-lg border border-line bg-card p-5">
+            <article class="clip flex flex-col p-5">
               <h3 class="text-base font-semibold leading-snug">{p.name}</h3>
               <p class="mt-2 flex-1 text-sm leading-relaxed text-muted">{p.blurb}</p>
               <div class="mt-3 flex flex-wrap gap-1.5">

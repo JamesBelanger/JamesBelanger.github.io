@@ -1,0 +1,324 @@
+---
+// The home hero: James's cut-paper collage, re-assembled from separate cutouts
+// so every piece can move on its own.
+//
+// Art comes from the LinkedIn banner script, which exports each placed piece as
+// a WebP plus public/collage/layers.json (positions in banner px):
+//   python make_banner.py --variant industry --palette teal_marigold \
+//          --export-layers <site>/public/collage
+// (vault: 03_Career_and_Admin/Personal_Website/LinkedIn_Banner/). Re-run it and
+// rebuild to change the art; nothing here hard-codes a position.
+//
+// Motion: three numbers on the stage (--mx, --my, --sy) drive every piece through
+// its own depth (--d), so the script only writes three custom properties a frame.
+// Pointer drift is desktop-only; all motion is off under prefers-reduced-motion.
+import collage from '../../public/collage/layers.json';
+import { SITE } from '../data/site';
+import TornEdge from './TornEdge.astro';
+
+const { width: W, height: H, layers } = collage;
+const [bg, ...pieces] = layers;
+
+// How far a piece travels, by kind (first word of its tag). Nearer = more.
+const DEPTH: Record<string, number> = {
+  field: 0.12, ipa: 0.08, clip: 0.42, staff: 0.5, stamp: 0.46, sticker: 0.85, chip: 0.62, letter: 0.2, label: 0.3,
+};
+// Clippings that double as signposts.
+const LINKS: Record<string, { href: string; label: string }> = {
+  'clip-browser': { href: '/projects', label: 'Projects' },
+  'clip-grid': { href: '/projects/identity-resolution/', label: 'Identity Resolution Lab' },
+  'clip-psth': { href: '/projects/hospital-quality/explore/', label: 'Hospital Quality Explorer' },
+  'clip-speech': { href: '/projects/pronunciation/', label: 'Pronunciation Coach' },
+  'sticker-mic': { href: '/projects/pronunciation/', label: 'Pronunciation Coach' },
+  'clip-agents': { href: '/projects/research-engine', label: 'Research Engine' },
+  'clip-code': { href: '/projects/research-engine', label: 'Research Engine' },
+  'clip-manifold': { href: '/research', label: 'Research' },
+  'sticker-brain': { href: '/research', label: 'Research' },
+  stamp: { href: '/contact', label: 'Contact' },
+};
+const HOT = new Set(['clip', 'sticker', 'chip', 'letter', 'stamp']);
+// Name chips are tagged chip-<lang> by the export; clicking one plays that language
+// (NameScripts.astro owns the audio and listens for `name:say`). Braille has no voice of its own.
+const LANG_LABEL: Record<string, string> = Object.fromEntries(SITE.nameScripts.map((s) => [s.lang, s.label]));
+const chipLang = (tag: string) => {
+  const code = tag.startsWith('chip-') ? tag.slice(5) : '';
+  return !code ? undefined : code === 'brl' ? { lang: 'en', label: 'English' } : { lang: code, label: LANG_LABEL[code] ?? code };
+};
+const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
+
+// Phone layout. A 4:1 strip is ~150 px tall on a phone, so below 640 px the same pieces are
+// re-pasted onto a taller sheet (MW x MH art units) with the name stacked over two rows.
+// Keys are the layer tag plus its ordinal among same-tag layers; value = [centre x, centre y, scale].
+// Pieces not listed are left off the phone sheet.
+const MW = 800;
+const MH = 760;
+const NAME_SCALE = 1.34;
+const NAME_ROWS = [262, 428];
+const PHONE: Record<string, [number, number, number]> = {
+  'field:0': [140, 110, 1], 'field:3': [600, 40, 1], 'field:2': [725, 470, 0.9], 'field:1': [330, 705, 1],
+  'field:4': [690, 195, 1], 'field:5': [90, 565, 1.1], 'field:8': [60, 335, 0.9], 'field:6': [640, 645, 1],
+  'field:7': [330, 150, 1], 'ipa:0': [250, 150, 1], 'ipa:1': [600, 545, 1],
+  'clip-arcs:0': [300, 74, 1.25], 'clip-words:0': [655, 86, 1.05], 'sticker-brain:0': [84, 172, 0.75],
+  'sticker-noodle:0': [735, 178, 1.1], 'chip-ko:0': [585, 168, 1.25], 'chip-zh:0': [455, 166, 1.25],
+  'chip-ru:0': [705, 262, 1.2], 'chip-th:0': [78, 268, 1.2],
+  'label:0': [400, 524, 1.6],
+  'chip-ar:0': [120, 578, 1.3], 'chip-hi:0': [245, 590, 1.3], 'chip-ja:0': [470, 596, 1.25],
+  'stamp-paper:0': [690, 592, 0.85], 'stamp:0': [690, 592, 0.85],
+  'clip-browser:0': [150, 682, 1], 'sticker-mic:0': [335, 652, 1.1], 'clip-speech:0': [565, 694, 1],
+};
+const letters = pieces.filter((p) => p.tag === 'letter');
+const words = [letters.slice(0, 5), letters.slice(5)];
+const phoneLetter = (p: (typeof pieces)[number]): [number, number, number] => {
+  const row = words[0].includes(p) ? 0 : 1;
+  const lo = Math.min(...words[row].map((l) => l.cx - l.w / 2));
+  const hi = Math.max(...words[row].map((l) => l.cx + l.w / 2));
+  return [MW / 2 + (p.cx - (lo + hi) / 2) * NAME_SCALE, NAME_ROWS[row] + (p.cy - 192) * NAME_SCALE, NAME_SCALE];
+};
+const seen: Record<string, number> = {};
+
+const items = pieces.map((p, i) => {
+  const kind = p.tag.split('-')[0];
+  const key = `${p.tag}:${(seen[p.tag] = (seen[p.tag] ?? -1) + 1)}`;
+  const m = p.tag === 'letter' ? phoneLetter(p) : PHONE[key];
+  const phone = m ? `--ml:${pct(m[0], MW)};--mt:${pct(m[1], MH)};--mw:${pct(p.w * m[2], MW)}` : '';
+  const depth = kind === 'letter' ? DEPTH.letter + (i % 3) * 0.05 : (DEPTH[kind] ?? 0.3);
+  return {
+    ...p,
+    kind,
+    link: LINKS[p.tag],
+    say: chipLang(p.tag),
+    hot: HOT.has(kind) && p.tag !== 'stamp-paper',
+    noPhone: !m,
+    style: `--l:${pct(p.cx, W)};--t:${pct(p.cy, H)};--w:${pct(p.w, W)};${phone};--r:${-p.rot}deg;--d:${depth.toFixed(2)};--i:${i};--sh:${p.shadow}`,
+  };
+});
+---
+<header class="collage" aria-label={`${SITE.name}: ${SITE.tagline}`}>
+  <h1 class="sr-only">{SITE.name}</h1>
+  <p class="sr-only">{SITE.tagline}</p>
+
+  <div class="stage" data-collage>
+    <img class="bg" src={`/collage/${bg.file}`} alt="" width={W} height={H} decoding="async" fetchpriority="high" />
+    {
+      items.map((p) =>
+        p.link ? (
+          <a class:list={['piece', `k-${p.kind}`, 'hot', { 'no-phone': p.noPhone }]} style={p.style} href={p.link.href} aria-label={p.link.label} data-label={p.link.label}>
+            <span class="in"><img src={`/collage/${p.file}`} alt="" width={p.w} height={p.h} decoding="async" draggable="false" /></span>
+          </a>
+        ) : p.say ? (
+          <button type="button" class:list={['piece', `k-${p.kind}`, 'hot', { 'no-phone': p.noPhone }]} style={p.style} data-say-lang={p.say.lang} aria-label={`Hear ${SITE.name} in ${p.say.label}`}>
+            <span class="in"><img src={`/collage/${p.file}`} alt="" width={p.w} height={p.h} decoding="async" draggable="false" /></span>
+          </button>
+        ) : (
+          <span class:list={['piece', `k-${p.kind}`, { hot: p.hot, 'no-phone': p.noPhone }]} style={p.style} aria-hidden="true">
+            <span class="in"><img src={`/collage/${p.file}`} alt="" width={p.w} height={p.h} decoding="async" draggable="false" /></span>
+          </span>
+        ),
+      )
+    }
+  </div>
+
+  <TornEdge />
+</header>
+
+<style>
+  .collage {
+    position: relative;
+    overflow: hidden;
+    background: #0d948e;
+    /* Never let the name's 59% of the art exceed a phone's width: below ~46rem the
+       stage stops shrinking, is centred on the name, and the edges crop instead. */
+    --stage-w: max(100%, min(46rem, 160vw));
+    --over: max(0px, (min(46rem, 160vw) - 100vw) / 2);
+  }
+  .stage {
+    position: relative;
+    left: 50%;
+    width: var(--stage-w);
+    aspect-ratio: 1584 / 396;
+    transform: translateX(calc(-50% - min(2.9%, var(--over))));
+    --mx: 0;
+    --my: 0;
+    --sy: 0;
+  }
+  .bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .piece {
+    position: absolute;
+    left: var(--l);
+    top: var(--t);
+    width: var(--w);
+    display: block;
+    transform:
+      translate(
+        calc(-50% + var(--mx) * var(--d) * 1px),
+        calc(-50% + (var(--my) + var(--sy)) * var(--d) * 1px)
+      )
+      rotate(var(--r));
+    will-change: transform;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button.piece {
+    appearance: none;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .in,
+  .piece img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .piece img {
+    filter: drop-shadow(1px 2px 2px rgb(0 0 0 / var(--sh)));
+    /* Pasted down one after another on load. `backwards` only, so hover still transitions after. */
+    animation: paste 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.25) backwards;
+    animation-delay: calc(var(--i) * 15ms);
+    transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1), filter 0.25s ease;
+    user-select: none;
+  }
+  @keyframes paste {
+    from {
+      opacity: 0;
+      transform: scale(1.3) rotate(7deg) translateY(-14px);
+    }
+  }
+
+  /* Loose pieces breathe a little, each on its own clock. */
+  .k-sticker .in,
+  .k-chip .in {
+    animation: sway calc(5s + var(--i) * 90ms) ease-in-out calc(var(--i) * -400ms) infinite;
+  }
+  @keyframes sway {
+    0%, 100% { transform: rotate(-1.4deg); }
+    50% { transform: rotate(1.4deg) translateY(-1px); }
+  }
+
+  /* Pick a piece up. */
+  .hot:hover,
+  .hot:focus-visible {
+    z-index: 5;
+    outline: none;
+  }
+  .hot:hover img,
+  .hot:focus-visible img {
+    transform: scale(1.08) rotate(calc(var(--r) * -0.6));
+    filter: drop-shadow(4px 9px 5px rgb(0 0 0 / 0.38));
+  }
+  .k-letter.hot:hover img {
+    transform: translateY(-6%) rotate(calc(var(--r) * -1.4));
+  }
+
+  /* Signposts name where they go. */
+  a.piece::after {
+    content: attr(data-label) ' →';
+    position: absolute;
+    left: 50%;
+    bottom: 4%;
+    translate: -50% 0;
+    padding: 0.25em 0.6em 0.15em;
+    background: #141418;
+    color: #faf7ee;
+    font: 700 0.7rem/1.3 var(--font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+  }
+  a.piece:hover::after,
+  a.piece:focus-visible::after {
+    opacity: 1;
+  }
+
+  @media (max-width: 639px) {
+    .stage {
+      left: 0;
+      width: 100%;
+      aspect-ratio: 800 / 760;
+      transform: none;
+    }
+    .bg {
+      object-fit: cover;
+    }
+    .piece {
+      left: var(--ml);
+      top: var(--mt);
+      width: var(--mw);
+    }
+    .piece.no-phone {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const stage = document.querySelector<HTMLElement>('[data-collage]');
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Name chips: ask NameScripts to show and speak that language.
+  stage?.querySelectorAll<HTMLElement>('[data-say-lang]').forEach((chip) =>
+    chip.addEventListener('click', () =>
+      document.dispatchEvent(new CustomEvent('name:say', { detail: { lang: chip.dataset.sayLang } })),
+    ),
+  );
+
+  if (stage && !RM) {
+    const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const cur = { mx: 0, my: 0, sy: 0 };
+    const goal = { mx: 0, my: 0, sy: 0 };
+    let running = false;
+
+    const frame = () => {
+      let moving = false;
+      for (const k of ['mx', 'my', 'sy'] as const) {
+        const d = goal[k] - cur[k];
+        if (Math.abs(d) > 0.05) {
+          cur[k] += d * 0.12;
+          moving = true;
+        } else cur[k] = goal[k];
+        stage.style.setProperty(`--${k}`, cur[k].toFixed(2));
+      }
+      if (moving) requestAnimationFrame(frame);
+      else running = false;
+    };
+    const kick = () => {
+      if (!running) {
+        running = true;
+        requestAnimationFrame(frame);
+      }
+    };
+
+    // Scrolling past: near pieces lag behind the far ones.
+    const onScroll = () => {
+      const h = stage.offsetHeight;
+      if (window.scrollY > h * 1.5) return;
+      goal.sy = window.scrollY * 0.3;
+      kick();
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Pointer: the whole collage leans away from the cursor, nearer pieces more.
+    if (fine) {
+      const hero = stage.parentElement!;
+      hero.addEventListener('pointermove', (e) => {
+        const r = hero.getBoundingClientRect();
+        goal.mx = -((e.clientX - r.left) / r.width - 0.5) * 36;
+        goal.my = -((e.clientY - r.top) / r.height - 0.5) * 22;
+        kick();
+      });
+      hero.addEventListener('pointerleave', () => {
+        goal.mx = goal.my = 0;
+        kick();
+      });
+    }
+  }
+</script>
