@@ -45,11 +45,11 @@ const v2Stack = ['FastAPI', 'Python', 'Azure Container Apps', 'GitHub Container 
 ---
 
 <BaseLayout
-  title="Houston Hospital Quality Explorer"
-  description="Case study: CMS Care Compare data for 467 Texas hospitals, loaded into Postgres, analyzed with SQL, and published as an interactive quality dashboard."
+  title="Hospital Quality Explorer"
+  description="Case study: CMS Care Compare data for 5,419 U.S. hospitals, loaded into Postgres, analyzed with SQL, and published as an interactive explorer and a question-answering demo with its evaluation."
 >
   <div class="flex flex-wrap items-center gap-3">
-    <h1 class="text-3xl font-bold tracking-tight">Houston Hospital Quality Explorer</h1>
+    <h1 class="text-3xl font-bold tracking-tight">Hospital Quality Explorer</h1>
     <span class="rounded-full bg-accent/15 px-2 py-0.5 text-xs font-medium text-accent-strong">Case study</span>
   </div>
   <p class="mt-3 max-w-2xl text-lg leading-relaxed text-muted">
@@ -305,7 +305,7 @@ const v2Stack = ['FastAPI', 'Python', 'Azure Container Apps', 'GitHub Container 
         <li><strong>Scope.</strong> It answers from the hospital-level quality tables and the 496 documentation chunks, nothing else. It will not rank individual doctors, quote prices, discuss patients or give medical advice. This release has one reporting period per measure, so questions about change over time cannot be answered.</li>
         <li><strong>Definition answers are the weak spot.</strong> 11 to 14 of 22 on the test split and 11 of 15 on the holdout. For some questions the right passage is never retrieved (6 or 7 of 22 test questions in the final runs), because the documentation is thin or phrased differently for those measures. Part of the gap is the answer-key problem above.</li>
         <li><strong>Declining is graded by a blunt rule.</strong> A judge that checks whether an answer asserts anything the documents lack is planned and not built.</li>
-        <li><strong>No alerting.</strong> Nothing notifies anyone when the daily budget runs out or the error rate rises; the status page has to be looked at. The runbook&rsquo;s prompt roll-back commands are written from the CLI reference and have not been run.</li>
+        <li><strong>No alerting.</strong> Nothing notifies anyone when the daily budget runs out or the error rate rises; the status page has to be looked at.</li>
         <li><strong>It is a demo.</strong> Public data, a small daily budget, questions logged without IP addresses, and no promise it will be answering at any given moment. Answers can be wrong; check the SQL or the cited source.</li>
       </ul>
 

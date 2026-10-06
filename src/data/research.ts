@@ -10,7 +10,7 @@ export interface ResearchTheme {
 }
 
 // Grounded in the vault's project inventory. Plain-language summaries up top,
-// technical method chips below. Swap each figure placeholder for a real export.
+// technical method chips below. Only the flagship theme renders a figure (research.astro).
 export const RESEARCH: ResearchTheme[] = [
   {
     id: 'language-manifold',
@@ -59,7 +59,6 @@ export const RESEARCH: ResearchTheme[] = [
   {
     id: 'population-geometry',
     title: 'Poisson encoding across domains: music and grammar',
-    status: 'Active',
     summary:
       'The same population-geometry toolkit generalizes beyond English narrative. In a piano-listening task I characterized 704 hippocampal neurons and found that the Krumhansl–Kessler tonal hierarchy — not the Circle of Fifths — best predicts their geometry, while dissociating absolute from relative pitch. In bilingual listeners, SVM decoders read grammatical gender and conjugation from Spanish-evoked activity.',
     methods: [
@@ -73,24 +72,6 @@ export const RESEARCH: ResearchTheme[] = [
     figure: {
       caption: 'Figure: hippocampal tuning to tonal function across 704 neurons (Krumhansl–Kessler model).',
       alt: 'Population geometry plot of hippocampal neural tuning to musical tonal hierarchy.',
-    },
-  },
-  {
-    id: 'universal-manifold',
-    title: 'Toward a universal language manifold (forward-looking)',
-    status: 'Designed & documented — not yet implemented',
-    summary:
-      'A research direction I have designed and specified: a sequence-to-sequence transformer that learns a language-agnostic semantic manifold directly from neural data, by forcing an encoder to translate hippocampal spike patterns across English, Spanish, and Hebrew renderings of the same narrative. It is the architectural payoff of the geometry work — treating the brain’s code as a prior for machines.',
-    methods: [
-      'Seq2seq transformer (POYO-style unit tokenization)',
-      'Perceiver cross-attention bottleneck',
-      'InfoNCE contrastive cross-lingual loss',
-      'Language-adversarial gradient reversal',
-      'Poisson reconstruction loss',
-    ],
-    figure: {
-      caption: 'Figure: conceptual schematic of the trilingual brain-to-manifold encoder bottleneck.',
-      alt: 'Schematic of a multilingual encoder-decoder compressing neural data into a shared latent manifold.',
     },
   },
 ];

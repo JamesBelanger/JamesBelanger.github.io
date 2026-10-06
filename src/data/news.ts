@@ -24,7 +24,7 @@ export const NEWS: NewsItem[] = [
   },
   {
     date: '2026',
-    text: 'Co-authored work on a population code for semantics in human hippocampus appears in Nature Neuroscience.',
+    text: 'Co-authored work on a population code for semantics in human hippocampus, in press at Nature Neuroscience.',
     href: '/publications',
   },
   {
@@ -34,7 +34,7 @@ export const NEWS: NewsItem[] = [
   },
   {
     date: '2026',
-    text: 'Bilingual semantic geometries in human hippocampal neurons published in Cell.',
+    text: 'Bilingual semantic geometries in human hippocampal neurons, in press at Cell.',
     href: '/publications',
   },
   {

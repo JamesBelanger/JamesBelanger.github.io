@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Tag from '../../components/Tag.astro';
-import FigurePlaceholder from '../../components/FigurePlaceholder.astro';
 
 const lenses = ['provenance', 'confound', 'circularity', 'independence', 'power'];
 const stack = ['Claude Code (headless)', 'Multi-agent orchestration', 'PowerShell', 'Task Scheduler', 'Markdown ledger'];
@@ -193,11 +192,7 @@ const stack = ['Claude Code (headless)', 'Multi-agent orchestration', 'PowerShel
     </section>
 
     <section>
-      <h2 class="text-xl font-semibold leading-snug">Watch it run</h2>
-      <FigurePlaceholder
-        caption="3-minute walkthrough: a live tick — coordinator reading the ledger, fleet fanning out, a verdict landing. Recording in progress."
-        alt="Screen recording of the research engine executing one tick"
-      />
+      <h2 class="text-xl font-semibold leading-snug">Source</h2>
       <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
         <li><a href="https://github.com/JamesBelanger/research-engine">Read the source →</a></li>
       </ul>
