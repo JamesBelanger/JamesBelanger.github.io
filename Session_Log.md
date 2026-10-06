@@ -1,5 +1,58 @@
 # Session Log — jamesbelanger.io
 
+## 2026-10-06 (afternoon) — copy pass for general employers (commit `e3fd436`, live)
+Audit against `resume_facts.md` and the job lanes James is applying to (AI workflow, forward-deployed, NLP / data
+science, BI, enablement, clinical research). Committed by pathspec only; the uncommitted homepage work
+(`PodcastRaster.astro`, `index.astro`, staged `NeuronWall.astro` deletion, empty `public/media/`) was left untouched.
+- Bio (`site.ts`): added guides / staff training / first-line support at two hospitals.
+- Project cards (`projects.ts`): plain-English lead before method names; removed "production engineering",
+  "scraped from Instagram", "B2B concept", "competitive wedge", "FERPA-compliant".
+- `/research`: empty figure placeholders no longer render; unbuilt "universal language manifold" theme removed
+  (recover from `0c9c9b1` if wanted for PhD use); stale "Active" status dropped.
+- `/projects/research-engine`: "Recording in progress" placeholder removed.
+- Hospital Quality case study: title and meta now national (5,419); stale "roll-back commands have not been run" removed.
+- ASR note: "a third of that gap" → "more than half" (body says about 60%).
+- News: Nature Neuroscience and Cell now "in press", matching Publications.
+- Demo footers (pronunciation, identity-resolution): no present-tense Baylor line, no "four years". These are site
+  copies; the source repos still carry the old footers.
+- 404 heading plain; `public/figures/README.txt` deleted.
+
+**Open for James:** languages line (site says Portuguese + "intermediate" labels; fact sheet says Spanish, some French,
+Japanese, Chinese); QA-Emb "I built a ... framework" wording; 704-neuron music numbers and spaCy / NLTK / Tableau tags
+not in the fact sheet; Identity Resolution 769 (card) vs 858 (demo page title); News items all dated just "2026";
+React 19 tag on Houston Eats vs the never-claim list.
+
+## 2026-10-06 (later) — Simulated spike raster with the real podcast words; publications refreshed
+**Raster.** James asked for the lab's podcast raster in place of the made-up 1,008-square wall, then pulled back
+from real data ("idk if the lab would be violating HIPAA or PHI") while keeping the stimulus ("the stimuli is
+fine, but not the actual data"). Result, `SimRaster.astro` on the home page:
+- WORDS = real: 100 words of the podcast with their true onsets, `src/data/podcast-words.json`, written by the
+  vault script `QA_emb_CLIP_Minye/word_level/scripts/animate_population_raster.py --export-words`.
+- SPIKES = simulated in the browser (seeded, same every load): 50 model neurons, 4-34 Hz busiest-on-top, 2 ms
+  refractory, shared + private slow drift, bursts in a quarter of cells, brief responses to ~10% of words.
+  Caption states plainly that the spikes are simulated and the words are real.
+- Canvas, theme-aware, built and run only when scrolled near (62 ms one-off), still frame under reduced motion.
+- A real-data version (re-coloured movie) was built first and then removed before anything was committed or
+  pushed: no recording-derived file is in the repo or its history. `NeuronWall.astro` is deleted.
+- The vault script keeps three harmless additions from that attempt: `--site`, `--mode`, `--export-words`.
+  Two private renders remain in the vault (`figures/Figure_Dynamic_Raster_Site_{Light,Dark}.mp4`).
+
+**Publications** (checked against Crossref + bioRxiv, 2026-10-06; James approved the update):
+- Nature: now in an issue, 654, 714-723. Nature Neuroscience: published online 2026-09-30,
+  doi 10.1038/s41593-026-02436-4, author list updated to the printed 19. Cell: published, 189(16), 5065-5080,
+  doi 10.1016/j.cell.2026.05.020. Nature Human Behaviour: still in press (no DOI registered).
+- "A geometric foundation for word meaning": DOI 10.64898/2026.01.28.702241 restored (now resolves to this title).
+- "Mirror manifolds" retitled per its v3: "Hippocampus serves as a repository for spoken and heard word
+  meanings during conversations".
+- Home copy changed from "four in press" to three published + one in press. Vault `resume_facts.md` got a
+  dated publication-status line so new resumes can say "published".
+- Not shown on the site: a Publisher Correction to the Nature Neuroscience paper registered 2026-10-06
+  (doi 10.1038/s41593-026-02501-y).
+
+Browser-tested (desktop light, phone dark): raster runs, words advance, no media requests, no overflow, no
+errors; publications page shows the new statuses and all DOIs resolve. Build note: `astro build` fails with
+EPERM on Windows if an `astro preview` server is holding `dist/` open; stop the preview first.
+
 ## 2026-10-06 — SHIPPED (commit `0c9c9b1`, live on jamesbelanger.com)
 James OK'd the unpublished finding numbers and chose to keep the "single, strikingly low-dimensional population
 axis" sentence on /research ("that's what happened"). Everything in the four 2026-10-05 entries below was

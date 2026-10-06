@@ -10,6 +10,7 @@ export interface Publication {
 }
 
 // Source of truth: 03_Career_and_Admin/PhD_Applications/00_Master/Publications.md (APA 7th).
+// Statuses, DOIs and the Nature Neuroscience author list re-checked against Crossref + bioRxiv on 2026-10-06.
 // ⚠️ VERIFY every author list, venue, and DOI against the published record before this site is public —
 //    publicly claimed Nature-tier co-authorship is a hard, checkable claim.
 export const PUBLICATIONS: Publication[] = [
@@ -20,7 +21,7 @@ export const PUBLICATIONS: Publication[] = [
     title: 'Plasticity and language in the anaesthetized human hippocampus',
     authors:
       'Katlowitz, K. A., Cole, E. R., Mickiewicz, E. A., Shah, S., Franch, M. C., Adkinson, J., Belanger, J. L., Mathura, R. K., Meszéna, D., McGinley, M., Muñoz, W., Banks, G. P., Cash, S. S., Hsu, C.-W., Paulk, A. C., Provenza, N. R., Watrous, A., Williams, Z., … Hayden, B. Y., & Sheth, S. A.',
-    status: 'Advance online publication',
+    status: 'Published · 654, 714–723',
     doi: '10.1038/s41586-026-10448-0',
   },
   {
@@ -38,8 +39,9 @@ export const PUBLICATIONS: Publication[] = [
     venue: 'Nature Neuroscience',
     title: 'A population code for semantics in human hippocampus',
     authors:
-      'Franch, M. C., Mickiewicz, E. A., Belanger, J., Joiner, B., Katlowitz, K. A., Zhu, H., Chavez, A. G., Chericoni, A., Paulo, D., Bartoli, E., Kemmer, S., Piantadosi, S. T., Provenza, N. R., Hennig, J. A., Sheth, S. A., & Hayden, B. Y.',
-    status: 'In press',
+      'Franch, M., Mickiewicz, E. A., Belanger, J. L., Joiner, B., Katlowitz, K. A., Zhu, H., Chavez, A. G., Chericoni, A., Goldman, A. M., Krishnan, V., Maheshwari, A., Paulo, D. L., Bartoli, E., Kemmer, S., Piantadosi, S. T., Provenza, N. R., Hennig, J. A., Sheth, S. A., & Hayden, B. Y.',
+    status: 'Published online 30 Sep 2026',
+    doi: '10.1038/s41593-026-02436-4',
   },
   {
     type: 'journal',
@@ -48,7 +50,8 @@ export const PUBLICATIONS: Publication[] = [
     title: 'Shared neural geometries for bilingual semantic representations in human hippocampal neurons',
     authors:
       'Yan, X., Chavez, A. G., Franch, M. C., Katlowitz, K. A., Gautam, I., Kim, B., Krishna, A., Shrivastava, A., Van Arsdel, K., Belanger, J., Chericoni, A., Ismail, T., Mickiewicz, E. A., Paulo, D., Zhu, H., … Hayden, B. Y., & Sheth, S. A.',
-    status: 'In press',
+    status: 'Published · 189(16), 5065–5080',
+    doi: '10.1016/j.cell.2026.05.020',
   },
   {
     type: 'preprint',
@@ -58,14 +61,15 @@ export const PUBLICATIONS: Publication[] = [
     authors:
       'Zhu, H., Franch, M., Mickiewicz, E., Belanger, J., Cowan, R. L., Katlowitz, K., Chavez, A. G. L., Chericoni, A., Paulo, D., Yan, X., Bartoli, E., Hennig, J., Provenza, N., Smith, E. H., Piantadosi, S., Sheth, S., & Hayden, B. Y.',
     status: 'Preprint',
-    // DOI removed: 10.64898/2026.01.28.702241 resolved to a different title
-    // ("Semantic axes in the brain support analogical representations"). Verify and re-add the correct DOI.
+    doi: '10.64898/2026.01.28.702241',
   },
   {
     type: 'preprint',
     year: 2025,
     venue: 'bioRxiv',
-    title: 'Mirror manifolds: Partially overlapping neural subspaces for speaking and listening',
+    // Posted 2025 as "Mirror manifolds: Partially overlapping neural subspaces for speaking and listening";
+    // retitled in v3 (2026-06-29).
+    title: 'Hippocampus serves as a repository for spoken and heard word meanings during conversations',
     authors: 'Chavez, A. G., Franch, M., Mickiewicz, E. A., Baltazar, W., Belanger, J. L., Devara, D., Etta, M., Hamre, T., Ismail, T., Joiner, B., Kim, Y., Kona, A., Mansourian, K., Nangia, A., Pluenneke, M., Soubra, S., Venkateswaran, T., Venkudusamy, K., Chericoni, A., Kabotyanski, K. E., … Hayden, B. Y.',
     status: 'Preprint',
     doi: '10.1101/2025.09.20.677504',

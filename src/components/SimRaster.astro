@@ -1,0 +1,267 @@
+---
+// A spike raster with the words going by underneath, in the style of the lab's
+// "player piano + karaoke" movies.
+//
+// The WORDS are real: 100 words of the podcast stimulus with their actual onsets
+// (src/data/podcast-words.json, written by the vault script
+// QA_emb_CLIP_Minye/word_level/scripts/animate_population_raster.py --export-words).
+// The SPIKES are simulated: no patient recording or lab data is used or shipped. They
+// are generated in the browser from a seeded model, and the caption says so.
+//
+// The model is built to look like real single-unit data rather than noise: each of 50
+// neurons has its own firing rate (busiest on top, as in the lab's plots), a 2 ms refractory
+// period, slow drifts partly shared across the population, occasional bursts, and brief
+// responses to some of the words. Same seed every load, so it is the same "recording".
+//
+// Vanilla canvas, theme-aware, generated and run only once it scrolls into view, and a
+// single still frame under prefers-reduced-motion.
+import transcript from '../data/podcast-words.json';
+
+interface Props { class?: string }
+const { class: className = '' } = Astro.props;
+
+const words = transcript.words.map((w) => ({ w: w.w, t: Math.round(w.t * 1000) })); // onsets in ms
+const duration = Math.round(transcript.duration * 1000) + 900; // a breath before it loops
+---
+<figure class:list={['sim', className]}>
+  <div class="clip p-2 sm:p-3">
+    <canvas data-sim class="block w-full" aria-hidden="true"></canvas>
+    <p class="karaoke" data-sim-words={JSON.stringify({ duration, words })} aria-hidden="true">
+      <span class="past"></span>
+      <span class="now">{words[0].w}</span>
+      <span class="next">{words.slice(1, 7).map((w) => w.w).join(' ')}</span>
+    </p>
+  </div>
+  <figcaption class="mt-3 font-mono text-xs text-muted">
+    The words and their timing are the real podcast the patients heard. The spikes are simulated, not patient data:
+    50 model neurons with realistic firing statistics, one row each, one tick per spike.
+  </figcaption>
+</figure>
+
+<style>
+  /* Current word pinned under the playhead; earlier and later words run off to either side. */
+  .karaoke {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: baseline;
+    gap: 0.6em;
+    margin-top: 0.6rem;
+    padding: 0.5rem 0 0.35rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: clamp(0.8rem, 2.6vw, 1rem);
+    white-space: nowrap;
+  }
+  .past,
+  .next {
+    overflow: hidden;
+    color: var(--muted);
+  }
+  .past {
+    display: flex;
+    justify-content: flex-end;
+    opacity: 0.45;
+  }
+  .now {
+    padding: 0.05em 0.35em;
+    background: var(--pop);
+    color: #141418;
+    font-weight: 700;
+    font-size: 1.25em;
+  }
+</style>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-sim]');
+  const line = document.querySelector<HTMLElement>('[data-sim-words]');
+
+  if (canvas && line) {
+    const ctx = canvas.getContext('2d')!;
+    const { duration: T, words } = JSON.parse(line.dataset.simWords!) as { duration: number; words: { w: string; t: number }[] };
+    const [past, now, next] = Array.from(line.children) as HTMLElement[];
+    const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const N = 50;
+    const SIDE = 7; // words shown either side of the current one
+    const STEP = 8; // ms between updates of the slow rate terms
+
+    // ---- the model (built the first time the raster scrolls into view) ------------
+    const simulate = () => {
+      // Seeded PRNG (mulberry32): the same spikes on every load.
+      let seed = 20261006;
+      const rnd = () => {
+        seed = (seed + 0x6d2b79f5) | 0;
+        let x = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x;
+        return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+      };
+      const TAU = Math.PI * 2;
+
+      // Slow drift shared by the population (periodic in T, so the loop has no seam).
+      const comps = [1, 2, 3, 5].map((k) => ({ k, phase: rnd() * TAU, amp: 0.5 / k }));
+      const shared = new Float32Array(Math.ceil(T / STEP));
+      for (let b = 0; b < shared.length; b++) {
+        shared[b] = comps.reduce((s, c) => s + c.amp * Math.sin((TAU * c.k * b * STEP) / T + c.phase), 0);
+      }
+
+      const out: Float32Array[] = [];
+      const drive = new Float32Array(T);
+      for (let n = 0; n < N; n++) {
+        const rate = 4 + 30 * Math.exp(-n / 12) * (0.7 + rnd() * 0.6); // Hz: the 50 busiest cells of a session, busiest on top
+        const loading = -0.2 + rnd() * 1.1; // how much it follows the shared drift
+        const own = { k: 1 + Math.floor(rnd() * 9), phase: rnd() * TAU, amp: 0.1 + rnd() * 0.5 };
+        const bursty = rnd() < 0.25;
+
+        // Brief extra drive 60-320 ms after the onsets of the few words this cell "likes".
+        drive.fill(1);
+        for (const w of words) {
+          if (rnd() > 0.1) continue;
+          const gain = 1.5 + rnd() * 3;
+          for (let d = 60; d < 320; d++) drive[(w.t + d) % T] += gain * Math.sin((Math.PI * (d - 60)) / 260) ** 2;
+        }
+
+        const s: number[] = [];
+        let quiet = 0; // refractory countdown, ms
+        let slow = 0;
+        for (let ms = 0; ms < T; ms++) {
+          if (ms % STEP === 0) {
+            slow = (rate / 1000) * Math.exp(loading * shared[ms / STEP] + own.amp * Math.sin((TAU * own.k * ms) / T + own.phase));
+          }
+          if (quiet > 0) {
+            quiet--;
+            continue;
+          }
+          if (rnd() < slow * drive[ms]) {
+            s.push(ms);
+            quiet = 2;
+            if (bursty && rnd() < 0.35) s.push(Math.min(T - 1, ms + 3 + Math.floor(rnd() * 5)));
+          }
+        }
+        out.push(Float32Array.from(s));
+      }
+      return out;
+    };
+    let spikes: Float32Array[] | null = null;
+
+    // ---- drawing ---------------------------------------------------------------
+    let W = 0;
+    let H = 0;
+    let half = 3500; // ms of time shown either side of now
+    let colors = { tick: '', bg: '', now: '', band: '' };
+
+    const layout = () => {
+      W = canvas.clientWidth;
+      H = Math.round(Math.min(300, Math.max(150, W * 0.4)));
+      half = W < 480 ? 2200 : 3500;
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      canvas.style.height = `${H}px`;
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    const readColors = () => {
+      const cs = getComputedStyle(document.documentElement);
+      const v = (name: string) => cs.getPropertyValue(name).trim();
+      colors = { tick: v('--accent-strong'), bg: v('--bg'), now: v('--fg'), band: v('--pop') };
+    };
+
+    // First spike at or after `ms`.
+    const from = (a: Float32Array, ms: number) => {
+      let lo = 0;
+      let hi = a.length;
+      while (lo < hi) {
+        const mid = (lo + hi) >> 1;
+        if (a[mid] < ms) lo = mid + 1;
+        else hi = mid;
+      }
+      return lo;
+    };
+
+    let shown = -1;
+    const draw = (clock: number) => {
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = colors.bg;
+      ctx.fillRect(0, 0, W, H);
+
+      if (spikes) {
+        const rowH = H / N;
+        const tickH = Math.max(1.5, rowH * 0.78);
+        const tickW = W < 480 ? 1.2 : 2;
+        const pxPerMs = W / (2 * half);
+        const start = clock - half;
+        ctx.fillStyle = colors.tick;
+        for (let n = 0; n < N; n++) {
+          const a = spikes[n];
+          const y = n * rowH + (rowH - tickH) / 2;
+          // The window can straddle the loop point, so walk it in unwrapped time.
+          for (let lap = Math.floor(start / T) * T; lap < clock + half; lap += T) {
+            for (let i = from(a, start - lap); i < a.length; i++) {
+              const at = a[i] + lap;
+              if (at > clock + half) break;
+              ctx.globalAlpha = at > clock ? 0.5 : 1; // what's still to come is drawn lighter
+              ctx.fillRect(Math.round((at - start) * pxPerMs), y, tickW, tickH);
+            }
+          }
+        }
+      }
+
+      // now
+      ctx.globalAlpha = 0.45;
+      ctx.fillStyle = colors.band;
+      const band = W < 480 ? 5 : 8;
+      ctx.fillRect(W / 2 - band / 2, 0, band, H);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = colors.now;
+      ctx.fillRect(W / 2 - 0.75, 0, 1.5, H);
+
+      // words
+      let i = 0;
+      while (i + 1 < words.length && words[i + 1].t <= clock) i++;
+      if (i !== shown) {
+        shown = i;
+        past.textContent = words.slice(Math.max(0, i - SIDE), i).map((x) => x.w).join(' ');
+        now.textContent = words[i].w;
+        next.textContent = words.slice(i + 1, i + 1 + SIDE).map((x) => x.w).join(' ');
+      }
+    };
+
+    // ---- clock -----------------------------------------------------------------
+    let clock = RM ? words[12].t + 60 : 0; // ms into the loop
+    let last = 0;
+    let visible = false;
+    let running = false;
+    const frame = (ts: number) => {
+      if (!visible) {
+        running = false;
+        return;
+      }
+      clock = (clock + Math.min(100, ts - (last || ts))) % T;
+      last = ts;
+      draw(clock);
+      requestAnimationFrame(frame);
+    };
+
+    layout();
+    readColors();
+    draw(clock);
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (!visible) return;
+      spikes ??= simulate();
+      if (RM) {
+        draw(clock);
+      } else if (!running) {
+        running = true;
+        last = 0;
+        requestAnimationFrame(frame);
+      }
+    }, { rootMargin: '300px 0px' }).observe(canvas);
+    window.addEventListener('resize', () => {
+      layout();
+      draw(clock);
+    });
+    new MutationObserver(() => {
+      readColors();
+      draw(clock);
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  }
+</script>

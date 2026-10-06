@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CollageHero from '../components/CollageHero.astro';
-import NeuronWall from '../components/NeuronWall.astro';
+import SimRaster from '../components/SimRaster.astro';
 import NameScripts from '../components/NameScripts.astro';
 import Gloss from '../components/Gloss.astro';
 import { SITE } from '../data/site';
@@ -138,11 +138,11 @@ const linkRow = [
     <h2 class="label">Where it comes from</h2>
     <p class="mt-6 leading-relaxed">
       The lab work was research on how the human brain represents language: we recorded single neurons while
-      people listened and talked, then asked what each one was tracking. It produced nine co-authored papers,
-      four of them in press at Nature, Nature Human Behaviour, Nature Neuroscience and Cell.
+      people listened and talked, then asked what each one was tracking. It produced nine co-authored papers:
+      three published in Nature, Nature Neuroscience and Cell, and a fourth in press at Nature Human Behaviour.
     </p>
 
-    <NeuronWall class="mt-6" />
+    <SimRaster class="mt-6" />
 
     <div class="mt-6 grid gap-5 sm:grid-cols-2" data-findings>
       {
