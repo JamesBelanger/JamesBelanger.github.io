@@ -242,13 +242,15 @@ const v2Stack = ['FastAPI', 'Python', 'Azure Container Apps', 'GitHub Container 
       <h3 class="mt-8 text-base font-semibold">What broke</h3>
       <ul class="mt-2 max-w-2xl space-y-4 leading-relaxed">
         <li>
-          <strong>An empty result can pass for an answer.</strong> Two number questions failed in both starting runs
-          because the generated SQL had a filter that matched nothing, so the query returned zero rows, and zero rows
-          is easy to report as a true &ldquo;none.&rdquo; I caught it from the per-question failure list
-          (&ldquo;generated query returned no rows&rdquo;). The pipeline now spends one repair call on this case, asking the planner
-          whether a filter (letter case, spelling, an over-narrow condition) was wrong before accepting
-          &ldquo;none,&rdquo; and the planner and schema notes were revised. Number questions went from 23 of 26 to
-          26 of 26 and stayed there. The run files do not separate which of those changes did it.
+          <strong>A change of mine turned a wrong filter into a confident &ldquo;none.&rdquo;</strong> At first, a query that returned
+          zero rows was refused. I changed that so the service answers &ldquo;no records match,&rdquo; because &ldquo;none&rdquo; is sometimes the
+          true answer. The first evaluation then showed the cost: on two number questions the model filtered a name in mixed case
+          against data stored in capitals, got zero rows, and reported &ldquo;none&rdquo; with full confidence. A third used a Texas-only
+          view for a national question. What fixed it was telling the planner true facts measured from the database (how text
+          is cased, which states each view covers): number questions went from 23 of 26 to 26 of 26 and stayed there. I also added a check
+          that asks the planner to look again when a query returns nothing. It has not fired once in the runs since, so it is covered
+          only by unit tests, and it cannot catch a count that comes back as 0, which is one row, not none. A holdout question failed
+          exactly that way.
         </li>
         <li>
           <strong>The keyword half of hybrid search matched nothing, then hurt once it worked.</strong> Documentation search
@@ -266,12 +268,14 @@ const v2Stack = ['FastAPI', 'Python', 'Azure Container Apps', 'GitHub Container 
           that is what runs now. The first choice was wrong because the study fed the search something the product does not.
         </li>
         <li>
-          <strong>The release gate blocked a change, and I re-baselined it on purpose.</strong> Every change to the service is checked
+          <strong>The release gate blocked a change, and I re-baselined on purpose.</strong> Every change to the service is checked
           against a stored baseline with a tolerance per question type. After the first round of changes, number questions
-          rose to 26 of 26 but definition fell to 11 of 22, two below the baseline against a one-question tolerance, so the gate failed.
-          Repeat runs of one configuration differed by 1 to 2 definition questions, so most of the drop was noise. I set the definition tolerance
-          to 2 from that spread and re-baselined, with the reason written into the baseline file. Later the not-in-the-documents tolerance went from 0 to 1 for a
-          similar reason: with 4 questions, one answer that honestly said &ldquo;the documentation does not give the criteria&rdquo; failed a grader that only accepts an outright refusal.
+          rose to 26 of 26 but definition questions fell from 13 to 8 and 10 of 22 in two runs, so the gate failed and that version would not have
+          shipped. The cause was the keyword search described above. With search back on vectors, definition questions returned to between 11 and
+          14 of 22, inside the 1 to 2 question spread I measured between identical runs, while number questions held at 26. I accepted
+          that trade, set the definition tolerance to 2 from the measured spread, and re-baselined with the reason written into the
+          baseline file. Later the not-in-the-documents tolerance went from 0 to 1 for a similar reason: with 4 questions, one answer that
+          honestly said &ldquo;the documentation does not give the criteria&rdquo; failed a grader that only accepts an outright refusal.
           Off-topic and unsafe questions stay at zero tolerance, and any unsafe question that produces SQL fails the gate regardless.
         </li>
         <li>
