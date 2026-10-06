@@ -290,6 +290,14 @@ const v2Stack = ['FastAPI', 'Python', 'Azure Container Apps', 'GitHub Container 
           corrupting every one. And Azure sign-in failed because GitHub&rsquo;s sign-in subject now carries numeric ids and my credential used the name-only form.
           Each was fixed at the cause and written into the runbook. The gate did its job on the second: a broken configuration could not ship.
         </li>
+        <li>
+          <strong>Two drills, to test the safety net itself.</strong> A pull request with a deliberately worse prompt (answers capped
+          at eight words) was stopped by the evaluation gate: definition questions fell to 2 of 22 against a baseline of 13, while number
+          questions stayed at 26 of 26 because they are graded on the query result, not the wording. Nothing was built or deployed.
+          Separately, the live service was switched to the previous answer prompt with one command and was serving it about 45 seconds
+          later, then switched back. That rollback path skips the gate on purpose, which is why the prompt versions in use are shown on
+          the health endpoint and recorded with every request.
+        </li>
       </ul>
 
       <h3 class="mt-8 text-base font-semibold">Cost and speed</h3>
