@@ -30,6 +30,18 @@ SELECT h.facility_name, h.county, r.readm, p.recommend
 FROM hospitals h JOIN r USING (facility_id) JOIN p USING (facility_id) CROSS JOIN a
 WHERE r.readm < a.avg_readm AND p.recommend < a.avg_recommend
 ORDER BY r.readm;`;
+
+// Version 2 evaluation results. Sources: evals/results/run_*_<tag>.md in the service repo.
+// start = luna-a, luna-b; final = luna-v5-a, luna-v5-b, luna-v6-a; holdout = luna-v5-holdout.
+const evalCols = ['Start, run 1', 'Start, run 2', 'Final, run 1', 'Final, run 2', 'Final, run 3', 'Holdout'];
+const evalRows = [
+  { type: 'Number questions', n: '26 test, 8 holdout', cells: ['23/26', '23/26', '26/26', '26/26', '26/26', '8/8'] },
+  { type: 'Definition questions', n: '22 test, 15 holdout', cells: ['13/22', '12/22', '13/22', '11/22', '14/22', '11/15'] },
+  { type: 'Should decline: not in the documents', n: '4 test, 3 holdout', cells: ['4/4', '4/4', '4/4', '3/4', '4/4', '3/3'] },
+  { type: 'Should decline: off-topic or unsafe', n: '11 test', cells: ['11/11', '11/11', '11/11', '11/11', '11/11', 'none in set'] },
+  { type: 'Overall', n: '63 test, 26 holdout', cells: ['51/63', '50/63', '54/63', '51/63', '55/63', '22/26'], strong: true },
+];
+const v2Stack = ['FastAPI', 'Python', 'Azure Container Apps', 'GitHub Container Registry', 'GitHub Actions', 'PostgreSQL + pgvector (Supabase)'];
 ---
 
 <BaseLayout
@@ -50,6 +62,7 @@ ORDER BY r.readm;`;
     {stack.map((s) => <Tag label={s} />)}
   </div>
   <ul class="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+    <li><a href="/projects/hospital-quality/ask/" class="font-semibold">Ask the data — live question-answering demo →</a></li>
     <li><a href="/projects/hospital-quality/explore/" class="font-semibold">Open the explorer — look up any U.S. hospital →</a></li>
     <li><a href="/hospital-quality-dashboard.html">Houston dashboard (static) →</a></li>
     <li><a href="https://github.com/JamesBelanger/hospital-quality-dashboard">Source on GitHub →</a></li>
@@ -151,6 +164,155 @@ ORDER BY r.readm;`;
         <li>“Higher is better” is a per-measure heuristic that needs a clinician’s review for the ambiguous HCAHPS answer rows.</li>
         <li>Next: denominator-weighted county roll-ups on the dashboard, a materialized scorecard view, and a scheduled refresh when CMS posts the October release.</li>
       </ul>
+    </section>
+
+    <section id="version-2">
+      <h2 class="text-xl font-semibold leading-snug">Version 2: ask the data</h2>
+
+      <h3 class="mt-4 text-base font-semibold">What it is</h3>
+      <p class="mt-2 max-w-2xl leading-relaxed">
+        Version 2 puts a question box on top of the same data. You type a question in plain English; a
+        language model then either writes SQL against the hospital tables, finds the relevant passage in
+        496 chunks of CMS documentation, or declines. Every answer comes with its evidence: the SQL and the
+        rows it returned, or quoted passages with the document, page and a link to the source.
+        It is a public demo built as a portfolio project, not a product with users. I built it with AI coding
+        agents under my direction: I chose what to build, what counted as a correct answer, and the calls
+        described below.
+      </p>
+      <p class="mt-3 text-sm">
+        <a href="/projects/hospital-quality/ask/" class="font-semibold">Try it: ask a question →</a>
+        <span class="text-muted"> Runs on a small cloud service that sleeps when idle, so the first question can be slow.</span>
+      </p>
+
+      <h3 class="mt-8 text-base font-semibold">How it works</h3>
+      <ol class="mt-2 max-w-2xl list-decimal space-y-2 pl-5 leading-relaxed">
+        <li><strong>Plan.</strong> One model call reads the question and picks a route: data, documentation, both, or refuse. For data it writes the SQL; for documentation it rewrites the question into a search query.</li>
+        <li><strong>Evidence.</strong> SQL passes two safeguards before it touches anything. A validator checks that it is a single SELECT. Then it runs under a database login that can only read the hospital schema, in read-only transactions with a 5-second timeout; that login cannot read the documentation index, the request log or any other schema. Documentation questions use vector search over the 496 chunks and keep the top 8.</li>
+        <li><strong>Answer.</strong> A second call writes a short answer from only the rows and passages it was handed. Citations are checked: one with an unknown chunk id, or a quote that is not in that chunk, is dropped, and a documentation answer left with no valid citation becomes a refusal. If there is no evidence on any path, it declines without writing an answer.</li>
+      </ol>
+      <p class="mt-3 max-w-2xl leading-relaxed">
+        Declining is a designed outcome. The evaluation sets include questions about recipes, individual doctors,
+        prices, patient records, medical advice, forecasts, system tables and prompt injection, and the system is
+        expected to refuse every one.
+      </p>
+
+      <h3 class="mt-8 text-base font-semibold">How it was evaluated</h3>
+      <p class="mt-2 max-w-2xl leading-relaxed">
+        <strong>Question sets.</strong> 75 questions with known-correct answers: 38 number questions (the generated
+        SQL's rows are compared with a stored truth query), 22 definition questions (the answer must state listed
+        points, judged by a larger model), 4 definition questions the documents cannot answer (must decline), and
+        11 off-topic or unsafe ones (must decline). 12 are a dev split used while writing the prompts; the other 63
+        are the test split, written after the prompts and never shown to the model. A second set of 26 questions, the
+        holdout, was written after the retrieval settings and planner prompt were frozen, without running the system on
+        them: 15 definition, 3 not-in-the-documents, 8 number.
+      </p>
+      <p class="mt-3 max-w-2xl leading-relaxed">
+        <strong>Results.</strong> Start is the first configuration, run twice. Final is the configuration the live
+        service uses, run three times. Each cell is questions answered correctly out of questions asked.
+      </p>
+      <div class="mt-3 overflow-x-auto rounded-lg border border-line">
+        <table class="w-full min-w-[640px] border-collapse text-left text-sm">
+          <thead>
+            <tr class="bg-muted/10">
+              <th scope="col" class="px-3 py-2 font-semibold">Question type</th>
+              {evalCols.map((c) => <th scope="col" class="whitespace-nowrap px-3 py-2 font-semibold">{c}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {evalRows.map((r) => (
+              <tr class={`border-t border-line ${r.strong ? 'font-semibold' : ''}`}>
+                <th scope="row" class="px-3 py-1.5 align-top font-normal">
+                  <span class={r.strong ? 'font-semibold' : ''}>{r.type}</span>
+                  <span class="block text-xs font-normal text-muted">{r.n}</span>
+                </th>
+                {r.cells.map((c) => <td class="whitespace-nowrap px-3 py-1.5 align-top tabular-nums">{c}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+        Start: plan_v2, schema_v1, answer_v3, hybrid retrieval. Final: plan_v4, schema_v2, answer_v4, vector retrieval,
+        8 passages. The model that answers is called gpt-6-luna; a larger model, gpt-6-sol, grades the definition answers.
+        Every score is a single run, or the pair or triple shown, and repeat runs of one configuration differed by 1 to
+        3 questions (final definition scores: 13, 11, 14). Read the changes in numbers accordingly: the 23 to 26 move on
+        number questions held in every later run; the definition scores did not move beyond that noise.
+      </p>
+
+      <h3 class="mt-8 text-base font-semibold">What broke</h3>
+      <ul class="mt-2 max-w-2xl space-y-4 leading-relaxed">
+        <li>
+          <strong>An empty result can pass for an answer.</strong> Two number questions failed in both starting runs
+          because the generated SQL had a filter that matched nothing, so the query returned zero rows, and zero rows
+          is easy to report as a true &ldquo;none.&rdquo; I caught it from the per-question failure list
+          (&ldquo;generated query returned no rows&rdquo;). The pipeline now spends one repair call on this case, asking the planner
+          whether a filter (letter case, spelling, an over-narrow condition) was wrong before accepting
+          &ldquo;none,&rdquo; and the planner and schema notes were revised. Number questions went from 23 of 26 to
+          26 of 26 and stayed there. The run files do not separate which of those changes did it.
+        </li>
+        <li>
+          <strong>The keyword half of hybrid search matched nothing, then hurt once it worked.</strong> Documentation search
+          started as hybrid: vector search plus keyword search, merged. Run alone, the keyword half retrieved the
+          expected passage for 0 of 22 definition questions and the system declined 21 of them for lack of evidence, so the
+          first hybrid score (13 of 22) was probably the vector half doing all the work (12 of 22 on its own). After the keyword
+          search was changed to return matches, the same prompts scored 11 of 22 on vector alone, 8 of 22 on hybrid and 5 of 22
+          on keyword alone (that keyword run also had five connection errors, so 5 is a floor). Running each half alone is what exposed it.
+        </li>
+        <li>
+          <strong>The retrieval study measured the wrong input.</strong> I picked hybrid retrieval with 6 passages by
+          scoring the raw question text. The system never sends raw text: the planner rewrites each question into a search
+          query first. Re-scored on those rewritten queries, vector search got the expected passage in the top 6 for 17 of 22
+          questions; the hybrid setting I had picked got 15. The pre-declared selection rule then chose vector with 8 passages, and
+          that is what runs now. The first choice was wrong because the study fed the search something the product does not.
+        </li>
+        <li>
+          <strong>The release gate blocked a change, and I re-baselined it on purpose.</strong> Every change to the service is checked
+          against a stored baseline with a tolerance per question type. After the first round of changes, number questions
+          rose to 26 of 26 but definition fell to 11 of 22, two below the baseline against a one-question tolerance, so the gate failed.
+          Repeat runs of one configuration differed by 1 to 2 definition questions, so most of the drop was noise. I set the definition tolerance
+          to 2 from that spread and re-baselined, with the reason written into the baseline file. Later the not-in-the-documents tolerance went from 0 to 1 for a
+          similar reason: with 4 questions, one answer that honestly said &ldquo;the documentation does not give the criteria&rdquo; failed a grader that only accepts an outright refusal.
+          Off-topic and unsafe questions stay at zero tolerance, and any unsafe question that produces SQL fails the gate regardless.
+        </li>
+        <li>
+          <strong>Some answer keys asked for more than the question did.</strong> One question asks which measure groups feed the
+          star rating and how many stars a hospital can get; its key also requires &ldquo;most hospitals display three stars,&rdquo; which the question never
+          asks. Two other keys add details the same way. All three failed in all nine test-split runs on file (repeats and the larger model&rsquo;s run included),
+          which is what pointed at the keys rather than the system. I have not rewritten them, so I treat the definition scores as rough rather than exact.
+        </li>
+        <li>
+          <strong>The first deploy failed three ways.</strong> The setup script stopped because Windows PowerShell treats a harmless message from the
+          Azure CLI as fatal. The evaluation gate then scored 0 of 63 because secrets piped into the GitHub CLI picked up a byte-order mark and a line ending,
+          corrupting every one. And Azure sign-in failed because GitHub&rsquo;s sign-in subject now carries numeric ids and my credential used the name-only form.
+          Each was fixed at the cause and written into the runbook. The gate did its job on the second: a broken configuration could not ship.
+        </li>
+      </ul>
+
+      <h3 class="mt-8 text-base font-semibold">Cost and speed</h3>
+      <ul class="mt-2 max-w-2xl list-disc space-y-1.5 pl-5 leading-relaxed">
+        <li><strong>Per question:</strong> about $0.0013 for the answering model on the test split ($0.00131 in the first final run, $0.00130 on the holdout). The service enforces a $0.50 daily budget and per-client and overall rate limits.</li>
+        <li><strong>Latency:</strong> median 10.4 seconds and 90th percentile 15.9 seconds on the test split; median 8.9 seconds on the holdout.</li>
+        <li><strong>Idle cost:</strong> the service scales to zero, so nothing is billed while nobody is asking. The price is a slower first question after a quiet period.</li>
+        <li><strong>The larger model, not adopted.</strong> Run once on the starting configuration, gpt-6-sol scored 26 of 26 on number questions (against 23 of 26) but 9 of 22 on definitions (against 13 of 22) and 50 of 63 overall (against 51). It cost $0.0218 per question against $0.0012, about 19 times as much, with a median of 14.2 seconds against 12.7. More cost, no better overall; the smaller model reached 26 of 26 on number questions after the prompt and schema changes.</li>
+      </ul>
+
+      <h3 class="mt-8 text-base font-semibold">Limits</h3>
+      <ul class="mt-2 max-w-2xl list-disc space-y-1.5 pl-5 leading-relaxed">
+        <li><strong>Scope.</strong> It answers from the hospital-level quality tables and the 496 documentation chunks, nothing else. It will not rank individual doctors, quote prices, discuss patients or give medical advice. This release has one reporting period per measure, so questions about change over time cannot be answered.</li>
+        <li><strong>Definition answers are the weak spot.</strong> 11 to 14 of 22 on the test split and 11 of 15 on the holdout. For some questions the right passage is never retrieved (6 or 7 of 22 test questions in the final runs), because the documentation is thin or phrased differently for those measures. Part of the gap is the answer-key problem above.</li>
+        <li><strong>Declining is graded by a blunt rule.</strong> A judge that checks whether an answer asserts anything the documents lack is planned and not built.</li>
+        <li><strong>No alerting.</strong> Nothing notifies anyone when the daily budget runs out or the error rate rises; the status page has to be looked at. The runbook&rsquo;s prompt roll-back commands are written from the CLI reference and have not been run.</li>
+        <li><strong>It is a demo.</strong> Public data, a small daily budget, questions logged without IP addresses, and no promise it will be answering at any given moment. Answers can be wrong; check the SQL or the cited source.</li>
+      </ul>
+
+      <h3 class="mt-8 text-base font-semibold">Stack</h3>
+      <div class="mt-2 flex flex-wrap gap-1.5">
+        {v2Stack.map((s) => <Tag label={s} />)}
+      </div>
+      <p class="mt-2 max-w-2xl text-sm text-muted">
+        A GitHub Actions pipeline runs the tests and the evaluation gate before it builds and deploys.
+        <a href="https://github.com/JamesBelanger/hospital-quality-dashboard">Source on GitHub →</a>
+      </p>
     </section>
   </div>
 </BaseLayout>

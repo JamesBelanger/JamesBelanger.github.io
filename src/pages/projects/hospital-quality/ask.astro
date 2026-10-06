@@ -1,0 +1,362 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Tag from '../../../components/Tag.astro';
+
+const stack = ['FastAPI', 'Azure Container Apps', 'PostgreSQL + pgvector', 'Text-to-SQL', 'Retrieval'];
+const examples = [
+  'How many Texas hospitals have an overall star rating of 5?',
+  'Which five Texas counties have the most hospitals, and how many does each have?',
+  'What is the goal of the hybrid hospital-wide mortality measure?',
+  'Who is surveyed in HCAHPS, and when after discharge?',
+  'Which individual cardiologists in Houston have the best patient outcomes?',
+];
+---
+
+<BaseLayout
+  title="Ask the hospital data"
+  description="Live demo: ask a plain-language question about CMS hospital quality data and see the SQL or the cited documentation behind the answer."
+>
+  <div class="flex flex-wrap items-center gap-3">
+    <h1 class="text-3xl font-bold tracking-tight">Ask the hospital data</h1>
+    <span class="rounded-full bg-accent/15 px-2 py-0.5 text-xs font-medium text-accent-strong">Live demo</span>
+  </div>
+  <p class="mt-3 max-w-2xl text-lg leading-relaxed text-muted">
+    Ask a question about U.S. hospital quality in plain English. Number questions are answered by
+    writing SQL against the CMS Care Compare data; definition questions are answered from CMS
+    documentation. Either way, the page shows the SQL or the quoted source it used.
+  </p>
+  <div class="mt-4 flex flex-wrap gap-1.5">
+    {stack.map((s) => <Tag label={s} />)}
+  </div>
+  <ul class="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+    <li><a href="/projects/hospital-quality#version-2">How it works and how it was tested →</a></li>
+    <li><a href="/projects/hospital-quality/explore/">In-browser explorer →</a></li>
+    <li><a href="https://github.com/JamesBelanger/hospital-quality-dashboard">Source on GitHub →</a></li>
+    <li><a href="/projects">All projects →</a></li>
+  </ul>
+
+  <p class="mt-6 max-w-2xl rounded-xl border border-muted/20 bg-muted/5 p-4 text-sm leading-relaxed">
+    <strong>Public demo on public CMS data.</strong> Questions are logged; no IP addresses are stored.
+    Answers can be wrong, so check the SQL or the cited source. This is not medical advice. Each
+    question costs about a tenth of a cent and the demo has a small daily budget, so it may stop
+    answering for the day.
+  </p>
+
+  <form id="ask-form" class="mt-6 max-w-2xl" novalidate>
+    <label for="ask-input" class="block text-sm font-semibold">Your question</label>
+    <div class="mt-1.5 flex flex-col gap-2 sm:flex-row">
+      <input
+        id="ask-input"
+        name="question"
+        type="text"
+        maxlength="300"
+        autocomplete="off"
+        placeholder="e.g. How many Texas hospitals have a 5-star rating?"
+        aria-describedby="ask-hint"
+        class="min-w-0 flex-1 rounded-lg border border-line bg-card px-3 py-2 text-base text-fg placeholder:text-muted disabled:opacity-60"
+      />
+      <button
+        id="ask-button"
+        type="submit"
+        class="rounded-lg bg-accent-strong px-5 py-2 text-base font-semibold text-bg hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        Ask
+      </button>
+    </div>
+    <p id="ask-hint" class="mt-1.5 text-xs text-muted">3 to 300 characters. Press Enter to ask.</p>
+  </form>
+
+  <div class="mt-4 max-w-2xl">
+    <p class="text-xs font-semibold uppercase tracking-wide text-muted">Try one</p>
+    <ul class="mt-2 flex flex-wrap gap-2" id="ask-chips">
+      {examples.map((q) => (
+        <li>
+          <button
+            type="button"
+            data-q={q}
+            class="ask-chip rounded-full border border-line bg-card px-3 py-1 text-left text-sm text-fg hover:border-accent-strong disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {q}
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <div id="ask-progress" class="mt-6 hidden max-w-2xl rounded-xl border border-line bg-card p-4 text-sm" role="status">
+    <p class="font-semibold">Working on your question<span id="ask-elapsed" class="ml-1 font-normal text-muted" aria-hidden="true"></span></p>
+    <p class="mt-1 text-muted">Usually 8–12 seconds. The first question can take longer while the service wakes up.</p>
+  </div>
+
+  <div id="ask-result" class="mt-6 max-w-3xl" aria-live="polite"></div>
+</BaseLayout>
+
+<script>
+  // The only place the service address appears.
+  const API_BASE = 'https://hq-ask.victoriousdesert-e769edf4.southcentralus.azurecontainerapps.io';
+  const TIMEOUT_MS = 90_000;
+  const ROW_LIMIT = 10;
+  const EXPLORER = '/projects/hospital-quality/explore/';
+
+  type Citation = {
+    chunk_id: string;
+    doc_title: string;
+    section_title: string | null;
+    page_start: number | null;
+    source_url: string | null;
+    quote: string;
+  };
+  type AskResponse = {
+    question: string;
+    route: 'data' | 'docs' | 'both' | 'refuse';
+    refused: boolean;
+    refusal_reason: string | null;
+    answer: string | null;
+    sql: string | null;
+    columns: string[];
+    rows: unknown[][];
+    row_count: number;
+    citations: Citation[];
+    model: string;
+    timings: { total_ms?: number };
+    total_cost_usd?: number;
+  };
+
+  const form = document.getElementById('ask-form') as HTMLFormElement;
+  const input = document.getElementById('ask-input') as HTMLInputElement;
+  const button = document.getElementById('ask-button') as HTMLButtonElement;
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.ask-chip'));
+  const progress = document.getElementById('ask-progress') as HTMLElement;
+  const elapsedEl = document.getElementById('ask-elapsed') as HTMLElement;
+  const result = document.getElementById('ask-result') as HTMLElement;
+
+  // Small DOM helper. Everything from the API goes in through textContent, never innerHTML.
+  function el<K extends keyof HTMLElementTagNameMap>(tag: K, className = '', text?: string): HTMLElementTagNameMap[K] {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  function safeUrl(u: string | null): string | null {
+    if (!u) return null;
+    try {
+      const url = new URL(u);
+      return url.protocol === 'https:' || url.protocol === 'http:' ? url.href : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function cell(v: unknown): string {
+    if (v === null || v === undefined) return '—';
+    return typeof v === 'object' ? JSON.stringify(v) : String(v);
+  }
+
+  function retryText(seconds: number): string {
+    if (seconds < 90) return `about ${Math.max(1, Math.round(seconds))} seconds`;
+    if (seconds < 5400) return `about ${Math.round(seconds / 60)} minutes`;
+    return `about ${Math.round(seconds / 3600)} hours`;
+  }
+
+  function heading(text: string): HTMLElement {
+    return el('h2', 'text-lg font-semibold leading-snug', text);
+  }
+
+  function renderMessage(title: string, body: string, withExplorer: boolean): void {
+    result.replaceChildren();
+    const box = el('div', 'rounded-xl border border-line bg-card p-4');
+    box.appendChild(el('p', 'font-semibold', title));
+    box.appendChild(el('p', 'mt-1 text-sm leading-relaxed', body));
+    if (withExplorer) {
+      const p = el('p', 'mt-2 text-sm');
+      p.append('You can still explore the same data in the ');
+      const a = el('a', '', 'in-browser explorer');
+      a.href = EXPLORER;
+      p.append(a, ', which needs no service.');
+      box.appendChild(p);
+    }
+    result.appendChild(box);
+  }
+
+  function renderSql(sql: string): HTMLElement {
+    const details = el('details', 'mt-3 rounded-lg border border-line bg-card');
+    const summary = el('summary', 'cursor-pointer select-none px-4 py-2 text-sm font-semibold', 'Show the SQL');
+    const pre = el('pre', 'overflow-x-auto border-t border-line bg-muted/10 p-4 text-xs leading-relaxed');
+    pre.appendChild(el('code', '', sql));
+    details.append(summary, pre);
+    return details;
+  }
+
+  function renderTable(columns: string[], rows: unknown[][], total: number): HTMLElement {
+    const wrap = el('div', 'mt-3');
+    const scroller = el('div', 'overflow-x-auto rounded-lg border border-line');
+    const table = el('table', 'w-full border-collapse text-left text-sm');
+    const head = el('tr');
+    for (const c of columns) head.appendChild(el('th', 'whitespace-nowrap border-b border-line bg-muted/10 px-3 py-2 font-semibold', c));
+    table.appendChild(el('thead')).appendChild(head);
+    const body = el('tbody');
+    for (const r of rows.slice(0, ROW_LIMIT)) {
+      const tr = el('tr', 'border-b border-line last:border-b-0');
+      for (const v of r) tr.appendChild(el('td', 'px-3 py-1.5 align-top', cell(v)));
+      body.appendChild(tr);
+    }
+    table.appendChild(body);
+    scroller.appendChild(table);
+    wrap.appendChild(scroller);
+    const shown = Math.min(ROW_LIMIT, rows.length);
+    const note = total > shown ? `Showing ${shown} of ${total} rows` : `${total} ${total === 1 ? 'row' : 'rows'}`;
+    wrap.appendChild(el('p', 'mt-1.5 text-xs text-muted', note));
+    return wrap;
+  }
+
+  function renderCitations(citations: Citation[]): HTMLElement {
+    const list = el('ul', 'mt-3 space-y-3');
+    for (const c of citations) {
+      const li = el('li', 'rounded-lg border border-line bg-card p-4');
+      li.appendChild(el('blockquote', 'border-l-2 border-accent pl-3 text-sm italic leading-relaxed', `“${c.quote}”`));
+      const meta = el('p', 'mt-2 text-xs leading-snug text-muted');
+      const where = [c.doc_title, c.section_title, c.page_start != null ? `p. ${c.page_start}` : null].filter(Boolean).join(' · ');
+      const href = safeUrl(c.source_url);
+      if (href) {
+        const a = el('a', '', where);
+        a.href = href;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        meta.appendChild(a);
+      } else {
+        meta.textContent = where;
+      }
+      li.appendChild(meta);
+      list.appendChild(li);
+    }
+    return list;
+  }
+
+  function renderAnswer(d: AskResponse, release: string): void {
+    result.replaceChildren();
+    const card = el('div', 'rounded-xl border border-line bg-card p-5');
+
+    if (d.refused) {
+      card.appendChild(el('p', 'font-semibold', 'It declined to answer'));
+      card.appendChild(el('p', 'mt-1 leading-relaxed', d.refusal_reason || 'This question is outside what the service answers.'));
+      card.appendChild(el('p', 'mt-2 text-sm text-muted', 'Declining is a normal outcome: the service only answers questions about this hospital data and its documentation.'));
+    } else {
+      card.appendChild(el('p', 'text-xs font-semibold uppercase tracking-wide text-muted', 'Answer'));
+      card.appendChild(el('p', 'mt-1 whitespace-pre-line text-lg leading-relaxed', d.answer ?? ''));
+    }
+    result.appendChild(card);
+
+    const hasSql = !d.refused && !!d.sql;
+    const hasCites = !d.refused && d.citations.length > 0;
+    if (hasSql || hasCites) {
+      const section = el('section', 'mt-6');
+      section.appendChild(heading('How it got this'));
+      if (hasSql) {
+        section.appendChild(el('p', 'mt-1 text-sm text-muted', 'The service wrote this SQL and ran it with a read-only database login.'));
+        section.appendChild(renderSql(d.sql as string));
+        if (d.columns.length && d.rows.length) section.appendChild(renderTable(d.columns, d.rows, d.row_count));
+        else section.appendChild(el('p', 'mt-3 text-sm text-muted', 'The query returned no rows.'));
+      }
+      if (hasCites) {
+        section.appendChild(el('p', 'mt-4 text-sm text-muted', hasSql ? 'Documentation it quoted:' : 'Passages from the CMS documentation it relied on:'));
+        section.appendChild(renderCitations(d.citations));
+      }
+      result.appendChild(section);
+    }
+
+    const seconds = typeof d.timings?.total_ms === 'number' ? `${(d.timings.total_ms / 1000).toFixed(1)} s` : 'n/a';
+    const cost = typeof d.total_cost_usd === 'number' ? `$${d.total_cost_usd.toFixed(4)}` : 'n/a';
+    result.appendChild(el('p', 'mt-5 text-xs text-muted', `Model ${d.model} · release ${release} · ${seconds} · ${cost}`));
+  }
+
+  let busy = false;
+  let timer: number | undefined;
+
+  function setBusy(on: boolean): void {
+    busy = on;
+    button.disabled = on;
+    input.disabled = on;
+    chips.forEach((c) => (c.disabled = on));
+    result.setAttribute('aria-busy', String(on));
+    progress.classList.toggle('hidden', !on);
+    window.clearInterval(timer);
+    if (on) {
+      const start = Date.now();
+      elapsedEl.textContent = '· 0 s';
+      timer = window.setInterval(() => {
+        elapsedEl.textContent = `· ${Math.floor((Date.now() - start) / 1000)} s`;
+      }, 1000);
+    }
+  }
+
+  async function ask(question: string): Promise<void> {
+    const q = question.trim();
+    if (busy) return;
+    if (q.length < 3 || q.length > 300) {
+      renderMessage('Check the length', 'Questions need to be between 3 and 300 characters.', false);
+      return;
+    }
+    result.replaceChildren();
+    setBusy(true);
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), TIMEOUT_MS);
+    try {
+      const res = await fetch(`${API_BASE}/ask`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: q }),
+        signal: controller.signal,
+      });
+      if (res.ok) {
+        const d = (await res.json()) as AskResponse;
+        const release = (res.headers.get('X-Release') || '').slice(0, 7) || 'unknown';
+        renderAnswer(d, release);
+      } else if (res.status === 429) {
+        let detail = '';
+        try {
+          const j = await res.json();
+          if (typeof j?.detail === 'string') detail = j.detail;
+        } catch { /* body is optional */ }
+        const secs = Number(res.headers.get('Retry-After'));
+        const when = Number.isFinite(secs) && secs > 0 ? ` Try again in ${retryText(secs)}.` : ' Try again later.';
+        renderMessage(
+          'The demo has reached its limit',
+          `The demo’s daily budget or rate limit was reached.${detail ? ` The service says: “${detail}”` : ''}${when}`,
+          true,
+        );
+      } else if (res.status === 422) {
+        renderMessage('Check the length', 'Questions need to be between 3 and 300 characters.', false);
+      } else if (res.status === 502 || res.status === 503) {
+        renderMessage('The service could not answer right now', 'It may be waking up or temporarily unavailable. Try again in a minute.', true);
+      } else {
+        renderMessage('Something went wrong', `The service returned an unexpected error (HTTP ${res.status}).`, true);
+      }
+    } catch (err) {
+      if (controller.signal.aborted) {
+        renderMessage('That took too long', 'No answer arrived within 90 seconds. The service may be starting up; trying again often works.', true);
+      } else {
+        renderMessage('Could not reach the service', 'The request did not go through. Check your connection, or try again in a minute.', true);
+      }
+    } finally {
+      window.clearTimeout(timeout);
+      setBusy(false);
+    }
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    void ask(input.value);
+  });
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      input.value = chip.dataset.q ?? '';
+      void ask(input.value);
+    });
+  });
+
+  // Free wake-up call: /health touches neither the database nor the model, so by the time
+  // someone has picked a question the service is usually already awake.
+  fetch(`${API_BASE}/health`).catch(() => {});
+</script>

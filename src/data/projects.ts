@@ -11,9 +11,10 @@ export const PROJECTS: Project[] = [
     name: 'Hospital Quality Explorer',
     category: 'Product / full-stack',
     blurb:
-      'CMS Care Compare data for 5,419 U.S. hospitals (799k rows across six datasets) loaded into a Postgres star schema and benchmarked with SQL window functions instead of loaded benchmark tables. Published as an interactive explorer: look up any hospital, define a peer group, and get a report card, linked comparisons, a map, weighted rankings, and an in-browser SQL console (DuckDB-WASM) over the same tables.',
-    stack: ['PostgreSQL (Supabase)', 'SQL', 'Python ETL', 'D3', 'DuckDB-WASM', 'Tableau Public'],
+      'CMS Care Compare data for 5,419 U.S. hospitals (799k rows across six datasets) loaded into a Postgres star schema and benchmarked with SQL window functions instead of loaded benchmark tables. Published as an interactive explorer: look up any hospital, define a peer group, and get a report card, linked comparisons, a map, weighted rankings, and an in-browser SQL console (DuckDB-WASM) over the same tables. Version 2 adds a live question-answering demo: plain-English questions are answered with model-written SQL (validated, run under a read-only login) or quoted CMS documentation, or declined, and the case study covers how it was evaluated and what broke.',
+    stack: ['PostgreSQL (Supabase)', 'SQL', 'Python ETL', 'D3', 'DuckDB-WASM', 'Tableau Public', 'FastAPI', 'Azure Container Apps', 'pgvector'],
     links: [
+      { label: 'Ask the data (live)', href: '/projects/hospital-quality/ask/' },
       { label: 'Explorer', href: '/projects/hospital-quality/explore/' },
       { label: 'Case study', href: '/projects/hospital-quality' },
       { label: 'Houston dashboard', href: '/hospital-quality-dashboard.html' },
