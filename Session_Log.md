@@ -1,5 +1,13 @@
 # Session Log — jamesbelanger.io
 
+## 2026-10-06 — SHIPPED (commit `0c9c9b1`, live on jamesbelanger.com)
+James OK'd the unpublished finding numbers and chose to keep the "single, strikingly low-dimensional population
+axis" sentence on /research ("that's what happened"). Everything in the four 2026-10-05 entries below was
+committed as one commit, rebased onto two newer remote commits (hospital-quality Ask page + case-study fix; no
+conflicts, new pages checked under the new styling), fast-forwarded to `main` and pushed. Deploy run succeeded;
+live site verified (home, collage layers, audio, icons, OG image all 200).
+**Open:** EN/ES toggle; README still describes .io + Vercel; James to keep ear-checking the name clips.
+
 ## 2026-10-05 (late) — Page strip, icons, phone hero, real findings (same branch, still UNCOMMITTED)
 James picked three follow-ups and asked for the home research block to show real findings, animated, because
 the rotating manifold picture was a synthetic illustration ("kind of bs"). No résumé link until he has a job
