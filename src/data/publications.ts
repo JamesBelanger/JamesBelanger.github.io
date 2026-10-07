@@ -28,6 +28,8 @@ export const PUBLICATIONS: Publication[] = [
     type: 'journal',
     year: 2026,
     venue: 'Nature Human Behaviour',
+    // DOI assigned in proofs: 10.1038/s41562-026-02543-z. Not live as of 2026-10-06; add `doi` and update
+    // `status` once it resolves.
     title: 'Attention is all you need (in the brain): Semantic contextualization in human hippocampus',
     authors:
       'Katlowitz, K. A., Belanger, J. L., Ismail, T., Chavez, A. G., Chericoni, A., Franch, M. C., Mickiewicz, E. A., Mathura, R. K., Paulo, D., Bartoli, E., Piantadosi, S. T., Provenza, N. R., Watrous, A. J., Sheth, S. A., & Hayden, B. Y.',

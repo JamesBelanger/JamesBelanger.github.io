@@ -22,6 +22,37 @@ Japanese, Chinese); QA-Emb "I built a ... framework" wording; 704-neuron music n
 not in the fact sheet; Identity Resolution 769 (card) vs 858 (demo page title); News items all dated just "2026";
 React 19 tag on Houston Eats vs the never-claim list.
 
+## 2026-10-06 (evening) — Research page reorganised around what James did (LOCAL, uncommitted, not pushed)
+James: the page was "disorganized", "to a normal researcher this sniffs very off", and should show industry
+readers "solidly what I have done". What read wrong: lab-wide science written as "my research" with a
+"Flagship" badge and a branded title; unpublished findings stated as settled; status notes ("figure validated");
+a "forward-looking, not yet implemented" theme; long method-chip lists; a synthetic figure; no lab, role or
+dates anywhere.
+- `src/data/research.ts` rewritten: `ROLE`, `WORK` (Recording / Pipelines / Modelling, each a list of things he
+  did with the fact-sheet numbers), `OWN_PROJECT` (the grammar-and-meaning analysis, labelled unpublished, with
+  "What held up" and "What I threw out"), `OTHER_STUDIES` (music, bilingual: what he built, no findings claimed),
+  `METHODS` (fact-sheet list only).
+- `src/pages/research.astro` rewritten to match: role line with lab and dates -> What I did -> Papers it went
+  into (the four journal papers from `publications.ts`, live statuses) -> My own analysis -> other studies ->
+  methods. `ManifoldViz.astro` and `FigurePlaceholder.astro` deleted (unused; the former was the synthetic figure).
+- Removed from the page: the "universal language manifold" theme, the Krumhansl-Kessler / 704-neuron music
+  finding and the "decoders read gender and conjugation" result (not verified in the fact sheet or notes; the
+  page now says what was built instead).
+- Browser-checked desktop + phone: no overflow, no errors, home links resolve.
+- **Linguistics block + paper contribution (James: his biggest contribution was the linguistics for Vigi
+  Katlowitz's paper).** New first block in `WORK`: all linguistic features for the Nature Human Behaviour paper
+  (356 hippocampal units, 10 participants; POS, dependency relations, syntactic depth, clause position, word
+  frequency) and the embeddings (GPT-2, Llama-3, DeBERTa; GloVe, Word2Vec), plus his own 57-feature annotation.
+  `PAPER_ROLES` in `research.ts` holds a per-paper contribution line; papers that have one sort first. Details
+  checked against the proof (`Downloads/41562_2026_2543_Author.pdf`): "J.L.B. and T.I. contributed to this work
+  equally"; J.L.B. conceptualized, performed the analysis, wrote. The proof's DOI (10.1038/s41562-026-02543-z)
+  is not live yet; noted in `publications.ts`. Same facts added to the vault resume fact sheet.
+- Projects page research cards: already rewritten in plain language by another session; left as they are.
+**Needs James before pushing:** confirm the role statements are his to make as worded (solo spike sorter,
+recruiting/enrolling, SOPs), the music and bilingual lines, and whether to name the Hayden Lab on the page.
+Optional: one line per paper on what he contributed. The Projects page "Research engineering" cards still use
+the older research-voice wording.
+
 ## 2026-10-06 (later) — Simulated spike raster with the real podcast words; publications refreshed
 **Raster.** James asked for the lab's podcast raster in place of the made-up 1,008-square wall, then pulled back
 from real data ("idk if the lab would be violating HIPAA or PHI") while keeping the stimulus ("the stimuli is

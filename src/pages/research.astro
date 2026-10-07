@@ -1,50 +1,109 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { RESEARCH } from '../data/research';
 import Tag from '../components/Tag.astro';
-import ManifoldViz from '../components/ManifoldViz.astro';
+import { ROLE, WORK, PAPER_ROLES, OWN_PROJECT, OTHER_STUDIES, METHODS } from '../data/research';
+import { PUBLICATIONS } from '../data/publications';
+
+// Papers with a stated contribution come first.
+const journal = PUBLICATIONS.filter((p) => p.type === 'journal').sort(
+  (a, b) => Number(b.title in PAPER_ROLES) - Number(a.title in PAPER_ROLES),
+);
+const preprints = PUBLICATIONS.filter((p) => p.type === 'preprint').length;
 ---
-<BaseLayout title="Research" description="Research on the geometry of language in human single-neuron and population recordings.">
+<BaseLayout
+  title="Research"
+  description="What James Belanger did as a research technician in a human single-neuron lab: recordings, data pipelines, statistical modelling, and the papers they went into."
+>
   <h1 class="text-3xl font-bold tracking-tight">Research</h1>
-  <p class="mt-3 max-w-2xl text-lg leading-relaxed text-muted">
-    At Baylor College of Medicine I measured how language is represented in human neural population codes,
-    and asked whether the brain’s compressed geometry can guide more efficient, compositional machine learning.
+  <p class="mt-2 font-mono text-sm text-muted">{ROLE.title} · {ROLE.lab} · {ROLE.dates}</p>
+  <p class="mt-4 max-w-2xl text-lg leading-relaxed">
+    The lab records single neurons in the brains of epilepsy patients while they listen and talk. This page is
+    what I did there: the recordings I ran, the pipelines I built, the papers that work went into, and one
+    analysis project of my own.
   </p>
 
-  <div class="mt-10 space-y-14">
-    {
-      RESEARCH.map((t) => (
-        <article id={t.id} class="scroll-mt-24">
-          <div class="flex flex-wrap items-center gap-3">
-            <h2 class="text-xl font-semibold leading-snug">{t.title}</h2>
-            {t.flagship && (
-              <span class="rounded-full bg-accent/15 px-2 py-0.5 text-xs font-medium text-accent-strong">
-                Flagship
-              </span>
-            )}
-          </div>
-          {t.status && <p class="mt-1 text-sm text-muted">{t.status}</p>}
-          <p class="mt-3 max-w-2xl leading-relaxed">{t.summary}</p>
-          {t.flagship && (
-            <figure class="my-5">
-              <ManifoldViz class="aspect-[16/9] w-full" />
-              <figcaption class="mt-2 text-sm text-muted">{t.figure.caption}</figcaption>
-            </figure>
-          )}
-          <div class="mt-3 flex flex-wrap gap-1.5">
-            {t.methods.map((m) => <Tag label={m} />)}
-          </div>
-          {t.links && (
-            <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
-              {t.links.map((l) => (
-                <li>
-                  <a href={l.href}>{l.label} →</a>
-                </li>
-              ))}
+  <!-- What I did -->
+  <section class="mt-12">
+    <h2 class="label">What I did</h2>
+    <div class="mt-6 space-y-5">
+      {
+        WORK.map((area) => (
+          <article id={area.id} class="clip scroll-mt-24 p-5 sm:p-6">
+            <h3 class="text-xl"><span class="hl">{area.name}</span></h3>
+            <p class="mt-1 font-medium">{area.line}</p>
+            <ul class="mt-3 space-y-2.5 text-[0.95rem] leading-relaxed">
+              {area.items.map((item) => <li class="border-t border-line pt-2.5">{item}</li>)}
             </ul>
-          )}
-        </article>
-      ))
-    }
-  </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Papers -->
+  <section class="mt-14">
+    <h2 class="label">Papers it went into</h2>
+    <p class="mt-6 max-w-2xl leading-relaxed">
+      I am a co-author on nine papers from the lab. These four are in journals; the other {preprints} are preprints.
+      The first is the one I contributed most to.
+    </p>
+    <ul class="mt-4">
+      {
+        journal.map((p) => (
+          <li class="border-t border-line py-3">
+            {p.doi ? <a href={`https://doi.org/${p.doi}`} class="text-fg">{p.title}</a> : <span>{p.title}</span>}
+            <span class="mt-0.5 block text-sm text-muted">{p.venue}, {p.year} · {p.status}</span>
+            {PAPER_ROLES[p.title] && <p class="mt-2 max-w-2xl text-[0.95rem] leading-relaxed">{PAPER_ROLES[p.title]}</p>}
+          </li>
+        ))
+      }
+    </ul>
+    <p class="mt-3 font-mono text-sm font-bold"><a href="/publications">All nine, with citations →</a></p>
+  </section>
+
+  <!-- Own project -->
+  <section id={OWN_PROJECT.id} class="mt-14 scroll-mt-24">
+    <h2 class="label">My own analysis</h2>
+    <h3 class="mt-6 text-2xl">{OWN_PROJECT.title}</h3>
+    <p class="mt-1 font-mono text-sm text-muted">{OWN_PROJECT.status}</p>
+    <p class="mt-4 max-w-2xl leading-relaxed">{OWN_PROJECT.question}</p>
+
+    <div class="mt-6 grid gap-5 md:grid-cols-2">
+      <div class="clip p-5">
+        <h4 class="font-mono text-xs font-bold uppercase tracking-widest text-muted">What held up</h4>
+        <ul class="mt-3 space-y-3 text-[0.95rem] leading-relaxed">
+          {OWN_PROJECT.held.map((f) => <li class="border-t border-line pt-3">{f}</li>)}
+        </ul>
+      </div>
+      <div class="clip p-5">
+        <h4 class="font-mono text-xs font-bold uppercase tracking-widest text-muted">What I threw out</h4>
+        <ul class="mt-3 space-y-3 text-[0.95rem] leading-relaxed">
+          {OWN_PROJECT.dropped.map((f) => <li class="border-t border-line pt-3">{f}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Other studies -->
+  <section class="mt-14">
+    <h2 class="label">Analysis I built for other studies</h2>
+    <dl class="mt-6 space-y-4">
+      {
+        OTHER_STUDIES.map((s) => (
+          <div>
+            <dt class="font-display text-lg font-bold">{s.name}</dt>
+            <dd class="mt-0.5 max-w-2xl leading-relaxed">{s.text}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <!-- Methods -->
+  <section class="mt-14">
+    <h2 class="label">Methods and tools</h2>
+    <div class="mt-6 flex flex-wrap gap-1.5">
+      {METHODS.map((m) => <Tag label={m} />)}
+    </div>
+  </section>
 </BaseLayout>
