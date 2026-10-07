@@ -386,17 +386,7 @@
    "shadow": 0.4
   },
   {
-   "file": "38-chip-hy.webp",
-   "tag": "chip-hy",
-   "cx": 224,
-   "cy": 177,
-   "w": 84.5,
-   "h": 37.0,
-   "rot": 5,
-   "shadow": 0.4
-  },
-  {
-   "file": "39-letter.webp",
+   "file": "38-letter.webp",
    "tag": "letter",
    "cx": 392.25,
    "cy": 188.54,
@@ -406,7 +396,7 @@
    "shadow": 0.45
   },
   {
-   "file": "40-letter.webp",
+   "file": "39-letter.webp",
    "tag": "letter",
    "cx": 458.96,
    "cy": 194.8,
@@ -416,7 +406,7 @@
    "shadow": 0.45
   },
   {
-   "file": "41-letter.webp",
+   "file": "40-letter.webp",
    "tag": "letter",
    "cx": 540.18,
    "cy": 193.5,
@@ -426,7 +416,7 @@
    "shadow": 0.45
   },
   {
-   "file": "42-letter.webp",
+   "file": "41-letter.webp",
    "tag": "letter",
    "cx": 617.33,
    "cy": 187.8,
@@ -436,7 +426,7 @@
    "shadow": 0.45
   },
   {
-   "file": "43-letter.webp",
+   "file": "42-letter.webp",
    "tag": "letter",
    "cx": 691.83,
    "cy": 196.37,
@@ -446,7 +436,7 @@
    "shadow": 0.45
   },
   {
-   "file": "44-letter.webp",
+   "file": "43-letter.webp",
    "tag": "letter",
    "cx": 815.69,
    "cy": 196.6,
@@ -456,7 +446,7 @@
    "shadow": 0.45
   },
   {
-   "file": "45-letter.webp",
+   "file": "44-letter.webp",
    "tag": "letter",
    "cx": 905.46,
    "cy": 195.73,
@@ -466,7 +456,7 @@
    "shadow": 0.45
   },
   {
-   "file": "46-letter.webp",
+   "file": "45-letter.webp",
    "tag": "letter",
    "cx": 957.06,
    "cy": 187.3,
@@ -476,7 +466,7 @@
    "shadow": 0.45
   },
   {
-   "file": "47-letter.webp",
+   "file": "46-letter.webp",
    "tag": "letter",
    "cx": 1002.55,
    "cy": 194.32,
@@ -486,7 +476,7 @@
    "shadow": 0.45
   },
   {
-   "file": "48-letter.webp",
+   "file": "47-letter.webp",
    "tag": "letter",
    "cx": 1073.46,
    "cy": 188.06,
@@ -496,7 +486,7 @@
    "shadow": 0.45
   },
   {
-   "file": "49-letter.webp",
+   "file": "48-letter.webp",
    "tag": "letter",
    "cx": 1175.47,
    "cy": 199.15,
@@ -506,7 +496,7 @@
    "shadow": 0.45
   },
   {
-   "file": "50-letter.webp",
+   "file": "49-letter.webp",
    "tag": "letter",
    "cx": 1248.11,
    "cy": 189.8,
@@ -516,7 +506,7 @@
    "shadow": 0.45
   },
   {
-   "file": "51-letter.webp",
+   "file": "50-letter.webp",
    "tag": "letter",
    "cx": 1288.44,
    "cy": 189.16,
@@ -526,7 +516,7 @@
    "shadow": 0.45
   },
   {
-   "file": "52-label.webp",
+   "file": "51-label.webp",
    "tag": "label",
    "cx": 862,
    "cy": 300,

@@ -22,6 +22,13 @@ Japanese, Chinese); QA-Emb "I built a ... framework" wording; 704-neuron music n
 not in the fact sheet; Identity Resolution 769 (card) vs 858 (demo page title); News items all dated just "2026";
 React 19 tag on Houston Eats vs the never-claim list.
 
+## 2026-10-06 (late night, 2) — Journey tab noted; Armenian removed
+- `CONTENT-TODO.md` gained a Backlog section: a "Journey" nav tab (how James's interests changed over time; his
+  idea, not built), EN/ES toggle, NHB DOI, per-paper contribution lines, name-clip ear-check.
+- Armenian dropped from `nameScripts` and from the collage (James). First hidden on the site, then removed at
+  the source: the vault banner script no longer has the chip, the collage layers were re-exported (52) and the
+  link-preview image regenerated. Ten scripts remain, all with audio.
+
 ## 2026-10-06 (late night) — News page brought up to date
 James asked whether there was more news to post. There was: two items still said "in press" for papers that
 are published, every date was a bare "2026", and two shipped things were missing.
