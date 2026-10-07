@@ -32,7 +32,6 @@ export const SITE = {
     { lang: 'zh', label: 'Chinese', text: '詹姆斯·贝兰杰' },
     { lang: 'th', label: 'Thai', text: 'เจมส์ เบแลนเจอร์' },
     { lang: 'am', label: 'Amharic', text: 'ጄምስ በላንጀር' },
-    { lang: 'hy', label: 'Armenian', text: 'Ջեյմս Բելանջեր' },
   ] as { lang: string; label: string; text: string; rtl?: boolean }[],
   // Tagline split into constituents for the hover gloss (Gloss.astro).
   // cat = phrase category; es = Spanish gloss for that constituent.

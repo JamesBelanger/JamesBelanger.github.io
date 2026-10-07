@@ -17,7 +17,11 @@ import { SITE } from '../data/site';
 import TornEdge from './TornEdge.astro';
 
 const { width: W, height: H, layers } = collage;
-const [bg, ...pieces] = layers;
+// Pieces in the exported art that the site leaves out. Armenian: dropped from the name scripts
+// (James, 2026-10-06), so its chip goes too.
+const HIDDEN = new Set(['chip-hy']);
+const [bg, ...rest] = layers;
+const pieces = rest.filter((p) => !HIDDEN.has(p.tag));
 
 // How far a piece travels, by kind (first word of its tag). Nearer = more.
 const DEPTH: Record<string, number> = {
