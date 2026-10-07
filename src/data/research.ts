@@ -70,6 +70,45 @@ export const PAPER_ROLES: Record<string, string> = {
     'Equal-contribution second author. I did the linguistics and the language-model embeddings, and helped design the analysis, run it and write the paper. It shows that hippocampal neurons track where a word sits in its clause, and that their response to a word carries a weighted mix of the words before it, weighted much as a language model’s attention would.',
 };
 
+// Figures shown on the research page. Each must be one we are allowed to show, displayed whole and
+// unaltered, with its credit:
+//  - Nature paper: published open access under CC BY-NC-ND 4.0 (share with credit, non-commercial, no edits).
+//  - Katlowitz preprint: copyright is held by the authors (James is one); taken from the bioRxiv
+//    version, not the journal's typeset one. Swap for the journal figure only if that is open access.
+// Do NOT add figures from the Nature Neuroscience or Cell papers: neither is open access.
+export interface PaperFigure {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  caption: string;
+  credit: string;
+  href: string;
+}
+
+export const FIGURES: PaperFigure[] = [
+  {
+    src: '/research/katlowitz-preprint-fig1.webp',
+    width: 1300,
+    height: 1994,
+    alt: 'Multi-panel figure: a brain with the hippocampus highlighted, spike rasters under spoken words, a sentence drawn as a tree of nested clauses, and heat maps of neurons ordered by the word position they respond to.',
+    caption:
+      'Hippocampal neurons track where a word sits in its sentence. The sentence tree in panel D is the kind of structure I computed for every sentence in the recordings.',
+    credit: 'Figure 1 of the preprint of Katlowitz, Belanger et al., bioRxiv (2025). © the authors.',
+    href: 'https://doi.org/10.1101/2025.06.23.661103',
+  },
+  {
+    src: '/research/nature-fig1.webp',
+    width: 1200,
+    height: 1477,
+    alt: 'Multi-panel figure: a recording probe being placed in a human hippocampus, brain scans locating it, the waveforms of single neurons, and their spikes aligned to the words of a spoken sentence.',
+    caption:
+      'A recording probe in a living human hippocampus, the single neurons it picked up, and their spikes under the words of a story.',
+    credit: 'Figure 1 of Katlowitz et al., Nature 654, 714–723 (2026). CC BY-NC-ND 4.0.',
+    href: 'https://doi.org/10.1038/s41586-026-10448-0',
+  },
+];
+
 // James's own analysis project. Unpublished: label it, and keep the retractions visible.
 export const OWN_PROJECT = {
   id: 'grammar-and-meaning',

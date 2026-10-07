@@ -22,6 +22,29 @@ Japanese, Chinese); QA-Emb "I built a ... framework" wording; 704-neuron music n
 not in the fact sheet; Identity Resolution 769 (card) vs 858 (demo page title); News items all dated just "2026";
 React 19 tag on Houston Eats vs the never-claim list.
 
+## 2026-10-06 (night) — Figures and an animation on the research page (LOCAL, uncommitted, not pushed)
+The reorganised research page itself shipped as commit `6f8d0d5` (James: "yes i love it this is it"). He then
+asked to showcase striking figures from the papers and his own animations.
+- Reuse rights checked first (Crossref licence fields + bioRxiv API): Nature paper = open access, CC BY-NC-ND 4.0;
+  Nature Neuroscience and Cell = NOT open access (no figures from them); all nine bioRxiv preprints = "no reuse"
+  licence, copyright held by the authors.
+- Added to `/research` (assets in `public/research/`, data in `FIGURES` in `src/data/research.ts`):
+  1. `katlowitz-preprint-fig1.webp`: Figure 1 of the preprint of the Nature Human Behaviour paper, extracted
+     from the locally saved bioRxiv PDF (`Downloads/2025.06.23.661103v2.full.pdf`, page 24), shown whole.
+     Panel D is the syntactic-depth tree, i.e. James's linguistics. Credit: "(c) the authors".
+  2. `nature-fig1.webp`: Figure 1 of the Nature paper from nature.com, shown whole and unaltered with the
+     CC BY-NC-ND credit. Note it includes an intraoperative photo (panel a).
+  3. `grammar-to-numbers.mp4` (+ poster): James's own manim explainer `SyntacticGCNIntro.mp4` (vault
+     `QA_emb_CLIP_Minye/word_level/media/videos/syntactic_gcn_animation/1080p60/`), re-encoded 720p30, 0.9 MB,
+     silent, plays on click. Method only, no recordings.
+  Figures sit in a two-up grid under the papers list and open full size on click; the animation sits in
+  "My own analysis".
+- Not used: `ScaleDissociation.mp4` (states an interaction result the project notes say does not hold up
+  out of sample). bioRxiv blocks automated downloads (Cloudflare 429), hence the local PDF.
+- Browser-checked desktop + phone: images load, video plays, no overflow, no errors.
+**Held for James:** OK to publish (a) a co-authored preprint figure without asking Vigi, (b) the surgery photo
+inside the Nature figure, (c) an explainer of an unpublished method.
+
 ## 2026-10-06 (evening) — Research page reorganised around what James did (LOCAL, uncommitted, not pushed)
 James: the page was "disorganized", "to a normal researcher this sniffs very off", and should show industry
 readers "solidly what I have done". What read wrong: lab-wide science written as "my research" with a

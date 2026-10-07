@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Tag from '../components/Tag.astro';
-import { ROLE, WORK, PAPER_ROLES, OWN_PROJECT, OTHER_STUDIES, METHODS } from '../data/research';
+import { ROLE, WORK, PAPER_ROLES, FIGURES, OWN_PROJECT, OTHER_STUDIES, METHODS } from '../data/research';
 import { PUBLICATIONS } from '../data/publications';
 
 // Papers with a stated contribution come first.
@@ -59,6 +59,25 @@ const preprints = PUBLICATIONS.filter((p) => p.type === 'preprint').length;
       }
     </ul>
     <p class="mt-3 font-mono text-sm font-bold"><a href="/publications">All nine, with citations →</a></p>
+
+    <div class="mt-8 grid items-start gap-5 sm:grid-cols-2">
+      {
+        FIGURES.map((f) => (
+          <figure class="clip p-3">
+            <a href={f.src} target="_blank" rel="noopener" aria-label="Open the full figure">
+              <img src={f.src} alt={f.alt} width={f.width} height={f.height} loading="lazy" decoding="async" class="block h-auto w-full" />
+            </a>
+            <figcaption class="mt-3 text-sm leading-snug">
+              {f.caption}
+              <span class="mt-1.5 block font-mono text-xs text-muted">
+                <a href={f.href} class="text-muted">{f.credit}</a>
+              </span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+    <p class="mt-3 font-mono text-xs text-muted">Click a figure to open it full size.</p>
   </section>
 
   <!-- Own project -->
@@ -67,6 +86,29 @@ const preprints = PUBLICATIONS.filter((p) => p.type === 'preprint').length;
     <h3 class="mt-6 text-2xl">{OWN_PROJECT.title}</h3>
     <p class="mt-1 font-mono text-sm text-muted">{OWN_PROJECT.status}</p>
     <p class="mt-4 max-w-2xl leading-relaxed">{OWN_PROJECT.question}</p>
+
+    <figure class="mt-6">
+      <div class="clip bg-black p-1.5">
+        <video
+          class="block w-full"
+          width="1280"
+          height="720"
+          controls
+          muted
+          playsinline
+          preload="none"
+          poster="/research/grammar-to-numbers.jpg"
+          aria-label="Animation: two sentences with different words but the same grammar are turned into the same vector."
+        >
+          <source src="/research/grammar-to-numbers.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <figcaption class="mt-3 max-w-2xl text-sm leading-snug">
+        An explainer I animated for the method: how a sentence’s grammar becomes numbers. “She played the piano” and
+        “He broke the window” share no words but have the same structure, so they come out as the same vector.
+        <span class="mt-1.5 block font-mono text-xs text-muted">No recordings in it: the method only. 79 seconds, silent.</span>
+      </figcaption>
+    </figure>
 
     <div class="mt-6 grid gap-5 md:grid-cols-2">
       <div class="clip p-5">
