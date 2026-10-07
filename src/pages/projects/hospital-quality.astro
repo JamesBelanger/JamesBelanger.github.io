@@ -334,6 +334,21 @@ const v2Stack = ['FastAPI', 'Python', 'Azure Container Apps', 'GitHub Container 
         </li>
       </ul>
 
+      <h3 class="mt-8 text-base font-semibold">Abuse testing</h3>
+      <p class="mt-2 max-w-2xl leading-relaxed">
+        A public box that writes SQL and spends money invites people to break it, so after launch I had AI agents attack
+        it: 103 hand-written attack questions run three times each through the real pipeline (prompt extraction, SQL
+        injection through plain English, using it as a free chatbot, defamation, personal coverage decisions, smuggled
+        instructions), 256 SQL strings fed straight to the validator, direct tests of each restricted database login,
+        and checks of the web layer on the live service.
+      </p>
+      <ul class="mt-3 max-w-2xl list-disc space-y-1.5 pl-5 leading-relaxed">
+        <li><strong>What held.</strong> No attack got the prompt, a secret or another visitor&rsquo;s question, and none wrote or changed data. The login that runs model-written SQL cannot read the request log at all.</li>
+        <li><strong>What got through.</strong> A crafted query slipped past the validator and could read database system tables (role names, settings); the database login still blocked anything sensitive. Answers obeyed attacker wording (all capitals with a supplied closing line, a pirate voice) and could run to 9,300 characters. The coverage disclaimer was dropped on request once in three runs. On the live service, 30 simultaneous requests from one client were all answered despite a limit of 20 an hour, because requests were counted only when they finished.</li>
+        <li><strong>The fixes.</strong> The validator now resolves table names scope by scope and allows only functions on an explicit list. Answers are capped, the question is treated as data rather than instructions, the coverage sentence is added in code, and the limits count requests still in flight (at most six at once). On the live service afterwards, 30 simultaneous requests got 6 answers and 24 &ldquo;busy&rdquo; replies, and the release gate passed.</li>
+        <li><strong>How far this goes.</strong> Each attack had one phrasing, and the after-fix results are on the same attacks the fixes were written against, so they show the fixes work on those, not that the service is safe against attacks nobody tried. The full write-up is <a href="https://github.com/JamesBelanger/hospital-quality-dashboard/blob/master/redteam/REPORT.md">in the repository</a>.</li>
+      </ul>
+
       <h3 class="mt-8 text-base font-semibold">Cost and speed</h3>
       <ul class="mt-2 max-w-2xl list-disc space-y-1.5 pl-5 leading-relaxed">
         <li><strong>Per question:</strong> about $0.0013 for the answering model on the test split ($0.00131 in the first final run, $0.00130 on the holdout). The service enforces a $0.50 daily budget and per-client and overall rate limits.</li>
