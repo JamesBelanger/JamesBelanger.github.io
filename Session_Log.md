@@ -22,6 +22,15 @@ Japanese, Chinese); QA-Emb "I built a ... framework" wording; 704-neuron music n
 not in the fact sheet; Identity Resolution 769 (card) vs 858 (demo page title); News items all dated just "2026";
 React 19 tag on Houston Eats vs the never-claim list.
 
+## 2026-10-06 (late night) — News page brought up to date
+James asked whether there was more news to post. There was: two items still said "in press" for papers that
+are published, every date was a bare "2026", and two shipped things were missing.
+- `src/data/news.ts` rewritten, newest first, with real months: Ask the Hospital Data (Oct, new), Nature
+  Neuroscience published (Sep), Identity Resolution Lab + Pronunciation Coach (Sep), Hospital Quality Explorer,
+  Cell published, Nature Human Behaviour in press with his equal-contribution role, Research Engine case study
+  (Aug, new), Nature published (May), three preprints (May, Mar, Jan). Paper items link to their DOIs.
+- `news.astro` formats `YYYY-MM` as "Oct 2026". Paper dates from Crossref/bioRxiv; project dates from git.
+
 ## 2026-10-06 (night) — Figures and an animation on the research page (SHIPPED, commit `e4f0805`, live)
 The reorganised research page itself shipped as commit `6f8d0d5` (James: "yes i love it this is it"). He then
 asked to showcase striking figures from the papers and his own animations.
