@@ -22,7 +22,7 @@ Japanese, Chinese); QA-Emb "I built a ... framework" wording; 704-neuron music n
 not in the fact sheet; Identity Resolution 769 (card) vs 858 (demo page title); News items all dated just "2026";
 React 19 tag on Houston Eats vs the never-claim list.
 
-## 2026-10-06 (night) — Figures and an animation on the research page (LOCAL, uncommitted, not pushed)
+## 2026-10-06 (night) — Figures and an animation on the research page (SHIPPED, commit `e4f0805`, live)
 The reorganised research page itself shipped as commit `6f8d0d5` (James: "yes i love it this is it"). He then
 asked to showcase striking figures from the papers and his own animations.
 - Reuse rights checked first (Crossref licence fields + bioRxiv API): Nature paper = open access, CC BY-NC-ND 4.0;
@@ -42,8 +42,11 @@ asked to showcase striking figures from the papers and his own animations.
 - Not used: `ScaleDissociation.mp4` (states an interaction result the project notes say does not hold up
   out of sample). bioRxiv blocks automated downloads (Cloudflare 429), hence the local PDF.
 - Browser-checked desktop + phone: images load, video plays, no overflow, no errors.
-**Held for James:** OK to publish (a) a co-authored preprint figure without asking Vigi, (b) the surgery photo
-inside the Nature figure, (c) an explainer of an unpublished method.
+**James approved all three** (co-authored preprint figure, the surgery photo inside the Nature figure, the
+explainer of an unpublished method): "go on all 3". Pushed; deploy succeeded; all four assets and the page
+verified live.
+**Open:** add the Nature Human Behaviour DOI + status when it goes live (10.1038/s41562-026-02543-z); per-paper
+contribution lines for the other papers if James supplies them; EN/ES toggle.
 
 ## 2026-10-06 (evening) — Research page reorganised around what James did (LOCAL, uncommitted, not pushed)
 James: the page was "disorganized", "to a normal researcher this sniffs very off", and should show industry
