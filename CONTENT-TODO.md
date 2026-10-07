@@ -5,6 +5,22 @@ Items below are what's left. The **"Needs James"** block is the only thing block
 
 ---
 
+## Backlog (added 2026-10-06, after the industry redesign)
+
+- [ ] **"Journey" tab in the top nav** (James's idea, not for today): a page showing how his interests have
+      changed over time. Starting points to draw on: languages and writing systems, linguistics at Rice, the
+      move into neuroscience and single-neuron recording, then data tools and AI automation. Decide the form
+      when we build it (a timeline is the obvious one; it could reuse the collage pieces and the scroll-driven
+      motion from the home hero). Add `{ href: '/journey', label: 'Journey' }` to `NAV` in `src/data/site.ts`.
+- [ ] **English / Spanish toggle** for the whole site (Astro i18n, `/es/` routes; James reviews the Spanish).
+- [ ] **Nature Human Behaviour paper**: when DOI `10.1038/s41562-026-02543-z` goes live, add it to
+      `src/data/publications.ts`, change "In press" to published, and add a News item.
+- [ ] **Per-paper contribution lines** for the Nature, Nature Neuroscience and Cell papers
+      (`PAPER_ROLES` in `src/data/research.ts`), once James says what he did on each.
+- [ ] James to ear-check the ten non-English name clips (`public/audio/`).
+
+---
+
 ## ✅ Done (this scaffold)
 - [x] Interactive **language-manifold** viz (`src/components/ManifoldViz.astro`) — home showcase + the flagship figure on `/research`.
 - [x] **Headshot** in home hero (`public/headshot.jpg`); **Google Scholar** + **ORCID** wired in.
@@ -26,7 +42,7 @@ Items below are what's left. The **"Needs James"** block is the only thing block
 | ~~**Headshot**~~ | ✅ done | `public/headshot.jpg` in the home hero; manifold moved to its own showcase section below the bio |
 | ~~**CV degree/year/GPA**~~ | ✅ done | aligned to uploaded CV: B.A. Cognitive Sciences (Psych & Ling), Data Science minor, Spanish, May 2025, GPA 3.94 |
 | ~~**CV PDF**~~ | ✅ done | `public/cv/Belanger_CV_2026-06.pdf` (full 2026 CV); download buttons re-enabled. **Re-export & overwrite this file to update.** |
-| **4 research figures** | `public/figures/*.png` | **deferred until James publishes** — one per theme; pass `src=` to `<FigurePlaceholder />` in `src/pages/research.astro` |
+| ~~**4 research figures**~~ | superseded | The research page was rebuilt 2026-10-06: it shows two published/preprint figures and one animation from `public/research/`. `FigurePlaceholder` is gone. |
 
 > Verification note (kept for the record): only the **Nature** paper is confirmed published on the open
 > web; the other 3 journal articles show as bioRxiv preprints with no public acceptance evidence. James
@@ -35,8 +51,8 @@ Items below are what's left. The **"Needs James"** block is the only thing block
 ---
 
 ## Publications still to reconcile
-- [ ] **"A geometric foundation for word meaning"** — the old DOI `10.64898/2026.01.28.702241` resolved to a
-      *different* title. Find the correct bioRxiv DOI and re-add it in `src/data/publications.ts`.
+- [x] **"A geometric foundation for word meaning"** — DOI `10.64898/2026.01.28.702241` now resolves to this
+      title and is back in `src/data/publications.ts` (2026-10-06).
 
 ---
 
