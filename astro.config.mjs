@@ -5,9 +5,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  // Current deploy target = GitHub Pages user site (served at the root).
-  // ⚠️ When you attach the custom domain, change this to 'https://jamesbelanger.io'
-  //    (and update public/robots.txt + add public/CNAME). See DEPLOY.md.
+  // GitHub Pages with the custom domain in public/CNAME.
+  // Change domains with `node scripts/use-custom-domain.mjs <domain>`.
   site: 'https://jamesbelanger.com',
   integrations: [sitemap()],
   vite: {

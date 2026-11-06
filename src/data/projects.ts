@@ -82,7 +82,7 @@ export const PROJECTS: Project[] = [
     blurb:
       'An interactive web map for discovering Houston restaurants, with location filtering, marker clustering, and a CSV→geocode→JSON data pipeline. A personal project.',
     stack: ['React 19', 'Vite', 'Leaflet', 'Supabase', 'Tailwind CSS'],
-    links: [{ label: 'GitHub', href: 'https://github.com/JamesBelanger/houston-eats' }],
+    links: [{ label: 'Live demo', href: 'https://houston-eats.vercel.app' }],
   },
   {
     name: 'Graduation Name Pronouncer',

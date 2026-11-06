@@ -28,3 +28,8 @@ pnpm-debug.log*
 
 # vercel
 .vercel
+
+# working notes (kept locally, not published)
+Session_Log.md
+CONTENT-TODO.md
+DEPLOY.md

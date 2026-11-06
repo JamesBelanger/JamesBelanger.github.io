@@ -1,8 +1,8 @@
-# jamesbelanger.io
+# jamesbelanger.com
 
-Personal academic website for James Belanger — computational neuroscientist (the "language manifold" line of work).
+Source for [jamesbelanger.com](https://jamesbelanger.com), James Belanger's personal site: projects, research and notes.
 
-Built with **Astro 5 + Tailwind CSS v4**, deployed on **Vercel**. Content is plain TypeScript data files (no CMS); editing is a quick commit.
+Built with **Astro 5 + Tailwind CSS v4**. Every push to `main` builds and deploys to **GitHub Pages** through `.github/workflows/deploy.yml`. Content is plain TypeScript data files (no CMS).
 
 ## Run locally
 
@@ -20,7 +20,7 @@ Requires Node 18.20+, 20.3+, or 22+.
 | What | File |
 | --- | --- |
 | Name, role, tagline, links, nav | `src/data/site.ts` |
-| Research themes (4) | `src/data/research.ts` |
+| Research | `src/data/research.ts` |
 | Publications | `src/data/publications.ts` |
 | Projects | `src/data/projects.ts` |
 | News feed | `src/data/news.ts` |
@@ -28,16 +28,8 @@ Requires Node 18.20+, 20.3+, or 22+.
 | Theme tokens / colors / dark mode | `src/styles/global.css` |
 | SEO + OpenGraph + JSON-LD | `src/components/BaseHead.astro` |
 
-Most updates are data-only: add a paper to `publications.ts`, a line to `news.ts`, push, done.
+Most updates are data-only: add a paper to `publications.ts` or a line to `news.ts`, then push.
 
-## Deploy (Vercel)
+## Custom domain
 
-1. Push to a GitHub repo.
-2. Import it in Vercel — it auto-detects Astro (build: `astro build`, output: `dist`). No config needed.
-3. Add the custom domain **jamesbelanger.io** in Vercel → Project → Domains, and point the registrar's
-   nameservers / records at Vercel.
-
-## Before going live
-
-See **CONTENT-TODO.md** — placeholders (headshot, CV PDF, Scholar/ORCID, figures) and the
-publications-accuracy check are listed there.
+The domain is set by `node scripts/use-custom-domain.mjs <domain>`, which writes `public/CNAME`, the `site` value in `astro.config.mjs` and the sitemap line in `public/robots.txt`.
