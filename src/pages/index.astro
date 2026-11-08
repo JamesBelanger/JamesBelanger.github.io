@@ -8,33 +8,32 @@ import { SITE } from '../data/site';
 import { PROJECTS } from '../data/projects';
 import { PUBLICATIONS } from '../data/publications';
 
-// The three lanes on the hero's label strip, each with the evidence for it.
+// What he has built, grouped by kind of work. Every item is on the resume fact sheet (2026-11-08 review).
 const lanes = [
   {
     name: 'Data',
-    line: 'Pipelines that clean, match and check messy records.',
+    line: 'Pipelines for lab recordings and public data.',
     proof: [
-      'Spike-sorting and quality-control pipeline: 98% agreement with expert curation, manual review cut from 28% of the data to 5%, adopted lab-wide.',
-      'Record matching at 98.9% precision and 90.2% recall against known ground truth, with the rule that fired shown for every match.',
+      'Spike-sorting and quality-control pipeline: 98% agreement with expert curation, manual review cut from 28% of the data to 5%, adopted as the lab’s standard.',
+      'Automatic redaction of patient identifiers from clinical log files.',
       '799K rows of federal hospital data behind an explorer with an in-browser SQL console.',
     ],
   },
   {
-    name: 'Language',
-    line: 'Speech and language models, measured on real audio.',
+    name: 'Speech and language',
+    line: 'Speech and language models, tested on real audio.',
     proof: [
       'A pronunciation coach whose speech model, cut from 380 MB to 123 MB, runs entirely in the browser.',
       'A speech-recognition benchmark on faint conversational audio: 13.1% word error rate for Whisper against 44.1% for Qwen3-ASR (25.2% after tuning).',
-      '26 language models compared on a GPU cluster, in a job that finishes in about two minutes.',
+      'Speech transcription and word-level alignment for patient recordings, run locally so the audio never left the site.',
     ],
   },
   {
-    name: 'AI automation',
-    line: 'Agent workflows with checks built in and a person at the gate.',
+    name: 'AI tools',
+    line: 'AI workflows where a person checks the result.',
     proof: [
-      'An agent workflow that runs a ten-step brain-imaging procedure end to end: 203 electrode contacts on 19 leads localized within 0.16 mm of the hand-checked result.',
-      'A research engine where every verdict has to survive two agents trying to refute it.',
-      'Planner, worker and reviewer agents with caps, deny lists and an escalation path, used daily.',
+      'An agent workflow for the lab’s ten-step brain-imaging reconstruction: 203 electrode contacts on 19 leads localized within 0.16 mm of the hand-checked result, with a person approving before anything is uploaded.',
+      'A question-answering demo over hospital data that shows its SQL or a quoted source, built with AI coding agents: 22 of 26 right on questions written after the configuration was frozen.',
     ],
   },
 ];
@@ -44,12 +43,12 @@ const lanes = [
 const findings = [
   { big: '1,008', count: 1008, text: 'single neurons, recorded one at a time, in 14 patients.' },
   { big: '81,370', count: 81370, text: 'words of live conversation, plus a 7,346-word podcast, each word timed against the spikes.' },
-  { big: '2 of 3', text: 'brain regions tracked grammar more strongly than meaning: the hippocampus and anterior cingulate, but not orbitofrontal cortex. The same answer held for a podcast and for live conversation.' },
+  { big: '2 of 3', text: 'brain regions tracked grammar more strongly than meaning when the two were given the same number of dimensions: the hippocampus and anterior cingulate, but not orbitofrontal cortex. The same pattern held for a podcast and for live conversation.' },
   { big: '26', count: 26, text: 'language models compared with the brain, from 0.1 to 32.6 billion parameters. Bigger models matched the hippocampus no better; the best match was GPT-2 medium, one of the smallest.' },
 ];
 
 // Lead with what a visitor can try.
-const order = ['Pronunciation Coach (in-browser)', 'Hospital Quality Explorer', 'Identity Resolution Lab', 'Autonomous Research Engine'];
+const order = ['Hospital Quality Explorer', 'Pronunciation Coach (in-browser)'];
 const featured = order.map((n) => PROJECTS.find((p) => p.name === n)!).filter(Boolean);
 const recentPubs = PUBLICATIONS.filter((p) => p.type === 'journal').slice(0, 4);
 
@@ -98,7 +97,7 @@ const linkRow = [
 
   <!-- What I do -->
   <section class="mt-16">
-    <h2 class="label">What I do</h2>
+    <h2 class="label">What I’ve built</h2>
     <div class="mt-6 grid gap-5 md:grid-cols-3">
       {
         lanes.map((lane) => (
@@ -186,7 +185,7 @@ const linkRow = [
     <a href={`mailto:${SITE.email}`} class="clip halftone block p-5 text-[#141418] no-underline hover:no-underline">
       <span class="font-mono text-xs font-bold uppercase tracking-widest">Get in touch</span>
       <span class="mt-2 block font-display text-2xl font-bold leading-tight">{SITE.email}</span>
-      <span class="mt-2 block text-sm font-medium">Houston, open to remote or relocating.</span>
+      <span class="mt-2 block text-sm font-medium">Houston, TX</span>
     </a>
   </section>
 </BaseLayout>

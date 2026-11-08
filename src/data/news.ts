@@ -19,11 +19,6 @@ export const NEWS: NewsItem[] = [
   },
   {
     date: '2026-09',
-    text: 'Identity Resolution Lab is live: messy customer records matched in the browser, with precision and recall measured against ground truth.',
-    href: '/projects/identity-resolution/',
-  },
-  {
-    date: '2026-09',
     text: 'Pronunciation Coach is live: pronunciation scoring that runs entirely in the browser, with a Whisper vs Qwen3-ASR benchmark note.',
     href: '/projects/pronunciation/',
   },
@@ -41,11 +36,6 @@ export const NEWS: NewsItem[] = [
     date: '2026-08',
     text: '“Attention is all you need (in the brain)”, on how hippocampal neurons put words in context, is in press at Nature Human Behaviour. I am an equal-contribution second author.',
     href: '/research',
-  },
-  {
-    date: '2026-08',
-    text: 'Autonomous Research Engine case study: a multi-agent system where every verdict has to survive two agents trying to refute it.',
-    href: '/projects/research-engine',
   },
   {
     date: '2026-05',

@@ -1,7 +1,7 @@
 {
  "width": 1584,
  "height": 396,
- "variant": "industry",
+ "variant": "clinical",
  "palette": "teal_marigold",
  "seed": 7,
  "layers": [
@@ -520,7 +520,7 @@
    "tag": "label",
    "cx": 862,
    "cy": 300,
-   "w": 376.0,
+   "w": 435.5,
    "h": 32.0,
    "rot": -1.5,
    "shadow": 0.45

@@ -5,7 +5,7 @@
 // page unless it still stands, and unpublished work is labelled as unpublished.
 
 export const ROLE = {
-  title: 'Research Technician',
+  title: 'Research Assistant (part-time, 2024–25), then Research Technician',
   lab: 'Hayden Lab, Department of Neurosurgery, Baylor College of Medicine',
   dates: 'May 2024 to September 2026',
 };
@@ -44,8 +44,8 @@ export const WORK: WorkArea[] = [
     name: 'Pipelines',
     line: 'Turning raw recordings into data people can analyse.',
     items: [
-      'Spike sorting and quality control, built solo: 98% agreement with expert curation, with manual review cut from 28% of the data to 5%. Adopted lab-wide and run daily by other staff.',
-      'Electrode localization: 203 contacts on 19 leads localized within 0.16 mm of the hand-validated result with no manual steps. The lab’s ten-step reconstruction procedure now runs end to end, with a person approving the result before anything is uploaded.',
+      'Spike sorting and quality control, built solo: 98% agreement with expert curation, with manual review cut from 28% of the data to 5%. Adopted as the lab’s standard and run daily by other staff.',
+      'Electrode localization: an AI-agent workflow that ran the lab’s ten-step reconstruction procedure end to end, calling ordinary Python for the geometry and waiting for a person to approve the result before anything was uploaded. It localized 203 contacts on 19 leads within 0.16 mm of the hand-validated result.',
       'Speech transcription and word-level alignment for patient recordings, run locally so the audio never left the site.',
       'Automatic redaction of patient identifiers from clinical log files.',
     ],
@@ -117,8 +117,8 @@ export const OWN_PROJECT = {
   question:
     'When someone hears a sentence, do neurons in the hippocampus track its grammar, its meaning, or both? And do language models split the two the same way the brain does?',
   held: [
-    'Grammar was the stronger signal in the hippocampus and the anterior cingulate, but not in orbitofrontal cortex. The pattern was the same for people listening to a podcast and for live conversation (14 patients, 81,370 words).',
-    'Grammar and meaning are carried by overlapping groups of neurons, along directions that are partly separate, and both load mostly on a single shared axis of population activity.',
+    'With grammar and meaning given the same number of dimensions, grammar was the stronger signal in the hippocampus and the anterior cingulate, but not in orbitofrontal cortex, where the result was inconclusive. The pattern was the same for people listening to a podcast and for live conversation (14 patients, 81,370 words). How large the gap is depends on how the two are matched, so treat it as provisional.',
+    'Grammar and meaning are carried by overlapping groups of neurons, along directions that are partly separate.',
     'Across 26 language models, from 0.1 to 32.6 billion parameters, the grammatical part of a model predicted the neurons better than its semantic part in 23 of the 26. Bigger models did no better than small ones.',
   ],
   dropped: [

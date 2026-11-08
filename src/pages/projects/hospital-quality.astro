@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Tag from '../../components/Tag.astro';
 
-const stack = ['PostgreSQL (Supabase)', 'SQL', 'Python ETL', 'Tableau Public', 'Plotly'];
+const stack = ['PostgreSQL (Supabase)', 'SQL', 'Python ETL', 'Plotly'];
 const findings = [
   { big: '0.4th', text: 'national percentile: Houston Methodist Hospital’s heart-failure mortality (6.0%) — the best in the Houston area.' },
   { big: '10 of 11', text: 'key measures on which more than half of Texas hospitals beat the national average; the exception is the HCAHPS star rating (40%).' },
@@ -97,7 +97,7 @@ const v2Stack = ['FastAPI', 'Python', 'Azure Container Apps', 'GitHub Container 
         <li><strong>Clean.</strong> Six column layouts collapse into one tidy fact table: <code>(facility, measure, period, value)</code>. “Not Available” becomes NULL, never zero. A documented <code>higher_is_better</code> heuristic per measure.</li>
         <li><strong>Load.</strong> A three-table star schema in Postgres (Supabase): <code>hospitals</code>, <code>measures</code>, <code>measure_values</code>, plus a latest-period Texas view. Benchmarks are deliberately <em>not</em> loaded — state and national averages and percentiles are computed in SQL with window functions.</li>
         <li><strong>Analyze.</strong> Twelve SQL analyses — joins, window functions, CTEs, conditional pivots — each saved with its question, approach, and result count.</li>
-        <li><strong>Publish.</strong> SQL views → CSV extracts → a Tableau Public workbook and a self-contained Plotly page; and a static JSON + Parquet export that drives the interactive explorer below, with no server behind it.</li>
+        <li><strong>Publish.</strong> SQL views → CSV extracts → a self-contained Plotly page; and a static JSON + Parquet export that drives the interactive explorer below, with no server behind it.</li>
       </ol>
     </section>
 
@@ -152,7 +152,6 @@ const v2Stack = ['FastAPI', 'Python', 'Azure Container Apps', 'GitHub Container 
       </div>
       <p class="mt-2 text-sm text-muted">
         <a href="/hospital-quality-dashboard.html">Open full-screen →</a>
-        <!-- TABLEAU_EMBED: paste the Tableau Public embed code here once published -->
       </p>
     </section>
 

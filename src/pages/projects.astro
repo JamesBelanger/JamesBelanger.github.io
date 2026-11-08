@@ -3,13 +3,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { PROJECTS } from '../data/projects';
 import Tag from '../components/Tag.astro';
 
-const categories = ['Product / full-stack', 'Research engineering'] as const;
-const heading = { 'Product / full-stack': 'Shipped tools', 'Research engineering': 'Research engineering' } as const;
+const categories = ['Research engineering', 'Product / full-stack'] as const;
+const heading = { 'Product / full-stack': 'Personal projects', 'Research engineering': 'Lab work' } as const;
 ---
-<BaseLayout title="Projects" description="Tools James Belanger has built and shipped: data, speech and language, and AI agent workflows.">
+<BaseLayout title="Projects" description="Projects by James Belanger: research software from his lab work, and a few tools you can try.">
   <h1 class="text-3xl font-bold tracking-tight">Projects</h1>
   <p class="mt-3 max-w-2xl text-lg leading-relaxed text-muted">
-    Things I built and put in front of people, most with a live demo you can try, followed by the research software behind the papers.
+    The research software from my lab work, then a few personal projects you can try.
   </p>
 
   {
