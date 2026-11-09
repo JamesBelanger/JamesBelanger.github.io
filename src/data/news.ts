@@ -9,8 +9,8 @@ export interface NewsItem {
 export const NEWS: NewsItem[] = [
   {
     date: '2026-10',
-    text: 'Ask the Hospital Data is live: ask a question about U.S. hospital quality in plain English and see the SQL or the quoted source behind the answer.',
-    href: '/projects/hospital-quality/ask/',
+    text: 'Ask the Hospital Data went live: ask a question about U.S. hospital quality in plain English and see the SQL or the quoted source behind the answer. The live demo is now offline; the case study shows how it worked and how it was tested.',
+    href: '/projects/hospital-quality',
   },
   {
     date: '2026-09',

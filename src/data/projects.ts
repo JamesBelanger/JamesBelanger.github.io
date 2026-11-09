@@ -15,11 +15,11 @@ export const PROJECTS: Project[] = [
     name: 'Hospital Quality Explorer',
     category: 'Product / full-stack',
     blurb:
-      'Look up any of 5,419 U.S. hospitals and compare it with similar hospitals on the federal quality measures, using public CMS data (799K rows) loaded into Postgres, with the comparisons computed in SQL. Version 2 adds a question-answering demo that answers with its SQL or a quoted CMS document, or declines. It was tested on 26 questions written after the configuration was frozen and got 22 right. Designed and directed by me; implemented with AI coding agents (Claude Code).',
+      'Look up any of 5,419 U.S. hospitals and compare it with similar hospitals on the federal quality measures, using public CMS data (799K rows) loaded into Postgres, with the comparisons computed in SQL. Version 2 added a question-answering demo (now offline) that answered with its SQL or a quoted CMS document, or declined. It was tested on 26 questions written after the configuration was frozen and got 22 right. Designed and directed by me; implemented with AI coding agents (Claude Code).',
     stack: ['PostgreSQL (Supabase)', 'SQL', 'Python', 'D3', 'DuckDB-WASM', 'FastAPI', 'Azure', 'pgvector'],
     links: [
       { label: 'Explorer', href: '/projects/hospital-quality/explore/' },
-      { label: 'Ask the data', href: '/projects/hospital-quality/ask/' },
+      { label: 'Ask the data (offline)', href: '/projects/hospital-quality/ask/' },
       { label: 'Case study', href: '/projects/hospital-quality' },
       { label: 'Houston dashboard', href: '/hospital-quality-dashboard.html' },
       { label: 'GitHub', href: 'https://github.com/JamesBelanger/hospital-quality-dashboard' },
